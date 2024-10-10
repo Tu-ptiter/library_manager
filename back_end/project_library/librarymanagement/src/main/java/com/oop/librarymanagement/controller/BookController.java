@@ -3,9 +3,10 @@ package com.oop.librarymanagement.controller;
 import com.oop.librarymanagement.model.Book;
 import com.oop.librarymanagement.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -19,7 +20,14 @@ public class BookController {
         return libraryService.getAllBooks();
     }
 
-    private Book book;
+    @PostMapping("/addBook")
+    public ResponseEntity<Book> addBook(@RequestBody Book book){
+        Book saveBook = libraryService.addBook(book);
+        return new ResponseEntity<>(saveBook, HttpStatus.CREATED);
+    }
+
+
+
 
 
 
