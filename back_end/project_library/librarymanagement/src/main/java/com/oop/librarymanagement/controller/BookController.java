@@ -19,4 +19,8 @@ public class BookController {
         return libraryService.getAllBooks();
     }
 
+    private Book book;
+
+
+
 }
