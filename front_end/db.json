@@ -1,0 +1,332 @@
+{
+  "books": [
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a02",
+      "name": "Cuộc Đời Của Pi",
+      "description": "Câu chuyện phiêu lưu đầy cảm xúc.",
+      "author": [
+        "Yann Martel"
+      ],
+      "publicationYear": 2019,
+      "bigCategory": [
+        {
+          "name": "Văn Học",
+          "smallCategory": [
+            "Tiểu Thuyết"
+          ]
+        }
+      ],
+      "quantity": 10,
+      "availability": true,
+      "img": "https://example.com/cuoc-doi-cua-pi.jpg",
+      "nxb": "NXB Trẻ",
+      "id": "2a4d"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a03",
+      "name": "Những Người Khốn Khổ",
+      "description": "Kiệt tác của văn học thế giới.",
+      "author": [
+        "Victor Hugo"
+      ],
+      "publicationYear": 2015,
+      "bigCategory": [
+        {
+          "name": "Văn Học",
+          "smallCategory": [
+            "Cổ Điển"
+          ]
+        }
+      ],
+      "quantity": 8,
+      "availability": true,
+      "img": "https://example.com/nhung-nguoi-khon-kho.jpg",
+      "nxb": "NXB Văn Học",
+      "id": "8767"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a04",
+      "name": "Người Giàu Có Nhất Thành Babylon",
+      "description": "Bí quyết làm giàu và thành công.",
+      "author": [
+        "George S. Clason"
+      ],
+      "publicationYear": 2017,
+      "bigCategory": [
+        {
+          "name": "Kinh Tế",
+          "smallCategory": [
+            "Làm Giàu"
+          ]
+        }
+      ],
+      "quantity": 12,
+      "availability": true,
+      "img": "https://example.com/nguoi-giau-co-nhat-babylon.jpg",
+      "nxb": "NXB Kinh Tế",
+      "id": "5503"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a05",
+      "name": "Đắc Nhân Tâm",
+      "description": "Hướng dẫn nghệ thuật giao tiếp.",
+      "author": [
+        "Dale Carnegie"
+      ],
+      "publicationYear": 2018,
+      "bigCategory": [
+        {
+          "name": "Kỹ Năng Sống",
+          "smallCategory": [
+            "Giao Tiếp"
+          ]
+        }
+      ],
+      "quantity": 15,
+      "availability": true,
+      "img": "https://example.com/dac-nhan-tam.jpg",
+      "nxb": "NXB Tổng Hợp",
+      "id": "f442"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a06",
+      "name": "Sapiens: Lược Sử Loài Người",
+      "description": "Lịch sử phát triển của loài người.",
+      "author": [
+        "Yuval Noah Harari"
+      ],
+      "publicationYear": 2021,
+      "bigCategory": [
+        {
+          "name": "Khoa Học",
+          "smallCategory": [
+            "Lịch Sử"
+          ]
+        }
+      ],
+      "quantity": 7,
+      "availability": true,
+      "img": "https://example.com/sapiens.jpg",
+      "nxb": "NXB Lao Động",
+      "id": "5a27"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a07",
+      "name": "Hồi Ký Anne Frank",
+      "description": "Cuộc đời của Anne Frank trong chiến tranh.",
+      "author": [
+        "Anne Frank"
+      ],
+      "publicationYear": 2020,
+      "bigCategory": [
+        {
+          "name": "Văn Học",
+          "smallCategory": [
+            "Hồi Ký"
+          ]
+        }
+      ],
+      "quantity": 9,
+      "availability": false,
+      "img": "https://example.com/hoi-ky-anne-frank.jpg",
+      "nxb": "NXB Văn Hóa",
+      "id": "349f"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a08",
+      "name": "Biên Niên Sử Narnia",
+      "description": "Thế giới kỳ ảo của Narnia.",
+      "author": [
+        "C.S. Lewis"
+      ],
+      "publicationYear": 2010,
+      "bigCategory": [
+        {
+          "name": "Thiếu Nhi",
+          "smallCategory": [
+            "Fantasy"
+          ]
+        }
+      ],
+      "quantity": 6,
+      "availability": true,
+      "img": "https://example.com/narnia.jpg",
+      "nxb": "NXB Kim Đồng",
+      "id": "bc7d"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a09",
+      "name": "Nhà Giả Kim",
+      "description": "Cuộc hành trình tìm kiếm ý nghĩa cuộc sống.",
+      "author": [
+        "Paulo Coelho"
+      ],
+      "publicationYear": 2019,
+      "bigCategory": [
+        {
+          "name": "Văn Học",
+          "smallCategory": [
+            "Tiểu Thuyết"
+          ]
+        }
+      ],
+      "quantity": 11,
+      "availability": true,
+      "img": "https://example.com/nha-gia-kim.jpg",
+      "nxb": "NXB Hội Nhà Văn",
+      "id": "95b2"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a10",
+      "name": "Tư Duy Nhanh Và Chậm",
+      "description": "Làm thế nào chúng ta đưa ra quyết định.",
+      "author": [
+        "Daniel Kahneman"
+      ],
+      "publicationYear": 2016,
+      "bigCategory": [
+        {
+          "name": "Tâm Lý Học",
+          "smallCategory": [
+            "Phân Tích"
+          ]
+        }
+      ],
+      "quantity": 4,
+      "availability": true,
+      "img": "https://example.com/tu-duy-nhanh-va-cham.jpg",
+      "nxb": "NXB Tri Thức",
+      "id": "9bc6"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a11",
+      "name": "Cách Mạng Công Nghiệp 4.0",
+      "description": "Tìm hiểu về cách mạng công nghiệp lần thứ tư.",
+      "author": [
+        "Klaus Schwab"
+      ],
+      "publicationYear": 2018,
+      "bigCategory": [
+        {
+          "name": "Kinh Tế",
+          "smallCategory": [
+            "Tương Lai"
+          ]
+        }
+      ],
+      "quantity": 8,
+      "availability": true,
+      "img": "https://example.com/cach-mang-cong-nghiep-4.jpg",
+      "nxb": "NXB Khoa Học",
+      "id": "cd0a"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a12",
+      "name": "Thế Giới Phẳng",
+      "description": "Toàn cầu hóa trong thời đại mới.",
+      "author": [
+        "Thomas L. Friedman"
+      ],
+      "publicationYear": 2016,
+      "bigCategory": [
+        {
+          "name": "Kinh Tế",
+          "smallCategory": [
+            "Xã Hội"
+          ]
+        }
+      ],
+      "quantity": 3,
+      "availability": true,
+      "img": "https://example.com/the-gioi-phang.jpg",
+      "nxb": "NXB Tổng Hợp",
+      "id": "eea0"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a13",
+      "name": "Lập Trình Tư Duy",
+      "description": "Tư duy và kỹ năng lập trình.",
+      "author": [
+        "John Carmack"
+      ],
+      "publicationYear": 2020,
+      "bigCategory": [
+        {
+          "name": "Khoa Học Máy Tính",
+          "smallCategory": [
+            "Lập Trình"
+          ]
+        }
+      ],
+      "quantity": 5,
+      "availability": true,
+      "img": "https://example.com/lap-trinh-tu-duy.jpg",
+      "nxb": "NXB Công Nghệ",
+      "id": "f1eb"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a14",
+      "name": "Dẫn Nhập Vào AI",
+      "description": "Kiến thức cơ bản về trí tuệ nhân tạo.",
+      "author": [
+        "Andrew Ng"
+      ],
+      "publicationYear": 2021,
+      "bigCategory": [
+        {
+          "name": "Khoa Học Máy Tính",
+          "smallCategory": [
+            "Trí Tuệ Nhân Tạo"
+          ]
+        }
+      ],
+      "quantity": 7,
+      "availability": true,
+      "img": "https://example.com/dan-nhap-vao-ai.jpg",
+      "nxb": "NXB Công Nghệ",
+      "id": "8011"
+    },
+    {
+      "idBook": "7a1e548d64ffd07cb39f6a15",
+      "name": "Hành Trình 1 Phút Quản Lý",
+      "description": "Những bí quyết quản lý hiệu quả.",
+      "author": [
+        "Ken Blanchard"
+      ],
+      "publicationYear": 2021,
+      "bigCategory": [
+        {
+          "name": "Kinh Doanh",
+          "smallCategory": [
+            "Quản Lý"
+          ]
+        }
+      ],
+      "quantity": 8,
+      "availability": true,
+      "img": "https://example.com/hanh-trinh-1-phut-quan-ly.jpg",
+      "nxb": "NXB Doanh Nghiệp",
+      "id": "a9f9"
+    },
+    {
+      "id": "d78b",
+      "idBook": "1",
+      "name": "ZuyBigPP",
+      "description": "Hihihah",
+      "author": [
+        "Zuy"
+      ],
+      "publicationYear": 2000,
+      "bigCategory": [
+        {
+          "name": "Lớp 5",
+          "smallCategory": []
+        }
+      ],
+      "quantity": 3,
+      "availability": true,
+      "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/283/toi-ac-va-hinh-phat-tb-2020.jpg",
+      "nxb": "NXB ZuyBigPP"
+    }
+  ]
+}

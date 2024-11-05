@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { FaBook, FaUser, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+// sidebar.tsx
+import React from 'react';
+import { FaBook, FaUser } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface MenuItem {
   title: string;
@@ -14,68 +21,62 @@ interface SubMenuItem {
 }
 
 const Sidebar: React.FC = () => {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const location = useLocation();
 
   const menus: MenuItem[] = [
     {
       title: 'Sách',
-      icon: <FaBook />,
+      icon: <FaBook className="h-4 w-4" />,
       subItems: [
         { title: 'Tất cả Sách', path: '/admin/books/list' },
         { title: 'Thêm Sách', path: '/admin/books/add' },
-        { title: 'Sửa Sách', path: '/admin/books/edit' },
       ],
     },
     {
       title: 'Người đọc',
-      icon: <FaUser />,
+      icon: <FaUser className="h-4 w-4" />,
       subItems: [
         { title: 'Tất cả Người đọc', path: '/admin/readers/list' },
         { title: 'Thêm Người đọc', path: '/admin/readers/add' },
-        { title: 'Sửa Người đọc', path: '/admin/readers/edit' },
       ],
     },
   ];
 
-  const toggleMenu = (title: string) => {
-    if (activeMenu === title) {
-      setActiveMenu(null);
-    } else {
-      setActiveMenu(title);
-    }
-  };
-
   return (
     <div className="w-64 h-screen bg-gray-800 text-white">
       <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
-      <nav className="mt-10">
+      <Accordion type="single" collapsible className="mt-6">
         {menus.map((menu) => (
-          <div key={menu.title}>
-            <button
-              onClick={() => toggleMenu(menu.title)}
-              className="w-full flex items-center p-4 hover:bg-gray-700 focus:outline-none"
-            >
-              <span className="mr-3">{menu.icon}</span>
-              <span className="flex-1 text-left">{menu.title}</span>
-              {activeMenu === menu.title ? <FaChevronUp /> : <FaChevronDown />}
-            </button>
-            {activeMenu === menu.title && (
-              <div className="ml-8">
+          <AccordionItem 
+            key={menu.title} 
+            value={menu.title}
+            className="border-none"
+          >
+            <AccordionTrigger className="flex items-center px-4 py-3 hover:bg-gray-700 no-underline">
+              <div className="flex items-center gap-3">
+                {menu.icon}
+                <span>{menu.title}</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="ml-8 py-2 space-y-1">
                 {menu.subItems.map((subItem) => (
                   <Link
                     key={subItem.title}
                     to={subItem.path}
-                    className={`block p-2 hover:bg-gray-700 rounded ${location.pathname === subItem.path ? 'bg-gray-700' : ''}`}
+                    className={`block px-4 py-2 rounded-md transition-colors
+                      ${location.pathname === subItem.path 
+                        ? 'bg-gray-700 text-white' 
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                   >
                     {subItem.title}
                   </Link>
                 ))}
               </div>
-            )}
-          </div>
+            </AccordionContent>
+          </AccordionItem>
         ))}
-      </nav>
+      </Accordion>
     </div>
   );
 };
