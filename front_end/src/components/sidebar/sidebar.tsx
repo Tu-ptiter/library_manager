@@ -43,7 +43,8 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 h-screen bg-gray-800 text-white">
+    <div className="fixed left-0 top-0 w-64 h-screen bg-gray-800 text-white overflow-hidden">
+      <div className="flex flex-col h-full">
       <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
       <Accordion type="single" collapsible className="mt-6">
         {menus.map((menu) => (
@@ -77,6 +78,7 @@ const Sidebar: React.FC = () => {
           </AccordionItem>
         ))}
       </Accordion>
+      </div>
     </div>
   );
 };

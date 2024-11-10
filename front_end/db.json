@@ -307,26 +307,152 @@
       "img": "https://example.com/hanh-trinh-1-phut-quan-ly.jpg",
       "nxb": "NXB Doanh Nghiệp",
       "id": "a9f9"
+    }
+  ],
+  "members": [
+    {
+      "name": "Bùi Kim Lan",
+      "email": "hanhbk.B22DCTC628@stu.ptit.edu.vn",
+      "phoneNumber": "0345022728",
+      "address": "Phường Thịnh Liệt-Quận Đống Đa-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d16c",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 2,
+      "id": "c1de"
     },
     {
-      "id": "d78b",
-      "idBook": "1",
-      "name": "ZuyBigPP",
-      "description": "Hihihah",
-      "author": [
-        "Zuy"
+      "name": "Hoàng Gia Đạt",
+      "email": "dathg.B21DCKT873@stu.ptit.edu.vn",
+      "phoneNumber": "0163728108",
+      "address": "Phường Trung Văn-Quận Nam Từ Liêm-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d16d",
+      "transactions": [
+        "BORROW"
       ],
-      "publicationYear": 2000,
-      "bigCategory": [
-        {
-          "name": "Lớp 5",
-          "smallCategory": []
-        }
+      "booksBorrowed": 3,
+      "id": "5a74"
+    },
+    {
+      "name": "Võ Thu Mai",
+      "email": "maivt.B23DCPT450@stu.ptit.edu.vn",
+      "phoneNumber": "0813770393",
+      "address": "Phường Thượng Đình-Quận Thanh Xuân-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d16e",
+      "transactions": [
+        "BORROW"
       ],
-      "quantity": 3,
-      "availability": true,
-      "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/283/toi-ac-va-hinh-phat-tb-2020.jpg",
-      "nxb": "NXB ZuyBigPP"
+      "booksBorrowed": 3,
+      "id": "9272"
+    },
+    {
+      "name": "Phạm Thanh My",
+      "email": "mypt.B21DCKD199@stu.ptit.edu.vn",
+      "phoneNumber": "0818383353",
+      "address": "Phường Liên Mạc-Quận Bắc Từ Liêm-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d16f",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "2dea"
+    },
+    {
+      "name": "Nguyễn Văn Phúc",
+      "email": "phucnv.B21DCCN569@stu.ptit.edu.vn",
+      "phoneNumber": "0484635735",
+      "address": "Phường Thịnh Liệt-Quận Đống Đa-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d170",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "7cbe"
+    },
+    {
+      "name": "Vũ Gia Duy",
+      "email": "duyvg.B24DCPT149@stu.ptit.edu.vn",
+      "phoneNumber": "0753334873",
+      "address": "Phường Thượng Thanh-Quận Long Biên-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d171",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "7450"
+    },
+    {
+      "name": "Phan Xuân Quang",
+      "email": "quangpx.B22DCTT106@stu.ptit.edu.vn",
+      "phoneNumber": "0561213074",
+      "address": "Phường Tân Mai-Quận Hoàng Mai-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d172",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "14ae"
+    },
+    {
+      "name": "Phan Thanh Như",
+      "email": "nhupt.B22DCMR258@stu.ptit.edu.vn",
+      "phoneNumber": "0981237485",
+      "address": "Phường Lý Thái Tổ-Quận Hoàn Kiếm-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d173",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "f3ed"
+    },
+    {
+      "name": "Huỳnh Bích Lan",
+      "email": "lanhb.B24DCKH908@stu.ptit.edu.vn",
+      "phoneNumber": "0838850221",
+      "address": "Phường Ô Chợ Dừa-Quận Đống Đa-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d174",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "fa77"
+    },
+    {
+      "name": "Phạm Minh Ngân",
+      "email": "nganpm.B24DCTC776@stu.ptit.edu.vn",
+      "phoneNumber": "0236754295",
+      "address": "Phường Hàng Bài-Quận Hoàn Kiếm-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d175",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "e01d"
+    },
+    {
+      "name": "Trần Gia Phát",
+      "email": "phattg.B22DCCC374@stu.ptit.edu.vn",
+      "phoneNumber": "0353703275",
+      "address": "Phường Khương Mai-Quận Thanh Xuân-Thành phố Hà Nội",
+      "memberId": "672a281174f873211914d176",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 3,
+      "id": "30a6"
+    },
+    {
+      "id": "f568",
+      "name": "Nguyễn Lưu Nhật Duy",
+      "email": "duy@gmail.com",
+      "phoneNumber": "0987654321",
+      "address": "Hà Nội",
+      "memberId": "672a281174f873211914dcnh",
+      "transactions": [
+        "BORROW"
+      ],
+      "booksBorrowed": 0
     }
   ]
 }

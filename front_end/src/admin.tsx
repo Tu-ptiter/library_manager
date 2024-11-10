@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AdminDashboardLayout, CrudLayout } from './layout/pages/admin/admin_dashboard_layout';
 import AdminDashboard from './layout/pages/admin/admin_dashboard';
 import AddBook from './layout/pages/admin/add_book.tsx';
+import AddReader from './layout/pages/admin/add_reader';
 const AdminApp: React.FC = () => {
   return (
     <Router>
@@ -13,6 +14,7 @@ const AdminApp: React.FC = () => {
           <Route path=":entity/:action" element={<CrudLayout />} />
           <Route path=":entity/:action/:id" element={<CrudLayout />} />
           <Route path="books/add" element={<AddBook />} />
+          <Route path="readers/add" element={<AddReader />} />
         </Route>
       </Routes>
     </Router>
