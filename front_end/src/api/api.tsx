@@ -31,7 +31,7 @@ export interface Member {
   booksBorrowed: number;
 }
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'http://10.147.19.246:8080';
 
 // Books API
 export const fetchBooks = async (): Promise<Book[]> => {
@@ -44,9 +44,10 @@ export const fetchBooks = async (): Promise<Book[]> => {
   }
 };
 
-export const updateBook = async (id: string, bookData: Partial<Book>): Promise<Book> => {
+export const updateBook = async (idBook: string, bookData: Partial<Book>): Promise<Book> => {
   try {
-    const response = await axios.put<Book>(`${BASE_URL}/books/${id}`, bookData);
+    // Use idBook instead of id
+    const response = await axios.put<Book>(`${BASE_URL}/books/update/${idBook}`, bookData);
     return response.data;
   } catch (error) {
     console.error('Error updating book:', error);
@@ -54,9 +55,11 @@ export const updateBook = async (id: string, bookData: Partial<Book>): Promise<B
   }
 };
 
-export const deleteBook = async (id: string): Promise<void> => {
+
+export const deleteBook = async (idBook: string): Promise<void> => {
   try {
-    await axios.delete(`${BASE_URL}/books/${id}`);
+    // Use idBook instead of id
+    await axios.delete(`${BASE_URL}/books/delete/${idBook}`);
   } catch (error) {
     console.error('Error deleting book:', error);
     throw error;

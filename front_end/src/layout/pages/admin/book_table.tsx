@@ -76,7 +76,12 @@ const BookTable: React.FC<BookTableProps> = ({
 
   const handleSaveEdit = async (bookData: Partial<Book>) => {
     try {
-      await updateBook(editingBook!.id, bookData);
+      if (!editingBook?.idBook) {
+        console.error('Book ID is missing');
+        return;
+      }
+      // Use idBook instead of id
+      await updateBook(editingBook.idBook, bookData);
       setEditingBook(null);
       window.location.reload();
     } catch (error) {
@@ -86,7 +91,12 @@ const BookTable: React.FC<BookTableProps> = ({
 
   const handleConfirmDelete = async () => {
     try {
-      await deleteBook(deletingBook!.id);
+      if (!deletingBook?.idBook) {
+        console.error('Book ID is missing');
+        return;
+      }
+      // Use idBook instead of id
+      await deleteBook(deletingBook.idBook);
       setDeletingBook(null);
       window.location.reload();
     } catch (error) {
