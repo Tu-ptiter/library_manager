@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import Sidebar from '../../../components/sidebar/sidebar';
-import BookTable from './book_table';
-import ReaderTable from './reader_table';
+import BookTable from './books/book_table';
+import ReaderTable from './readers/reader_table';
 import { fetchBooks, fetchMembers } from '../../../api/api';
 import type { Book, Member } from '../../../api/api';
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
 
 type EntityType = 'books' | 'readers';
 type SearchField = 'name' | 'author' | 'bigCategory' | 'idBook' | 'nxb';
@@ -18,13 +19,27 @@ const CrudLayout: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchField, setSearchField] = useState<SearchField>('name');
   const itemsPerPage = 10;
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (entity === 'books') {
-      fetchBooks().then(setBooks).catch(console.error);
-    } else if (entity === 'readers') {
-      fetchMembers().then(setMembers).catch(console.error);
-    }
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        if (entity === 'books') {
+          const data = await fetchBooks();
+          setBooks(data);
+        } else if (entity === 'readers') {
+          const data = await fetchMembers();
+          setMembers(data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, [entity]);
 
   useEffect(() => {
@@ -80,6 +95,14 @@ const CrudLayout: React.FC = () => {
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <LoadingSpinner />
+        </div>
+      );
+    }
+
     if (!entity) return <div>Hành động không hợp lệ</div>;
 
     switch (action) {
@@ -131,7 +154,7 @@ const CrudLayout: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-4">{entity} - {action}</h1>
+      <h1 className="text-3xl font-bold mb-4"></h1>
       {renderContent()}
     </div>
   );

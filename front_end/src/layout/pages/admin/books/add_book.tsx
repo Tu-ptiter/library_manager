@@ -23,16 +23,24 @@ const bookSchema = z.object({
   name: z.string().min(1, "Tên sách không được để trống"),
   description: z.string(),
   author: z.string().transform(str => str.split(',').map(s => s.trim())),
-  publicationYear: z.string().transform(Number),
-  bigCategory: z.string().transform(str => [{
-    name: str,
-    smallCategory: []
-  }]),
-  quantity: z.string().transform(Number),
+  publicationYear: z.string()
+    .transform(Number)
+    .refine((n) => n >= 0, "Năm xuất bản không được âm"),
+  bigCategory: z.string().min(1, "Danh mục lớn không được để trống"),
+  smallCategory: z.string().min(1, "Danh mục nhỏ không được để trống"),
+  quantity: z.string()
+    .transform(Number)
+    .refine((n) => n >= 0, "Số lượng không được âm"),
   availability: z.boolean().default(true),
   img: z.string().url("URL hình ảnh không hợp lệ"),
   nxb: z.string().min(1, "Nhà xuất bản không được để trống"),
-});
+}).transform(data => ({
+  ...data,
+  bigCategory: [{
+    name: data.bigCategory,
+    smallCategory: [data.smallCategory]
+  }]
+}));
 
 type BookFormValues = z.infer<typeof bookSchema>;
 
@@ -113,7 +121,7 @@ const AddBook: React.FC = () => {
                     <FormItem>
                       <FormLabel>Năm xuất bản</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input type="number" min="0" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -125,9 +133,23 @@ const AddBook: React.FC = () => {
                   name="bigCategory"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Danh mục</FormLabel>
+                      <FormLabel>Danh mục lớn</FormLabel>
                       <FormControl>
-                        <Input placeholder="Nhập tên danh mục..." {...field} />
+                        <Input placeholder="Nhập tên danh mục lớn..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="smallCategory" 
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Danh mục nhỏ</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nhập tên danh mục nhỏ..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -141,7 +163,7 @@ const AddBook: React.FC = () => {
                     <FormItem>
                       <FormLabel>Số lượng</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input type="number" min="0" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

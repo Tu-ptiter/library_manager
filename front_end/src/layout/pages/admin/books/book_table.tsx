@@ -1,4 +1,4 @@
-// book_table.tsx
+
 import React from 'react';
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -19,28 +19,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
+import EditBookModal from '../../../../components/EditBookModal/EditBookModal';
+import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
+import { Book, updateBook, deleteBook } from '@/api/api';
 import { cn } from "@/lib/utils";
-import EditBookModal from '../../../components/EditBookModal/EditBookModal';
-import DeleteConfirmDialog from '../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
-import { updateBook, deleteBook } from '@/api/api';
-import CustomPagination from '../../../components/custom-pagination';
-
-interface Book {
-  idBook: string;
-  name: string;
-  description: string;
-  author: string[];
-  publicationYear: number;
-  bigCategory: Array<{
-    name: string;
-    smallCategory: string[];
-  }>;
-  quantity: number;
-  availability: boolean;
-  img: string;
-  nxb: string;
-  id: string;
-}
+import CustomPagination from '../../../../components/custom-pagination';
+import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
 
 interface BookTableProps {
   currentItems: Book[];
@@ -65,6 +49,7 @@ const BookTable: React.FC<BookTableProps> = ({
 }) => {
   const [editingBook, setEditingBook] = React.useState<Book | null>(null);
   const [deletingBook, setDeletingBook] = React.useState<Book | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleEdit = (book: Book) => {
     setEditingBook(book);
@@ -76,31 +61,35 @@ const BookTable: React.FC<BookTableProps> = ({
 
   const handleSaveEdit = async (bookData: Partial<Book>) => {
     try {
+      setIsLoading(true);
       if (!editingBook?.idBook) {
         console.error('Book ID is missing');
         return;
       }
-      // Use idBook instead of id
       await updateBook(editingBook.idBook, bookData);
       setEditingBook(null);
       window.location.reload();
     } catch (error) {
       console.error('Error updating book:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleConfirmDelete = async () => {
     try {
+      setIsLoading(true);
       if (!deletingBook?.idBook) {
         console.error('Book ID is missing');
         return;
       }
-      // Use idBook instead of id
       await deleteBook(deletingBook.idBook);
       setDeletingBook(null);
       window.location.reload();
     } catch (error) {
       console.error('Error deleting book:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,13 +131,18 @@ const BookTable: React.FC<BookTableProps> = ({
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả sách</h2>
       {renderSearchBar()}
-      <div className="rounded-md border border-gray-200">
+      <div className="rounded-md border border-gray-200 relative">
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+            <LoadingSpinner />
+          </div>
+        )}
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50 hover:bg-slate-50">
               <TableHead className="font-medium text-gray-700">ID</TableHead>
               <TableHead className="font-medium text-gray-700">Tên</TableHead>
-              <TableHead className="font-medium text-gray-700">Danh mục lớn</TableHead>
+              
               <TableHead className="font-medium text-gray-700">Danh mục nhỏ</TableHead>
               <TableHead className="font-medium text-gray-700">Tác giả</TableHead>
               <TableHead className="font-medium text-gray-700">Năm xuất bản</TableHead>
@@ -163,9 +157,7 @@ const BookTable: React.FC<BookTableProps> = ({
               <TableRow key={book.idBook} className="bg-gray-50/50 hover:bg-gray-100/80 border-gray-200">
                 <TableCell className="font-medium">{book.idBook}</TableCell>
                 <TableCell className="max-w-[200px] truncate">{book.name}</TableCell>
-                <TableCell className="max-w-[200px] truncate">
-                  {book.bigCategory.map(cat => cat.name).join(', ')}
-                </TableCell>
+
                 <TableCell className="max-w-[200px] truncate">
                   {book.bigCategory.map(cat => cat.smallCategory.join(', ')).join(', ')}
                 </TableCell>

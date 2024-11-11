@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
-import EditMemberModal from '../../../components/EditMembersModal/EditMembersModal';
-import DeleteConfirmDialog from '../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
+import EditMemberModal from '../../../../components/EditMembersModal/EditMembersModal';
+import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
 import { Member, updateMember, deleteMember } from '@/api/api';
 import { cn } from "@/lib/utils";
-import CustomPagination from '../../../components/custom-pagination';
+import CustomPagination from '../../../../components/custom-pagination';
 
 interface ReaderTableProps {
   currentItems: Member[];

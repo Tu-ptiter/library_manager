@@ -21,7 +21,8 @@ export interface Book {
     img: string;
     nxb: string;
     id: string;
-  }
+}
+
 interface EditBookModalProps {
   book: Book | null;
   isOpen: boolean;
@@ -31,16 +32,61 @@ interface EditBookModalProps {
 
 const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, onSave }) => {
   const [formData, setFormData] = React.useState<Partial<Book>>({});
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
 
   React.useEffect(() => {
     if (book) {
-      setFormData(book);
+      setFormData({
+        ...book,
+        bigCategoryName: book.bigCategory?.[0]?.name || '',
+        smallCategoryName: book.bigCategory?.[0]?.smallCategory?.[0] || ''
+      });
     }
   }, [book]);
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (formData.quantity && formData.quantity < 0) {
+      newErrors.quantity = 'Số lượng không được âm';
+    }
+
+    if (formData.publicationYear && formData.publicationYear < 0) {
+      newErrors.publicationYear = 'Năm xuất bản không được âm';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleQuantityChange = (value: string) => {
+    const quantity = parseInt(value) || 0; // Handle NaN case
+    setFormData({ 
+      ...formData, 
+      quantity: quantity,
+      availability: quantity > 0
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSave(formData);
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    const submissionData = {
+      ...formData,
+      bigCategory: [{
+        name: formData.bigCategoryName as string,
+        smallCategory: [formData.smallCategoryName as string]
+      }]
+    };
+
+    delete submissionData.bigCategoryName;
+    delete submissionData.smallCategoryName;
+
+    await onSave(submissionData);
     onClose();
   };
 
@@ -85,11 +131,40 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
               <Input
                 id="publicationYear"
                 type="number"
+                min="0"
                 value={formData.publicationYear || ''}
                 onChange={(e) => setFormData({ 
                   ...formData, 
                   publicationYear: parseInt(e.target.value) 
                 })}
+                className={errors.publicationYear ? 'border-red-500' : ''}
+              />
+              {errors.publicationYear && (
+                <span className="text-sm text-red-500">{errors.publicationYear}</span>
+              )}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bigCategory">Danh mục lớn</Label>
+              <Input
+                id="bigCategory"
+                value={formData.bigCategoryName || ''}
+                onChange={(e) => setFormData({ 
+                  ...formData, 
+                  bigCategoryName: e.target.value 
+                })}
+                placeholder="Nhập tên danh mục lớn..."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="smallCategory">Danh mục nhỏ</Label>
+              <Input
+                id="smallCategory"
+                value={formData.smallCategoryName || ''}
+                onChange={(e) => setFormData({ 
+                  ...formData, 
+                  smallCategoryName: e.target.value 
+                })}
+                placeholder="Nhập tên danh mục nhỏ..."
               />
             </div>
             <div className="space-y-2">
@@ -97,12 +172,14 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
               <Input
                 id="quantity"
                 type="number"
-                value={formData.quantity || ''}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  quantity: parseInt(e.target.value) 
-                })}
+                min="0"
+                value={formData.quantity !== undefined ? formData.quantity : ''}
+                onChange={(e) => handleQuantityChange(e.target.value)}
+                className={errors.quantity ? 'border-red-500' : ''}
               />
+              {errors.quantity && (
+                <span className="text-sm text-red-500">{errors.quantity}</span>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="nxb">Nhà xuất bản</Label>
