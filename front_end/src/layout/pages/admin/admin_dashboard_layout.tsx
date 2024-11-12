@@ -7,7 +7,8 @@ import ReaderTable from './readers/reader_table';
 import { fetchBooks, fetchMembers } from '../../../api/api';
 import type { Book, Member } from '../../../api/api';
 import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
-
+import BorrowManagement from './borrows/borrow_management';
+import CategoryManagement from './books/category_management';
 type EntityType = 'books' | 'readers';
 type SearchField = 'name' | 'author' | 'bigCategory' | 'idBook' | 'nxb';
 
@@ -134,7 +135,18 @@ const CrudLayout: React.FC = () => {
             />
           );
         }
+        
         break;
+        case 'manage':
+          if (entity === 'borrows') {
+            return <BorrowManagement />;
+          }
+          break;
+          case 'categories':
+            if (entity === 'books') {
+              return <CategoryManagement />;
+            }
+            break;
       case 'add':
         return <div>Thêm {entity}</div>;
       case 'edit': {
