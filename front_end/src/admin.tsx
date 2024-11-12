@@ -6,7 +6,8 @@ import AdminDashboard from './layout/pages/admin/admin_dashboard';
 import Overview from './layout/pages/admin/overview/overview';
 import AddBook from './layout/pages/admin/books/add_book';
 import AddReader from './layout/pages/admin/readers/add_reader';
-
+import BorrowManagement from './layout/pages/admin/borrows/borrow_management';
+import CategoryManagement from './layout/pages/admin/books/category_management';
 const AdminApp: React.FC = () => {
   return (
     <Router>
@@ -19,7 +20,9 @@ const AdminApp: React.FC = () => {
           <Route path=":entity/:action" element={<CrudLayout />} />
           <Route path=":entity/:action/:id" element={<CrudLayout />} />
           <Route path="books/add" element={<AddBook />} />
+          <Route path="books/categories" element={<CategoryManagement />} />
           <Route path="readers/add" element={<AddReader />} />
+          <Route path="borrows/manage" element={<BorrowManagement />} />
         </Route>
       </Routes>
     </Router>
