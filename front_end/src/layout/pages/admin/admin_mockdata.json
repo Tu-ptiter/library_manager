@@ -1,0 +1,10 @@
+{
+    "books": [
+      { "id": 1, "name": "Sách A", "author": "Tác Giả A" },
+      { "id": 2, "name": "Sách B", "author": "Tác Giả B" }
+    ],
+    "readers": [
+      { "id": 1, "name": "Người đọc A" },
+      { "id": 2, "name": "Người đọc B" }
+    ]
+  }
