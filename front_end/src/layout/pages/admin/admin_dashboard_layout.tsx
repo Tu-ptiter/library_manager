@@ -9,6 +9,8 @@ import type { Book, Member } from '../../../api/api';
 import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
 import BorrowManagement from './borrows/borrow_management';
 import CategoryManagement from './books/category_management';
+import Navbar from '../../../components/Navbar';
+
 type EntityType = 'books' | 'readers';
 type SearchField = 'name' | 'author' | 'bigCategory' | 'idBook' | 'nxb';
 
@@ -174,12 +176,15 @@ const CrudLayout: React.FC = () => {
 
 const AdminDashboardLayout: React.FC = () => {
   return (
-    <div className="flex">
+    <div className="flex flex-col min-h-screen">
+    <Navbar /> {/* Thêm Navbar ở đây */}
+    <div className="flex flex-1">
       <Sidebar />
       <div className="flex-1 ml-64 p-4">
         <Outlet />
       </div>
     </div>
+  </div>
   );
 };
 
