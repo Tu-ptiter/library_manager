@@ -9,6 +9,7 @@ import type { Book, Member } from '../../../api/api';
 import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
 import BorrowManagement from './borrows/borrow_management';
 import CategoryManagement from './books/category_management';
+
 type EntityType = 'books' | 'readers';
 type SearchField = 'name' | 'author' | 'bigCategory' | 'idBook' | 'nxb';
 
@@ -47,32 +48,36 @@ const CrudLayout: React.FC = () => {
     setCurrentPage(1);
   }, [searchTerm, searchField]);
 
-  // Filter books
+  // Filter books with null checks
   const filteredBooks = books.filter((book) => {
+    if (!searchTerm) return true;
+    
     const term = searchTerm.toLowerCase();
     switch (searchField) {
       case 'name':
-        return book.name.toLowerCase().includes(term);
+        return book.name?.toLowerCase().includes(term) ?? false;
       case 'author':
-        return book.author.some(author => author.toLowerCase().includes(term));
+        return book.author?.some(author => author?.toLowerCase().includes(term)) ?? false;
       case 'bigCategory':
-        return book.bigCategory.some(cat => cat.name.toLowerCase().includes(term));
+        return book.bigCategory?.some(cat => cat.name?.toLowerCase().includes(term)) ?? false;
       case 'idBook':
-        return book.idBook.toLowerCase().includes(term);
+        return book.idBook?.toLowerCase().includes(term) ?? false;
       case 'nxb':
-        return book.nxb.toLowerCase().includes(term);
+        return book.nxb?.toLowerCase().includes(term) ?? false;
       default:
         return true;
     }
   });
 
-  // Filter members
+  // Filter members with null checks
   const filteredMembers = members.filter((member) => {
+    if (!searchTerm) return true;
+    
     const term = searchTerm.toLowerCase();
     return (
-      member.name.toLowerCase().includes(term) ||
-      member.email.toLowerCase().includes(term) ||
-      member.phoneNumber.includes(term)
+      (member.name?.toLowerCase().includes(term) ?? false) ||
+      (member.email?.toLowerCase().includes(term) ?? false) ||
+      (member.phoneNumber?.includes(term) ?? false)
     );
   });
 
@@ -84,7 +89,7 @@ const CrudLayout: React.FC = () => {
     if (currentPage > totalPages) {
       setCurrentPage(1);
     }
-  }, [currentData.length, totalPages]);
+  }, [currentData.length, totalPages, currentPage]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = currentData.slice(startIndex, startIndex + itemsPerPage);
@@ -135,20 +140,23 @@ const CrudLayout: React.FC = () => {
             />
           );
         }
-        
         break;
-        case 'manage':
-          if (entity === 'borrows') {
-            return <BorrowManagement />;
-          }
-          break;
-          case 'categories':
-            if (entity === 'books') {
-              return <CategoryManagement />;
-            }
-            break;
+
+      case 'manage':
+        if (entity === 'borrows') {
+          return <BorrowManagement />;
+        }
+        break;
+
+      case 'categories':
+        if (entity === 'books') {
+          return <CategoryManagement />;
+        }
+        break;
+
       case 'add':
         return <div>Thêm {entity}</div>;
+
       case 'edit': {
         if (entity === 'books') {
           const item = books.find((book) => book.id === id);
@@ -159,6 +167,7 @@ const CrudLayout: React.FC = () => {
         }
         return <div>Sửa {entity}</div>;
       }
+
       default:
         return <div>Hành động không hợp lệ</div>;
     }
@@ -176,7 +185,7 @@ const AdminDashboardLayout: React.FC = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 ml-64 p-4">
+      <div className="flex-1 ml-64 p-4 lg:ml-64 md:ml-0 sm:ml-0 w-full">
         <Outlet />
       </div>
     </div>

@@ -30,7 +30,11 @@ export interface Member {
   transactions: string[];
   booksBorrowed: number;
 }
-
+export interface CategoryData {
+  name: string;
+  subcategories: string[];
+  isSubcategory?: boolean;
+}
 const BASE_URL = 'http://10.147.19.246:8080';
 
 // Books API
@@ -149,5 +153,33 @@ export const deleteMember = async (memberId: string): Promise<void> => {
   } catch (error) {
     console.error('Error deleting member:', error);
     throw error;
+  }
+};
+
+
+export const fetchMainCategories = async (): Promise<string[]> => {
+  try {
+    const response = await axios.get<string[]>(`${BASE_URL}/books/categories`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching main categories:', error);
+    throw error;
+  }
+};
+
+export const fetchSubCategories = async (categoryName: string): Promise<string[]> => {
+  try {
+    const slug = categoryName.toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with hyphens
+      .replace(/\//g, '-')            // Replace slashes with hyphens
+      .normalize("NFD")               // Normalize diacritics
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .replace(/đ/g, 'd');           // Replace đ with d
+    
+    const response = await axios.get<string[]>(`${BASE_URL}/books/categories/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching subcategories for ${categoryName}:`, error);
+    return [];
   }
 };

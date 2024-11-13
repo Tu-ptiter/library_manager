@@ -1,6 +1,6 @@
 import React from 'react';
-import { Search, Plus } from "lucide-react"; // Added Plus icon
-import { useNavigate } from 'react-router-dom'; // Added for navigation
+import { Search, Plus } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -37,6 +37,8 @@ interface BookTableProps {
   setSearchTerm: (value: string) => void;
 }
 
+type SortOption = 'name-asc' | 'name-desc' | 'year-desc' | 'year-asc';
+
 const BookTable: React.FC<BookTableProps> = ({
   currentItems,
   currentPage,
@@ -51,6 +53,7 @@ const BookTable: React.FC<BookTableProps> = ({
   const [editingBook, setEditingBook] = React.useState<Book | null>(null);
   const [deletingBook, setDeletingBook] = React.useState<Book | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [sortOption, setSortOption] = React.useState<SortOption>('name-asc');
 
   const handleEdit = (book: Book) => {
     setEditingBook(book);
@@ -94,9 +97,26 @@ const BookTable: React.FC<BookTableProps> = ({
     }
   };
 
+  const sortedItems = React.useMemo(() => {
+    return [...currentItems].sort((a, b) => {
+      switch (sortOption) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'year-desc':
+          return b.publicationYear - a.publicationYear;
+        case 'year-asc':
+          return a.publicationYear - b.publicationYear;
+        default:
+          return 0;
+      }
+    });
+  }, [currentItems, sortOption]);
+
   const renderSearchBar = () => (
-    <div className="mb-6 flex gap-4 items-center">
-      <div className="w-[200px]">
+    <div className="mb-6 flex gap-4 sm:flex-row sm:items-center">
+      <div className="w-full sm:w-[200px]">
         <Select value={searchField} onValueChange={setSearchField}>
           <SelectTrigger className="focus:ring-0 focus:ring-offset-0">
             <SelectValue placeholder="Chọn trường tìm kiếm" />
@@ -110,7 +130,7 @@ const BookTable: React.FC<BookTableProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="relative w-[400px]"> {/* Modified width */}
+      <div className="w-full sm:w-[400px]">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
@@ -125,9 +145,22 @@ const BookTable: React.FC<BookTableProps> = ({
           className="pl-8 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
         />
       </div>
+      <div className="w-full sm:w-[200px]">
+        <Select value={sortOption} onValueChange={(value: SortOption) => setSortOption(value)}>
+          <SelectTrigger className="focus:ring-0 focus:ring-offset-0">
+            <SelectValue placeholder="Sắp xếp" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="name-asc">Tên sách A-Z</SelectItem>
+            <SelectItem value="name-desc">Tên sách Z-A</SelectItem>
+            <SelectItem value="year-desc">Năm xuất bản mới nhất</SelectItem>
+            <SelectItem value="year-asc">Năm xuất bản cũ nhất</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <Button 
         onClick={() => navigate('/admin/books/add')}
-        className="bg-green-500 hover:bg-blue-600 text-white"
+        className="bg-green-500 hover:bg-blue-600 text-white w-full sm:w-auto"
       >
         <Plus className="h-4 w-4 mr-2" />
         Thêm sách mới
@@ -139,7 +172,7 @@ const BookTable: React.FC<BookTableProps> = ({
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả sách</h2>
       {renderSearchBar()}
-      <div className="rounded-md border border-gray-200 relative">
+      <div className="overflow-x-auto rounded-md border border-gray-200 relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
             <LoadingSpinner />
@@ -160,7 +193,7 @@ const BookTable: React.FC<BookTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems.map((book) => (
+            {sortedItems.map((book) => (
               <TableRow key={book.idBook} className="bg-gray-50/50 hover:bg-gray-100/80 border-gray-200">
                 <TableCell className="font-medium">{book.idBook}</TableCell>
                 <TableCell>

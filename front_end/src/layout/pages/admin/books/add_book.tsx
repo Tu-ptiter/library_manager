@@ -7,7 +7,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { createBook } from '@/api/api';
+import { createBook, fetchMainCategories, fetchSubCategories, CategoryData } from '@/api/api';
 import {
   Form,
   FormControl,
@@ -16,7 +16,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+
+interface Category {
+  mainCategory: string;
+  subCategories: string[];
+}
 
 const bookSchema = z.object({
   idBook: z.string().min(1, "Mã sách không được để trống"),
@@ -46,12 +59,73 @@ type BookFormValues = z.infer<typeof bookSchema>;
 
 const AddBook: React.FC = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [selectedMainCategory, setSelectedMainCategory] = React.useState<string>('');
+  const [selectedSubCategory, setSelectedSubCategory] = React.useState<string>('');
+
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
       availability: true,
     },
   });
+
+  // Fetch categories on mount
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const mainCategories = await fetchMainCategories();
+        
+        const categoriesWithSubs = await Promise.all(
+          mainCategories.map(async (category) => {
+            const subCategories = await fetchSubCategories(category);
+            return {
+              mainCategory: category,
+              subCategories
+            };
+          })
+        );
+        
+        setCategories(categoriesWithSubs);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Handle main category selection
+  const handleMainCategoryChange = (value: string) => {
+    setSelectedMainCategory(value);
+    form.setValue('bigCategory', value);
+    
+    // Clear sub category if it doesn't belong to the selected main category
+    const category = categories.find(c => c.mainCategory === value);
+    if (category && !category.subCategories.includes(selectedSubCategory)) {
+      setSelectedSubCategory('');
+      form.setValue('smallCategory', '');
+    }
+  };
+
+  // Handle sub category selection
+  const handleSubCategoryChange = (value: string) => {
+    setSelectedSubCategory(value);
+    form.setValue('smallCategory', value);
+    
+    // Set main category automatically if not already selected
+    if (!selectedMainCategory) {
+      const category = categories.find(c => c.subCategories.includes(value));
+      if (category) {
+        setSelectedMainCategory(category.mainCategory);
+        form.setValue('bigCategory', category.mainCategory);
+      }
+    }
+  };
 
   const onSubmit = async (data: BookFormValues) => {
     try {
@@ -61,6 +135,14 @@ const AddBook: React.FC = () => {
       console.error('Error creating book:', error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-6">
@@ -134,9 +216,20 @@ const AddBook: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Danh mục lớn</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập tên danh mục lớn..." {...field} />
-                      </FormControl>
+                      <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn danh mục lớn" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category.mainCategory} value={category.mainCategory}>
+                              {category.mainCategory}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -144,13 +237,34 @@ const AddBook: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="smallCategory" 
+                  name="smallCategory"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Danh mục nhỏ</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập tên danh mục nhỏ..." {...field} />
-                      </FormControl>
+                      <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn danh mục nhỏ" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {selectedMainCategory
+                            ? categories
+                                .find(c => c.mainCategory === selectedMainCategory)
+                                ?.subCategories.map(sub => (
+                                  <SelectItem key={sub} value={sub}>
+                                    {sub}
+                                  </SelectItem>
+                                ))
+                            : categories.flatMap(category =>
+                                category.subCategories.map(sub => (
+                                  <SelectItem key={sub} value={sub}>
+                                    {sub}
+                                  </SelectItem>
+                                ))
+                              )}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

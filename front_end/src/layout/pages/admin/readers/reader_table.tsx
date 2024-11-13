@@ -1,7 +1,15 @@
 // reader_table.tsx
 import React from 'react';
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -17,6 +25,8 @@ import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/Dele
 import { Member, updateMember, deleteMember } from '@/api/api';
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
+
+type SortOption = 'name-asc' | 'name-desc';
 
 interface ReaderTableProps {
   currentItems: Member[];
@@ -35,8 +45,10 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   searchTerm,
   setSearchTerm
 }) => {
+  const navigate = useNavigate();
   const [editingMember, setEditingMember] = React.useState<Member | null>(null);
   const [deletingMember, setDeletingMember] = React.useState<Member | null>(null);
+  const [sortOption, setSortOption] = React.useState<SortOption>('name-asc');
 
   const handleEdit = (member: Member) => {
     setEditingMember(member);
@@ -53,7 +65,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
         return;
       }
    
-      
       await updateMember(editingMember.memberId, memberData);
       setEditingMember(null);
       window.location.reload();
@@ -81,11 +92,24 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     }
   };
 
+  const sortedItems = React.useMemo(() => {
+    return [...currentItems].sort((a, b) => {
+      switch (sortOption) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+  }, [currentItems, sortOption]);
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả người đọc</h2>
       <div className="mb-6 flex gap-4 items-center">
-        <div className="relative flex-1">
+        <div className="relative w-[400px]">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
@@ -98,6 +122,24 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             )}
           />
         </div>
+        <div className="w-[200px]">
+          <Select value={sortOption} onValueChange={(value: SortOption) => setSortOption(value)}>
+            <SelectTrigger className="focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Sắp xếp" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name-asc">Tên A-Z</SelectItem>
+              <SelectItem value="name-desc">Tên Z-A</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Button 
+          onClick={() => navigate('/admin/readers/add')}
+          className="bg-green-500 hover:bg-blue-600 text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Thêm người đọc mới
+        </Button>
       </div>
       <div className="rounded-md border border-gray-200">
         <Table>
@@ -113,7 +155,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems.map((member) => (
+            {sortedItems.map((member) => (
               <TableRow 
                 key={member.memberId} 
                 className={cn("bg-gray-50/50 hover:bg-gray-100/80 border-gray-200")}
