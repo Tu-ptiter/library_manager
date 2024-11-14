@@ -10,89 +10,55 @@ import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner';
 import BorrowManagement from './borrows/borrow_management';
 import CategoryManagement from './books/category_management';
 import Navbar from '../../../components/Navbar';
+
 type EntityType = 'books' | 'readers';
-type SearchField = 'name' | 'author' | 'bigCategory' | 'idBook' | 'nxb';
 
 const CrudLayout: React.FC = () => {
   const { entity, action, id } = useParams<{ entity: EntityType; action: string; id?: string }>();
   const [books, setBooks] = useState<Book[]>([]);
+  const [originalBooks, setOriginalBooks] = useState<Book[]>([]); // Store original list
   const [members, setMembers] = useState<Member[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchField, setSearchField] = useState<SearchField>('name');
-  const itemsPerPage = 10;
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const itemsPerPage = 10;
+
+  const handleSearchResults = (results: Book[] | null) => {
+    if (results === null) {
+      // Reset to original list when search is cleared
+      setBooks(originalBooks);
+    } else {
+      setBooks(results);
+    }
+    setCurrentPage(1); // Reset to first page when searching
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         if (entity === 'books') {
-          const data = await fetchBooks();
-          setBooks(data);
+          const response = await fetchBooks(currentPage, itemsPerPage);
+          const booksData = response.data || [];
+          setBooks(booksData);
+          setOriginalBooks(booksData); // Store original list
+          setTotalPages(response.totalPages || 1);
         } else if (entity === 'readers') {
           const data = await fetchMembers();
-          setMembers(data);
+          setMembers(Array.isArray(data) ? data : []);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+        setBooks([]);
+        setOriginalBooks([]);
+        setMembers([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [entity]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, searchField]);
-
-  // Filter books with null checks
-  const filteredBooks = books.filter((book) => {
-    if (!searchTerm) return true;
-    
-    const term = searchTerm.toLowerCase();
-    switch (searchField) {
-      case 'name':
-        return book.name?.toLowerCase().includes(term) ?? false;
-      case 'author':
-        return book.author?.some(author => author?.toLowerCase().includes(term)) ?? false;
-      case 'bigCategory':
-        return book.bigCategory?.some(cat => cat.name?.toLowerCase().includes(term)) ?? false;
-      case 'idBook':
-        return book.idBook?.toLowerCase().includes(term) ?? false;
-      case 'nxb':
-        return book.nxb?.toLowerCase().includes(term) ?? false;
-      default:
-        return true;
-    }
-  });
-
-  // Filter members with null checks
-  const filteredMembers = members.filter((member) => {
-    if (!searchTerm) return true;
-    
-    const term = searchTerm.toLowerCase();
-    return (
-      (member.name?.toLowerCase().includes(term) ?? false) ||
-      (member.email?.toLowerCase().includes(term) ?? false) ||
-      (member.phoneNumber?.includes(term) ?? false)
-    );
-  });
-
-  // Calculate pagination for current entity
-  const currentData = entity === 'books' ? filteredBooks : filteredMembers;
-  const totalPages = Math.max(1, Math.ceil(currentData.length / itemsPerPage));
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(1);
-    }
-  }, [currentData.length, totalPages, currentPage]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = currentData.slice(startIndex, startIndex + itemsPerPage);
+  }, [entity, currentPage]);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -114,29 +80,23 @@ const CrudLayout: React.FC = () => {
     switch (action) {
       case 'list':
         if (entity === 'books') {
-          if (!books.length) return <div>Không có dữ liệu sách</div>;
           return (
             <BookTable
-              currentItems={currentItems as Book[]}
+              currentItems={books}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
-              searchField={searchField}
-              setSearchField={setSearchField}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
+              onSearch={handleSearchResults}
             />
           );
         } else if (entity === 'readers') {
-          if (!members.length) return <div>Không có dữ liệu người đọc</div>;
+          if (!members?.length) return <div>Không có dữ liệu người đọc</div>;
           return (
             <ReaderTable
-              currentItems={currentItems as Member[]}
+              currentItems={members}
               currentPage={currentPage}
-              totalPages={totalPages}
+              totalPages={Math.ceil(members.length / itemsPerPage)}
               onPageChange={handlePageChange}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
             />
           );
         }
@@ -159,10 +119,10 @@ const CrudLayout: React.FC = () => {
 
       case 'edit': {
         if (entity === 'books') {
-          const item = books.find((book) => book.id === id);
+          const item = books.find((book) => book.bookId === id);
           return item ? <div>Sửa {entity} {item.name}</div> : <div>Không tìm thấy {entity}</div>;
         } else if (entity === 'readers') {
-          const item = members.find((member) => member.id === id);
+          const item = members.find((member) => member.memberId === id);
           return item ? <div>Sửa {entity} {item.name}</div> : <div>Không tìm thấy {entity}</div>;
         }
         return <div>Sửa {entity}</div>;
@@ -184,16 +144,16 @@ const CrudLayout: React.FC = () => {
 const AdminDashboardLayout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
-    <div className="pb-6"
-    ><Navbar /></div>
-   {/* Thêm Navbar ở đây */}
-  <div className="flex flex-1">
-    <Sidebar />
-    <div className="flex-1 ml-64 p-4 lg:ml-64 md:ml-0 sm:ml-0 w-full">
-      <Outlet />
+      <div className="pb-6">
+        <Navbar />
+      </div>
+      <div className="flex flex-1">
+        <Sidebar />
+        <div className="flex-1 ml-64 p-4 lg:ml-64 md:ml-0 sm:ml-0 w-full">
+          <Outlet />
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   );
 };
 

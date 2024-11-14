@@ -1,458 +1,222 @@
 {
-  "books": [
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a02",
-      "name": "Cuộc Đời Của Pi",
-      "description": "Câu chuyện phiêu lưu đầy cảm xúc.",
-      "author": [
-        "Yann Martel"
-      ],
-      "publicationYear": 2019,
-      "bigCategory": [
+    "data": [
         {
-          "name": "Văn Học",
-          "smallCategory": [
-            "Tiểu Thuyết"
-          ]
-        }
-      ],
-      "quantity": 10,
-      "availability": true,
-      "img": "https://example.com/cuoc-doi-cua-pi.jpg",
-      "nxb": "NXB Trẻ",
-      "id": "2a4d"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a03",
-      "name": "Những Người Khốn Khổ",
-      "description": "Kiệt tác của văn học thế giới.",
-      "author": [
-        "Victor Hugo"
-      ],
-      "publicationYear": 2015,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae9777655",
+            "title": "Hồ Oán Hận",
+            "description": "Sau bữa hai viên thám tử mò đến hỏi han về cái chết của Đông Nhi, Nhân đứng ngồi không yên. Rà soát mấy lần gặp gỡ Diệu Linh, y cho ràng chẳng có gì đáng ngại, vậy mà lòng dạ vẫn bứt rứt khó tả. Trong đầu của gã đàn ông từng nhiều năm phiêu dạt hải hồ lại nghĩ tới bước đường bỏ xứ. Nhưng khi ngồi thừ mặt ngẫm ngợi, y tự an ủi rằng chưa phải lúc. Dư vị da thịt đàn bà ngất ngây quá, chẳng những tình cảm được bù đáp, thân xác còn đã nư, tựa như linh hồn cô đơn đói khát tìm thấy bến đậu no đầy, lòng nào mà từ bỏ? Đống tro nguội lạnh mới bùng lên ngọn lửa nồng nàn, âm thầm rời đi khác nào hắt thau nước cho tắt ngóm. Phải chi có nàng bên cạnh để cùng nhau toan tính.<br>Từ bỏ sao đặng, khi nỗi ám ảnh từ thời khắc ngắn ngủi gặp lại người yêu cũ ở ven hồ khiến Nhân phải trả giá bằng một giấc mộng kinh hoàng nhưng lòng không hề nao núng, vẫn bất chấp tất cả, đợi chờ nàng tìm đến. Ma quái còn chẳng chấp, chấp gi mấy câu dò hỏi vu vơ của hai tên công sai rỗi việc.<br>Đêm ấy trời mưa như trút, bốn bề mênh mang nước. Trong màn mưa sậm sì, có một cái bóng lờ nhờ trắng từ phía hồ hướng về túp lều của gã trai cô độc. Nó đẩy cửa bước vào, tiến lại gần chàng ta, nước từ trên người nhỏ thành vũng trên nền đất. Nhân sợ đứng tim, định kêu lên nhưng miệng chỉ ú ớ mà không thốt được một câu. Bóng ma vén mớ tóc lòa xòa để lộ khuôn mặt đầy cám dỗ, rồi cất tiếng thì thào:<br>-  Linh đây mà, biết anh đã trở về nên em đến thăm. Anh hãy chờ một thời gian nữa, khi em đổi kiếp, chúng mình sẽ đoàn viên.<br>Đúng Linh thật rồi, Linh của ngày xưa, Linh của ban chiều thờ thẫn ven hồ. Mồm miệng đuợc \"mở khóa\", theo hiệu lệnh từ tim óc, Nhân buột lời say đám nồng nàn:<br>-  Anh nhớ em quá Linh ơi! Lúc tù tội đói khát hay khi bệnh tật hành hạ, anh vẫn mơ được ôm ấp em thêm một lần để có can đảm mà sống. Hãy lại đây với anh...<br>Trong ánh chớp chói lòa, thiếu phụ mặc đồ trắng nhe hàm răng ngập máu cười rờn rợn, gió thổi bay mái tóc bù xù, khuôn mặt xinh đẹp của Linh chỉ còn lại xương xẩu gớm ghiếc. Chốc lát, cái bóng tan biến vảo thinh không.<br>Sấm sét nổ váng trời, Nhân giật mình tỉnh giấc, mặt đầm mồ hôi. Gã thở phào nhẹ nhõm \"Thì ra chỉ là một cơn mê\". Ngoài trời mưa gió đang gào rú, dưới nền đất trong nhà, một vũng nước còn đọng lại.<br>",
+            "author": [
+                "Hồng Thái"
+            ],
+            "publicationYear": 2023,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Truyện Kinh Dị",
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 3,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/177/ho-oan-han.jpg",
+            "nxb": "NXB Văn Học"
+        },
         {
-          "name": "Văn Học",
-          "smallCategory": [
-            "Cổ Điển"
-          ]
-        }
-      ],
-      "quantity": 8,
-      "availability": true,
-      "img": "https://example.com/nhung-nguoi-khon-kho.jpg",
-      "nxb": "NXB Văn Học",
-      "id": "8767"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a04",
-      "name": "Người Giàu Có Nhất Thành Babylon",
-      "description": "Bí quyết làm giàu và thành công.",
-      "author": [
-        "George S. Clason"
-      ],
-      "publicationYear": 2017,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae9777656",
+            "title": "Đừng Nói Chúng Ta Không Lợi Quyền",
+            "description": "Đừng Nói Chúng Ta Không Lợi Quyền<br>Madeleine Thien dẫn dắt người đọc đi sâu vào cuộc sống đầy biến động của một gia đình Trung Hoa qua hai thế hệ tiếp nối nhau: thế hệ những người sống qua cuộc Cách mạng Văn hóa của Mao Trạch Đông giữa thế kỷ XX, rồi đến đời con cái của họ - những sinh viên tham gia biểu tình ở Quảng trường Thiên An Môn (1989), Hành trình của hai cô gái trẻ Marie và Ai-Ming không chỉ ráp nối lại từng mảnh ghép của câu chuyện gia đình, mà còn dần hé lộ những bi kịch của một giai đoạn đầy biến động trong lịch sử Trung Quốc, khi mỗi người nghệ sĩ phải đấu tranh với chính cái tôi của mình để sống còn, giữ vững lòng trung thành và cống hiến cho nền âm nhạc mà mình đang theo đuổi.<br>\"Một thiên anh hùng ca tuyệt diệu về lịch sử Trung Quốc được viết lên thật đẹp đẽ và đầy chi tiết.\" - The Times<br>\"Một tác phẩm đầy cảm động và vô cùng sâu sắc, nơi âm nhạc, toán học và lịch sử gia đình đan kết lại với nhau trong một câu chuyện kể giàu chất thơ...\" - Herald<br>\"Tác phẩm là một quyển trường thiên tiểu thuyết đầy tham vọng về một Trung Hoa chuyên chế, lấy âm nhạc làm cốt lõi... Lối kể chuyện khó hiểu của Madeleine Thien dần dần bóc trần cuộc đời của ba người nhạc sĩ sống trong thời đại đó, khi nền âm nhạc thực thụ phải bí mật sống còn, như một thứ tình yêu bị cấm đoán.\" - Sunday Times<br>",
+            "author": [
+                "Madeleine Thien"
+            ],
+            "publicationYear": 2022,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/148/dung-noi-chung-ta-khong-loi-quyen.jpg",
+            "nxb": "NXB Hội Nhà Văn"
+        },
         {
-          "name": "Kinh Tế",
-          "smallCategory": [
-            "Làm Giàu"
-          ]
-        }
-      ],
-      "quantity": 12,
-      "availability": true,
-      "img": "https://example.com/nguoi-giau-co-nhat-babylon.jpg",
-      "nxb": "NXB Kinh Tế",
-      "id": "5503"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a05",
-      "name": "Đắc Nhân Tâm",
-      "description": "Hướng dẫn nghệ thuật giao tiếp.",
-      "author": [
-        "Dale Carnegie"
-      ],
-      "publicationYear": 2018,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae9777658",
+            "title": "Miền Tây",
+            "description": "Miền Tây<br>Trong làng văn học Việt Nam rất hiếm có nhà văn nào nhận được sự yêu thương, mến mộ từ nhiều thế hệ độc giả khác nhau như nhà văn Tô Hoài. Nếu các bạn nhỏ biết đến ông như một người bạn dí dỏm, đáng yêu qua kiệt tác Dế mèn phiêu lưu ký và series truyện ngộ nghĩnh về loài vật, thì độc giả lớn tuổi biết đến ông như một cây đại thụ của làng văn với nhiều tác phẩm đã trở thành những tượng đài bất tử như Vợ chồng A Phủ, Cứu đất cứu mường, Chuyện đầm sen đền Đồng Cổ…<br>Tưởng nhớ một năm ngày Cụ trở về với cát bụi, Công ty Sách Phương Nam đã cho xuất bản và tái bản những tuyệt phẩm để đời của nhà văn, như một lời tri ân sâu sắc kính dâng lên Cụ.<br>Bộ sách gồm 9 tác phẩm, bao gồm 4 tiểu thuyết, 3 truyện ngắn và 2 bút ký:<br>Bộ ba tiểu thuyết Quê Nhà, Quê Người, Mười Năm là những tác phẩm đặc sắc, nằm trong danh sách các tác phẩm của Tô Hoài vinh dự nhận giải thưởng Hồ Chí Minh về văn học đợt 1. Ba tiểu thuyết tuy được viết trong những khoảng thời gian khác nhau, về những con người, những hoàn cảnh cụ thể khác nhau, nhưng lại là sự nối tiếp một cách có hệ thống trong dòng chảy lịch sử của vùng quê nơi nhà văn sinh ra và lớn lên. Quê Nhà là bức tranh tái hiện lại cuộc chiến đấu anh dũng của những anh hùng vô danh, những người mà trước đó tay chỉ quen với việc cấy việc cày việc nhà việc cửa nay lại dũng cảm đứng lên giương cờ nghĩa trong những năm đầu khi thực dân Pháp xâm lược. Quê Người là cảnh quê hương bị chiếm đóng. Những con người hiền lành chất phác của vùng quê ấy phải sống trong cảnh khốn đốn khi cái nghèo đói bủa vây. Người phải tha hương nơi đất khách, người ở lại chơ vơ, lạc lối ngay trên chính mảnh đất quê nhà. Mười Năm đưa người đọc hòa mình vào không khí sục sôi của vùng quê ấy những ngày vùng lên xóa tan xiềng xích. Đó là Mười năm toàn dân chuẩn bị Tổng khởi nghĩa, tiến tới Cách mạng Tháng Tám.<br>Ba cuốn tiểu thuyết gần như khắc họa đầy đủ cả giai đoạn đau thương của dân tộc. Dưới ngòi bút tài tình của tác giả, những con người, những mảnh đời ấy hiển hiện một cách chân thật, sống động, gần gũi thân thương, nhưng cũng đầy ám ảnh, gợi nhớ về một thời dĩ vãng đã xa.<br>Không chỉ tiểu thuyết, truyện ngắn cũng là thế mạnh làm nên tên tuổi một Tô Hoài. Những câu chuyện hay nhất, đặc sắc nhất đã được tuyển chọn trong ba tập truyện ngắn mà chúng tôi hân hạnh giới thiệu đến bạn đọc: Khách Nợ, Chiếc Áo Xường Xám Màu Hoa Đào, Chuyện Để Quên.<br>Khách Nợ là nét vẽ thực về những con người, những cảnh đời khốn cùng ở làng quê nghèo ngoại thành Hà Nội trước Cách mạng Tháng Tám. Với cách kể chuyện bình dị, nhẹ nhàng, không màu mè, hoa mỹ, từng câu chuyện, từng số phận cứ từ từ xuất hiện, họ sống, chết, đói khổ, đau thương… chân thật đến ngỡ ngàng nhưng cũng xót xa đến ngỡ ngàng. Trong tập truyện không thể không kể đến những trang viết độc đáo, đầy hấp dẫn về loài vật như Đôi ri đá, Chú gà trống ri, Mụ ngan… Những câu chuyện tưởng chừng vô thưởng vô phạt, nhưng góp phần không nhỏ phơi bày những hiện trạng xã hội thời bấy giờ.<br>Chiếc Áo Xường Xám Màu Hoa Đào là một trong số ít những tập truyện viết về đời sống cơ cực, lay lắt, mù mịt, bị đàn áp nặng nề của các dân tộc miền núi Tây Bắc trước 1945. Tập truyện là quá trình vùng lên thoát khỏi xiềng xích đến với chân trời mới của những số phận bé mọn khao khát tự do. Với lối kể chuyện tự nhiên, giọng văn khi dửng dưng, khi đanh thép, lúc bùi ngùi, lúc lại đầy kịch tính, con người vùng cao với bao đau thương, bất hạnh đã được khắc họa rõ nét với những A Phủ, Hùng Vương, Mỵ, bà Ảng… Đặc biệt, đây là lần đầu tiên nỗi đau thương, cuộc sống bất công của người phụ nữ miền núi Tây Bắc được đề cập đến với cái nhìn đầy cảm thông và chia sẻ.<br>Khác với hai truyện ngắn trên, Chuyện Để Quên là tuyển tập những truyện ngắn viết sau năm 1945. Cũng là khung cảnh làng quê nghèo ấy, cũng là miền Tây Bắc ấy, nhưng với một tâm thức hoàn toàn khác, lòng người có cách mạng dẫn lối dường như bừng tỉnh sau ngàn năm say giấc, tươi sáng hơn, rạng ngời hơn. Những câu chuyện gắn liền với một thời kỳ tranh đấu hào hùng của dân tộc, những câu chuyện của hi sinh, mất mát, của chiến tranh ác liệt… của những năm tháng không thể nào quên.<br>Được viết năm 1965, Miền Tây là tác phẩm tiếp nối cho đề tài về vùng đất Tây Bắc “để thương để nhớ” cho Tô Hoài trong suốt cuộc đời cầm bút của mình. Tô Hoài đã dành cho cuốn tiểu thuyết những nét vẽ chân thật và sinh động nhất, với hình ảnh những người con đất Phiềng Sa tình nghĩa đã sống qua hết những vất vả, đau thương, đấu tranh và dựng xây. Khai thác nhiều tư liệu lịch sử, chính trị, quân sự, tác phẩm đã tạo nên những bức tranh đối lập xưa và nay trong cuộc sống, số phận con người Phiềng Sa. Ở đó, hình ảnh con người chưa bao giờ được tác giả tạo nên bằng bút pháp lí tưởng hóa, mà họ luôn chân thật và gần gũi, mang đầy đủ mặt tốt và mặt xấu của một con người bình thường trong đời sống. Chính vì thế, họ đã sống rất lâu và vững bền trong trái tim rất nhiều độc giả Việt.<br>Ký Ức Đông Dương và Ký Ức Phiên Lãng là hai tập bút ký đặc biệt của nhà văn. Đó là những trang viết thấm đẫm tình hữu nghị sâu sắc với những quốc gia và vùng lãnh thổ trên thế giới mà tác giả đã có dịp đặt chân đến. Nếu như Ký Ức Đông Dương là câu chuyện ấm áp về những người bạn láng giềng thân thiết Lào và Campuchia thì Ký Ức Phiên Lãng là những hồi ức xinh đẹp, sâu lắng đầy cảm xúc về những con người, những vùng đất ở những châu lục khác nhau, tưởng chừng như rất xa xôi nhưng lại quá đỗi gần gũi. Tình anh em sâu đậm, thắm thiết, bền chặt của những dân tộc bị áp bức cùng đứng lên chiến đấu đập tan gông xiềng nô lệ. Đó là đất nước Lào với những con người hiền hòa mến khách. Là một Campuchia vừa thoát khỏi bọn diệt chủng, cả nước đang oằn mình xây dựng lại cuộc đời mới. Là một Ê-ti-ô-pi-a đang đương đầu với chiến tranh nhưng đâu đâu cũng rộn vang tiếng hát của hi vọng. Những em bé Ca-dắc-xtan vẫy tay ríu rít, miệng hô vang Hồ Chủ tịch muôn năm!... Việt Nam muôn năm!... Một Mát-xcơ-va thân thiện, đi đến đâu cũng nghe người dân chào Đồng chí Việt Nam… Dưới bàn tay nhào nặn bậc thầy của nhà văn, tất cả đã được tái hiện một cách rõ nét và sinh động hơn bao giờ hết. Nó sẽ mãi mãi là những ký ức đẹp trong lòng tác giả cũng như trong lòng người thưởng thức.<br>Với số lượng tác phẩm đồ sộ, thật không quá khi nói Tô Hoài là một trong những nhà văn có bút lực dồi dào nhất làng văn Việt Nam.<br>Song không chỉ thế, Tô Hoài còn là một nhà văn luôn có tâm thức hướng đến sự vẹn toàn. Các tác phẩm giới thiệu đến bạn đọc lần này là những bản in mới nhất, đầy đủ và hoàn thiện nhất do chính nhà văn Tô Hoài đọc và sửa chữa trước lúc đi xa.<br>Dường như với bất kỳ tác phẩm nào của mình đã xuất bản, nhà văn cũng luôn cẩn trọng đọc lại và chỉnh sửa những chi tiết chưa hài lòng. Như chính lời con trai của Cụ, nhà báo Nguyễn Phương Vũ, chia sẻ: “Đã từ lâu từ khi cầm bút bố tôi là người cẩn thận và luôn có trách nhiệm với câu chữ nên mỗi bản in dù là in lại nhưng ông luôn đọc, cắt gọt, chỉnh sửa, “uốn nắn”, tỉ mẩn như người dệt vải. Khi ông trao lại cho tôi để xử lý nhập liệu với một bản thảo chi chít màu mực, chữ, từ, câu mà ông thêm bớt đan xen ngang dọc. Cha tôi là vậy, sự cẩn trọng, kỹ lưỡng trong nghề viết như mối nợ tình với ông.”<br>Ngoài 9 tác phẩm được xuất bản trong năm 2015 này, chúng tôi cũng xin điểm lại những tác phẩm khác của cùng tác giả Tô Hoài mà Phương Nam Book độc quyền xuất bản và đã ra mắt bạn đọc trước đây:<br>Mỗi cuốn sách ra đời đều là tâm huyết của tác giả cũng như của đội ngũ phát hành. Bộ sách để đời của nhà văn Tô Hoài đến được tay bạn đọc là sự cố gắng không hề nhỏ của ban biên tập, đặc biệt là được sự giúp đỡ nhiệt tình của con trai Cụ (Nguyễn Phương Vũ), người đã có công sao chép lại toàn bộ những sửa chữa của nhà văn cho những tác phẩm của mình.<br>* * * * *<br>Quen biết nhiều, từng trải lắm, quả thật có thể nói Tô Hoài đã trở thành một cuốn từ điển sống của nghề văn. Qua các tác phẩm đã in của ông, mãi mãi người ta còn tìm thấy hình ảnh con người một thời, với tất cả những lo toan hàng ngày, sự phấn đấu của chúng ta cùng những khó khăn những hạn chế hoàn cảnh đã đặt ra mà không ai trong chúng ta vượt qua nổi. Thời gian sẽ sàng lọc để chọn ra những gì tinh hoa Tô Hoài đã viết, từ đó làm giàu thêm cho văn học Việt Nam.<br>Nhà phê bình Vương Trí Nhàn<br>Tô Hoài hay “khoe”, chẳng chịu bỏ phí những chuyến đi nên ông viết bút ký, ký sự về rất nhiều nước ông có dịp đặt chân đến. Về điều này có lẽ ông cũng là bậc thầy. Những tập ký, truyện ngắn lấy bối cảnh nước ngoài của ông rất khác với nhiều tập sách về nước ngoài của các tác giả thế hệ sau này. Đọc ông luôn có văn, có sáng tạo. Cũng như nhiều bạn đọc thuở ấy, trong đó có tôi, các tác phẩm này của Tô Hoài đã mở giúp chúng tôi một cửa sổ để nhìn ra một góc thế giới trong thời buổi sách quá hiếm, không có phương tiện thông tin.<br>Đỗ Quang Hạnh<br>Tiểu thuyết Tô Hoài là hình ảnh của dòng đời tự nhiên, chảy trôi miên viễn. Cuộc sống hiện ra dưới cái nhìn của Tô Hoài thật dung dị tự nhiên như nó vốn thế: có mọi thứ của sinh hoạt đời thường, vặt vãnh, cái tốt đẹp và cái tầm thường, có đời sống xã hội, vận động của lịch sử và đời sống thế sự, sinh hoạt phong tục.<br>Nhà phê bình Nguyễn Văn Long<br>Đời thường, bình dị và trầm buồn, đó là miền núi của Tô Hoài. Những đặc trưng phong cách này đã khơi gợi lịch sử nhiều đau thương của miền núi theo một cách riêng, gần gũi và nhân bản. Nét dịu dàng, sâu lắng, giàu chất thi họa của nó cũng là một đặc sắc thẩm mĩ, vừa mộc mạc cổ điển vừa có sức sống lâu bền.<br>Phạm Duy Nghĩa<br>",
+            "author": [
+                "Tô Hoài"
+            ],
+            "publicationYear": 2017,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/167/mien-tay.jpg",
+            "nxb": "NXB Văn Học"
+        },
         {
-          "name": "Kỹ Năng Sống",
-          "smallCategory": [
-            "Giao Tiếp"
-          ]
-        }
-      ],
-      "quantity": 15,
-      "availability": true,
-      "img": "https://example.com/dac-nhan-tam.jpg",
-      "nxb": "NXB Tổng Hợp",
-      "id": "f442"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a06",
-      "name": "Sapiens: Lược Sử Loài Người",
-      "description": "Lịch sử phát triển của loài người.",
-      "author": [
-        "Yuval Noah Harari"
-      ],
-      "publicationYear": 2021,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae9777659",
+            "title": "Chiến Binh Cầu Vồng",
+            "description": "",
+            "author": [
+                "Andrea Hirata"
+            ],
+            "publicationYear": 2019,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/126/chien-binh-cau-vong.jpg",
+            "nxb": "NXB Hội Nhà Văn"
+        },
         {
-          "name": "Khoa Học",
-          "smallCategory": [
-            "Lịch Sử"
-          ]
-        }
-      ],
-      "quantity": 7,
-      "availability": true,
-      "img": "https://example.com/sapiens.jpg",
-      "nxb": "NXB Lao Động",
-      "id": "5a27"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a07",
-      "name": "Hồi Ký Anne Frank",
-      "description": "Cuộc đời của Anne Frank trong chiến tranh.",
-      "author": [
-        "Anne Frank"
-      ],
-      "publicationYear": 2020,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae977765a",
+            "title": "Những Đốm Lửa Lưu Lạc",
+            "description": "Những Đốm Lửa Lưu Lạc<br>\"Đôi khi người ta cần phải cắt đứt quan hệ với những nơi họ sinh ra, với quá khứ của chính họ và bắt đầu lại từ đầu... Giống như những ngọn lửa thảo nguyên. Sau khi lửa thiêu rụi, đất sẽ màu mỡ hơn và những thứ mới mẻ có thể sinh sôi.\"<br>Ở Shaker Heights, một vùng ngoại ô cấp tiến và yên bình, mọi thứ đều tuân theo trật tự định sẵn - từ cách bố trí các con đường quanh co, màu sắc của những ngôi nhà, đến sự sung túc, thịnh vượng của cư dân trong vùng. Không ai hiểu rõ điều ấy như Elena Richardson. Thế nhưng, sự xuất hiện của người mẹ đơn thân Mia Warren cùng cô con gái tuổi teen Pearl đã làm thay đổi cuộc sống của gia đình Richardson, gây xáo trộn cộng đồng vốn nề nếp đến từng chi tiết này...<br>Một câu chuyện xúc động về sự gắn kết mãnh liệt của tình mẫu tử, sức nặng của những bí mật, bản chất của nghệ thuật và tính đồng nhất trong một cộng đồng, như những ngọn lửa âm ỉ ủ trong vẻ ngoài tĩnh lặng, cứ chực chờ bùng cháy.<br>\"Dí dỏm, thông minh và êm ái. Thật là một điều kỳ diệu.\" - Paula Hawkins<br>\"Phi thường... Những quyển sách thế này không thường xuất hiện.\" - John Green <br><br>",
+            "author": [
+                "Celeste Ng"
+            ],
+            "publicationYear": 2018,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/253/nhung-dom-lua-luu-lac.jpg",
+            "nxb": "NXB Phụ Nữ"
+        },
         {
-          "name": "Văn Học",
-          "smallCategory": [
-            "Hồi Ký"
-          ]
-        }
-      ],
-      "quantity": 9,
-      "availability": false,
-      "img": "https://example.com/hoi-ky-anne-frank.jpg",
-      "nxb": "NXB Văn Hóa",
-      "id": "349f"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a08",
-      "name": "Biên Niên Sử Narnia",
-      "description": "Thế giới kỳ ảo của Narnia.",
-      "author": [
-        "C.S. Lewis"
-      ],
-      "publicationYear": 2010,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae977765b",
+            "title": "Hình Xăm",
+            "description": "Tiêu Khắc là nhà giáo nhân dân điển hình, mẫu bạn trai lý tưởng cho những ai thích đàn ông trưởng thành, có học thức, có công danh địa vị và cả ngoại hình hoàn hảo. Anh từng có một mối tình đẹp được bao người ngưỡng mộ, nhưng tất cả đã chấm dứt khi người kia vì áp lực từ gia đình mà nảy sinh ý định kết hôn, sinh con với một người con gái khác. Buồn thật đấy nhưng với một người có nguyên tắc riêng trong tình yêu như thầy Tiêu, sự phản bội là tuyệt đối không thể chấp nhận được. Anh quyết liệt chia tay, không cho đối phương một cơ hội cứu vãn nào.<br>Chu Tội là một người đàn ông có thể dễ dàng thu hút người khác ngay từ ánh nhìn đầu tiên, và Tiêu Khắc cũng không ngoại lệ. Dáng vẻ của anh gói gọn trong một chữ “ngầu”. Không phải kiểu làm màu phù phiếm, mà cái “ngầu” của anh toát ra từ khí chất cử chỉ của một người được mài giũa bởi sự từng trải và những biến cố cuộc đời. Chữ “Tội” trong tên anh là “tội” trong “tội lỗi”. Sự thù hận của người bà và áp bức của quá khứ đã khiến anh trở nên trầm lắng hơn rất nhiều, trái ngược hoàn toàn với một Tiêu Khắc luôn vui vẻ, trẻ trung.<br>Cả hai vô tình gặp nhau trong một quán bar nhỏ đúng ngày sinh nhật của Tiêu Khắc. Đứng trước người đàn ông hoàn toàn phù hợp với hình mẫu lý tưởng của mình, Tiêu Khắc không hề do dự mà đi theo tiếng gọi con tim, bắt đầu hành trình theo đuổi “khúc gỗ” Chu Tội. Từ tặng hoa cho đến hát tình ca, bao nhiêu ngón nghề thả thính đều được thầy Tiêu thể hiện hết cùng với tấm chân tình mà những người theo đuổi Chu Tội trước đó chẳng ai bì kịp.<br>Tuy nhiên, khó có mối tình nào là hoàn toàn mỹ mãn không chút trắc trở. Đối với Tiêu Khắc và Chu Tội, khó khăn đến từ nỗi ám ảnh sâu sắc và cảm giác tội lỗi vì những gì xảy ra trong quá khứ của Chu Tội, nó khiến anh sợ hãi việc bản thân có thể sẽ vấy bẩn một Tiêu Khắc quá đỗi tuyệt vời.<br>“Anh sinh ra đã mang trong mình tội nghiệt, em là thiện, anh là ác. Nhưng kể từ hôm nay, mỗi một ngày của sau này, em đều không thể không cùng san sẻ tội nghiệt với anh, cùng gánh chịu cuộc đời và số mệnh của anh. Qua hôm nay anh ba mươi bảy tuổi rồi, anh hy vọng có thể bên em năm mươi, sáu mươi năm nữa, giống như lời em từng nói, quãng đời còn lại của anh đều có em.”<br>Chu Tội và Tiêu Khắc, cả hai đều phải đấu tranh rất nhiều cho hiện tại, một người lùi một bước để người còn lại mạnh mẽ tiến lên cùng nắm tay nhau đi đến cuối cuộc đời. Trải qua biết bao sóng gió, dù là Tiêu Khắc từng bị phản bội hay Chu Tội bị ám ảnh bởi quá khứ, đều xứng đáng có được một cái kết viên mãn cho cuộc đời mình.<br>Hình Xăm là cuốn tiểu thuyết xuất sắc của tác giả Bất Vấn Tam Cửu, từng câu từng chữ đều có thể chạm đến cảm xúc trong lòng độc giả, kể cho chúng ta câu chuyện về một tình yêu khắc cốt ghi tâm. “Muốn anh xăm một hình cho em, em muốn được bên anh suốt quãng đời còn lại.”<br>",
+            "author": [
+                "Bất Vấn Tam Cửu"
+            ],
+            "publicationYear": 2015,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/182/hinh-xam.jpg",
+            "nxb": "NXB Hà Nội"
+        },
         {
-          "name": "Thiếu Nhi",
-          "smallCategory": [
-            "Fantasy"
-          ]
-        }
-      ],
-      "quantity": 6,
-      "availability": true,
-      "img": "https://example.com/narnia.jpg",
-      "nxb": "NXB Kim Đồng",
-      "id": "bc7d"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a09",
-      "name": "Nhà Giả Kim",
-      "description": "Cuộc hành trình tìm kiếm ý nghĩa cuộc sống.",
-      "author": [
-        "Paulo Coelho"
-      ],
-      "publicationYear": 2019,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae977765c",
+            "title": "Sĩ Số Lớp Vắng 0",
+            "description": "“Tiếng gọi bí ẩn trong căn phòng đó dường như chỉ có mình tôi nghe thấy.”<br>“Lớp học này từng có người c.h.ế.t.”<br>“Người ta đồn rằng, vào buổi tối, trường này có ma.”<br>Sau khi bóng đêm nuốt trọn ngôi trường, những điều quỷ dị đã xảy ra…Nơi chiếc bàn học cuối lớp thỉnh thoảng lại vang lên tiếng gọi, chẳng nghe rõ tiếng nhưng như một loại thuốc mê khiến con người ta không thể điều khiển nổi tâm trí mà đi theo… một thứ quỷ dị đanglen lỏi trong từng ngóc ngách của lớp học này.<br>SĨ SỐ LỚP VẮNG 0 là cuốn sách được chắp bút bởi EMMA HẠ MY - chủ sở hữu kênh Youtube “Truyện của Emma” đăng tải những câu chuyện kinh dị tự sáng tác bằng hình ảnh hoạt họa do chính tác giả thực hiện. Cuốn sách bao gồm “Vệt Phấn Trên Bảng Đen” và 9 truyện ngắn khác CHƯA TỪNG xuất hiện trên kênh của Emma Hạ My.<br>Trải qua 10 câu chuyện, cuốn sách sẽ đưa bạn bước vào một thế giới đầy ám ảnh rùng mình khi nhắc đến như: hồn ma của nữ sinh bị g….iết và hã…m hi…ếp rồi ngụy tạo thành tr.eo c.ổ t..ự t..ử; nam sinh đang tr.eo c.ổ lắc lư trên thanh xà ngang học thể dục dựng ở giữa sân trường; là hồn ma của một nữ sinh, thường lang thang khắp nơi trong trường để dọa dẫm học sinh…<br>Tưởng chừng những sự việc hãi hùng kia dường như chỉ là cơn á.c m.ộng mà họ trải qua trong một đêm say giấc nồng. Nhưng rồi hiện thực phải đối diện tát cho họ một cú đau điếng. Những gì xảy ra đêm qua đều có thật.<br>",
+            "author": [
+                "Emma Hạ My"
+            ],
+            "publicationYear": 2013,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Truyện Kinh Dị",
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/255/si-so-lop-vang-0.jpg",
+            "nxb": "NXB Dân Trí"
+        },
         {
-          "name": "Văn Học",
-          "smallCategory": [
-            "Tiểu Thuyết"
-          ]
-        }
-      ],
-      "quantity": 11,
-      "availability": true,
-      "img": "https://example.com/nha-gia-kim.jpg",
-      "nxb": "NXB Hội Nhà Văn",
-      "id": "95b2"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a10",
-      "name": "Tư Duy Nhanh Và Chậm",
-      "description": "Làm thế nào chúng ta đưa ra quyết định.",
-      "author": [
-        "Daniel Kahneman"
-      ],
-      "publicationYear": 2016,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae977765d",
+            "title": "Sơn Trà Nở Muộn",
+            "description": "Nếu mỗi cuốn tiểu thuyết được ví như thời gian trong một ngày, thì Sơn Trà Nở Muộn có lẽ đã được bắt đầu vào thời điểm tăm tối nhất, đó chính là nửa đêm. <br>Hứa Huệ Chanh là một cô gái bán hoa ở hộp đêm, biệt danh là Sơn Trà. Ở độ tuổi xấp xỉ 30 như Hứa Huệ Chanh, chẳng còn gì gọi là giá trị để gìn giữ nữa, cô chẳng còn gì để mất, thậm chí, khát vọng sống mong manh của cô tưởng như đã tắt hẳn rồi, chỉ có thể sống vô hồn, vớt vát chút hơi thở từng ngày, chỉ có thể hèn mọn chờ đợi, hoặc là khách, hoặc là những trận đòn roi đau đớn quằn quại của ông chủ giữa giá lạnh. <br>Rơi vào cảnh khốn cùng đến vậy, cô lại gặp được Chung Định, người đàn ông bên ngoài tô vàng nạm ngọc, bên trong mục rỗng, bệnh hoạn, tàn độc không ai bằng. Hết lần này tới lần khác, hắn lôi cô vào những vụ cá cược oái oăm, những cuộc chơi đánh đổi cả sinh mạng, để thỏa mãn thú vui kỳ lạ của hắn và đám bạn, khiến cô không ít lần sống dở chết dở. Hứa Huệ Chanh vừa hận lại vừa khiếp sợ Chung Định, tìm đủ cách trốn tránh, cuối cùng vẫn không thoát khỏi nanh vuốt sắc nhọn kia. <br>Nhưng cô nào ngờ được rằng, người đàn ông từng dày vò cô đến thảm hại ấy, lại cứu rỗi cuộc đời cô… <br>",
+            "author": [
+                "Giá Oản Chúc"
+            ],
+            "publicationYear": 2023,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/248/son-tra-no-muon.jpg",
+            "nxb": "NXB Thanh Niên"
+        },
         {
-          "name": "Tâm Lý Học",
-          "smallCategory": [
-            "Phân Tích"
-          ]
-        }
-      ],
-      "quantity": 4,
-      "availability": true,
-      "img": "https://example.com/tu-duy-nhanh-va-cham.jpg",
-      "nxb": "NXB Tri Thức",
-      "id": "9bc6"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a11",
-      "name": "Cách Mạng Công Nghiệp 4.0",
-      "description": "Tìm hiểu về cách mạng công nghiệp lần thứ tư.",
-      "author": [
-        "Klaus Schwab"
-      ],
-      "publicationYear": 2018,
-      "bigCategory": [
+            "bookId": "6725f0b0801da71ae977765e",
+            "title": "Ghi Chép Pháp Y - Những Cái Chết Bí Ẩn",
+            "description": "Làm cách nào để một “xác chết lên tiếng”? - đó là công việc của bác sĩ pháp y.  <br>Ghi Chép Pháp Y - Những Cái Chết Bí Ẩn là cuốn sách nằm trong hệ liệt với “Pháp y Tần Minh” - bộ tiểu thuyết nổi đình đám của xứ Trung đã được chuyển thể thành series phim. Cuốn sách tổng hợp những vụ án có thật, được viết bởi bác sĩ pháp y Lưu Hiểu Huy - người có 15 năm kinh nghiệm và từng mổ xẻ hơn 800 tử thi. <br>Trải qua 15 câu chuyện kinh hoàng, cuốn sách sẽ đưa bạn bước vào hiện trường của những vụ án man rợ như: xác chết phi tang dưới cánh đồng ngô, thi thể thiếu nữ không lành lặn, xác chết nhầy nhụa đang bị giòi bọ đục khoét hay một thi thể co cứng trong màng bọc nilon…lần theo những dấu vết, ghép lại sự thật từ những mảnh vụn thi thể, nguyên nhân của cái chết sẽ dần được hé mở. <br>Mỗi vụ án đều là một ẩn số, hiện trường vụ án bao gồm cả xác chết chính là chiếc chìa khóa để truy tìm hung thủ ngay cả khi nó không còn nguyên vẹn. Vậy làm cách để các bác sĩ pháp y có thể xác định thương tật, các dấu hiệu cơ thể bị xâm hại? Cuốn sách này sẽ trình bày những kiến thức chuyên môn và quy trình xử lý vụ án, từ hiện trường vụ án đến đài giải phẫu, xét nghiệm nội tạng, phân tích chất độc… từng bước tìm ra bí mật ẩn giấu sau mỗi tử thi, phơi bày những manh mối liên quan đến tội ác con người và lỗ hổng của xã hội.<br>Không chỉ thuật lại những vụ án và các phương pháp pháp y, cuốn sách còn chứa đựng cảm xúc của tác giả đối với nghề nghiệp và sự méo mó của bản chất con người. Chẳng hạn, một đứa trẻ bệnh nặng phải đau đớn đến thế nào khi bị người nhà đem ra làm công cụ để đòi bồi thường? Cuốn sách sẽ phơi bày những góc khuất của xã hội, những hành vi thủ ác, sự biến chất và mất nhân tính của một bộ phận con người trong xã hội.<br>",
+            "author": [
+                "Lưu Hiểu Huy"
+            ],
+            "publicationYear": 2014,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/239/ghi-chep-phap-y-nhung-cai-chet-bi-an.jpg",
+            "nxb": "NXB Thanh Niên"
+        },
         {
-          "name": "Kinh Tế",
-          "smallCategory": [
-            "Tương Lai"
-          ]
+            "bookId": "6725f0b0801da71ae9777660",
+            "title": "Mùa Hạn Kinh Hoàng",
+            "description": "Giữa những cánh đồng khô cháy tại một vùng quê hẻo lánh của nước Úc, một vụ án mạng đẫm máu xảy ra: Luke Hadler bắn chết vợ cùng đứa con trai sáu tuổi, sau đó quay súng về phía mình và bóp cò.<br>Khi Aaron Falk – điều tra viên của lực lượng Cảnh sát Liên bang – trở về Kiewarra để dự đám tang gia đình người bạn thân thời thơ ấu, những chi tiết về vụ án nhà Hadler bắt đầu khiến anh nghi ngờ.<br>Và khi Falk điều tra sâu hơn vụ giết người, những vết thương cũ bắt đầu rỉ máu vào những vết thương mới. Vì Falk và Luke cùng che giấu một điều bí mật… Điều bí mật mà Falk tưởng rằng từ lâu đã bị chôn vùi…<br>\"Tại hiện trường, dưới cái nóng, lũ nhặng vẫn bu lấy nhung nhúc trong sự thỏa mãn, bởi máu tràn ra, tưới thẫm nền nhà và thảm trải sàn. Bên ngoài, đồ giặt giũ vẫn còn nguyên trên dây phơi, khô cong, cứng đờ dưới nắng. Một chiếc xe trượt của trẻ con nằm bơ vơ trên con đường lát đá. Trong vòng bán kính một cây số xung quanh nông trại đó, chỉ có một con người duy nhất mà trái tim còn đang đập.\" (trích đoạn)<br>",
+            "author": [
+                "Jane Harper"
+            ],
+            "publicationYear": 2023,
+            "bigCategory": [
+                {
+                    "name": "Văn Học",
+                    "smallCategory": [
+                        "Văn Học Đương Đại"
+                    ]
+                }
+            ],
+            "quantity": 5,
+            "availability": true,
+            "img": "https://nhasachphuongnam.com/images/thumbnails/435/537/detailed/131/mua-han-kinh-hoang.jpg",
+            "nxb": "NXB Thanh Niên"
         }
-      ],
-      "quantity": 8,
-      "availability": true,
-      "img": "https://example.com/cach-mang-cong-nghiep-4.jpg",
-      "nxb": "NXB Khoa Học",
-      "id": "cd0a"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a12",
-      "name": "Thế Giới Phẳng",
-      "description": "Toàn cầu hóa trong thời đại mới.",
-      "author": [
-        "Thomas L. Friedman"
-      ],
-      "publicationYear": 2016,
-      "bigCategory": [
-        {
-          "name": "Kinh Tế",
-          "smallCategory": [
-            "Xã Hội"
-          ]
-        }
-      ],
-      "quantity": 3,
-      "availability": true,
-      "img": "https://example.com/the-gioi-phang.jpg",
-      "nxb": "NXB Tổng Hợp",
-      "id": "eea0"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a13",
-      "name": "Lập Trình Tư Duy",
-      "description": "Tư duy và kỹ năng lập trình.",
-      "author": [
-        "John Carmack"
-      ],
-      "publicationYear": 2020,
-      "bigCategory": [
-        {
-          "name": "Khoa Học Máy Tính",
-          "smallCategory": [
-            "Lập Trình"
-          ]
-        }
-      ],
-      "quantity": 5,
-      "availability": true,
-      "img": "https://example.com/lap-trinh-tu-duy.jpg",
-      "nxb": "NXB Công Nghệ",
-      "id": "f1eb"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a14",
-      "name": "Dẫn Nhập Vào AI",
-      "description": "Kiến thức cơ bản về trí tuệ nhân tạo.",
-      "author": [
-        "Andrew Ng"
-      ],
-      "publicationYear": 2021,
-      "bigCategory": [
-        {
-          "name": "Khoa Học Máy Tính",
-          "smallCategory": [
-            "Trí Tuệ Nhân Tạo"
-          ]
-        }
-      ],
-      "quantity": 7,
-      "availability": true,
-      "img": "https://example.com/dan-nhap-vao-ai.jpg",
-      "nxb": "NXB Công Nghệ",
-      "id": "8011"
-    },
-    {
-      "idBook": "7a1e548d64ffd07cb39f6a15",
-      "name": "Hành Trình 1 Phút Quản Lý",
-      "description": "Những bí quyết quản lý hiệu quả.",
-      "author": [
-        "Ken Blanchard"
-      ],
-      "publicationYear": 2021,
-      "bigCategory": [
-        {
-          "name": "Kinh Doanh",
-          "smallCategory": [
-            "Quản Lý"
-          ]
-        }
-      ],
-      "quantity": 8,
-      "availability": true,
-      "img": "https://example.com/hanh-trinh-1-phut-quan-ly.jpg",
-      "nxb": "NXB Doanh Nghiệp",
-      "id": "a9f9"
-    }
-  ],
-  "members": [
-    {
-      "name": "Bùi Kim Lan",
-      "email": "hanhbk.B22DCTC628@stu.ptit.edu.vn",
-      "phoneNumber": "0345022728",
-      "address": "Phường Thịnh Liệt-Quận Đống Đa-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d16c",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 2,
-      "id": "c1de"
-    },
-    {
-      "name": "Hoàng Gia Đạt",
-      "email": "dathg.B21DCKT873@stu.ptit.edu.vn",
-      "phoneNumber": "0163728108",
-      "address": "Phường Trung Văn-Quận Nam Từ Liêm-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d16d",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "5a74"
-    },
-    {
-      "name": "Võ Thu Mai",
-      "email": "maivt.B23DCPT450@stu.ptit.edu.vn",
-      "phoneNumber": "0813770393",
-      "address": "Phường Thượng Đình-Quận Thanh Xuân-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d16e",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "9272"
-    },
-    {
-      "name": "Phạm Thanh My",
-      "email": "mypt.B21DCKD199@stu.ptit.edu.vn",
-      "phoneNumber": "0818383353",
-      "address": "Phường Liên Mạc-Quận Bắc Từ Liêm-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d16f",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "2dea"
-    },
-    {
-      "name": "Nguyễn Văn Phúc",
-      "email": "phucnv.B21DCCN569@stu.ptit.edu.vn",
-      "phoneNumber": "0484635735",
-      "address": "Phường Thịnh Liệt-Quận Đống Đa-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d170",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "7cbe"
-    },
-    {
-      "name": "Vũ Gia Duy",
-      "email": "duyvg.B24DCPT149@stu.ptit.edu.vn",
-      "phoneNumber": "0753334873",
-      "address": "Phường Thượng Thanh-Quận Long Biên-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d171",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "7450"
-    },
-    {
-      "name": "Phan Xuân Quang",
-      "email": "quangpx.B22DCTT106@stu.ptit.edu.vn",
-      "phoneNumber": "0561213074",
-      "address": "Phường Tân Mai-Quận Hoàng Mai-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d172",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "14ae"
-    },
-    {
-      "name": "Phan Thanh Như",
-      "email": "nhupt.B22DCMR258@stu.ptit.edu.vn",
-      "phoneNumber": "0981237485",
-      "address": "Phường Lý Thái Tổ-Quận Hoàn Kiếm-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d173",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "f3ed"
-    },
-    {
-      "name": "Huỳnh Bích Lan",
-      "email": "lanhb.B24DCKH908@stu.ptit.edu.vn",
-      "phoneNumber": "0838850221",
-      "address": "Phường Ô Chợ Dừa-Quận Đống Đa-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d174",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "fa77"
-    },
-    {
-      "name": "Phạm Minh Ngân",
-      "email": "nganpm.B24DCTC776@stu.ptit.edu.vn",
-      "phoneNumber": "0236754295",
-      "address": "Phường Hàng Bài-Quận Hoàn Kiếm-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d175",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "e01d"
-    },
-    {
-      "name": "Trần Gia Phát",
-      "email": "phattg.B22DCCC374@stu.ptit.edu.vn",
-      "phoneNumber": "0353703275",
-      "address": "Phường Khương Mai-Quận Thanh Xuân-Thành phố Hà Nội",
-      "memberId": "672a281174f873211914d176",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 3,
-      "id": "30a6"
-    },
-    {
-      "id": "f568",
-      "name": "Nguyễn Lưu Nhật Duy",
-      "email": "duy@gmail.com",
-      "phoneNumber": "0987654321",
-      "address": "Hà Nội",
-      "memberId": "672a281174f873211914dcnh",
-      "transactions": [
-        "BORROW"
-      ],
-      "booksBorrowed": 0
-    }
-  ]
+    ],
+    "currentPage": 0,
+    "totalItems": 1932,
+    "totalPages": 194,
+    "size": 10,
+    "hasNext": true,
+    "hasPrevious": false
 }

@@ -7,7 +7,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { createBook, fetchMainCategories, fetchSubCategories, CategoryData } from '@/api/api';
+import { createBook, fetchMainCategories, fetchSubCategories } from '@/api/api';
 import {
   Form,
   FormControl,
@@ -33,7 +33,7 @@ interface Category {
 
 const bookSchema = z.object({
   idBook: z.string().min(1, "Mã sách không được để trống"),
-  name: z.string().min(1, "Tên sách không được để trống"),
+  title: z.string().min(1, "Tên sách không được để trống"),
   description: z.string(),
   author: z.string().transform(str => str.split(',').map(s => s.trim())),
   publicationYear: z.string()
@@ -67,11 +67,20 @@ const AddBook: React.FC = () => {
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
+      idBook: '',
+      title: '',
+      description: '',
+      author: '',
+      publicationYear: '',
+      bigCategory: '',
+      smallCategory: '',
+      quantity: '',
       availability: true,
+      img: '',
+      nxb: '',
     },
   });
 
-  // Fetch categories on mount
   React.useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -99,12 +108,10 @@ const AddBook: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Handle main category selection
   const handleMainCategoryChange = (value: string) => {
     setSelectedMainCategory(value);
     form.setValue('bigCategory', value);
     
-    // Clear sub category if it doesn't belong to the selected main category
     const category = categories.find(c => c.mainCategory === value);
     if (category && !category.subCategories.includes(selectedSubCategory)) {
       setSelectedSubCategory('');
@@ -112,12 +119,10 @@ const AddBook: React.FC = () => {
     }
   };
 
-  // Handle sub category selection
   const handleSubCategoryChange = (value: string) => {
     setSelectedSubCategory(value);
     form.setValue('smallCategory', value);
     
-    // Set main category automatically if not already selected
     if (!selectedMainCategory) {
       const category = categories.find(c => c.subCategories.includes(value));
       if (category) {
@@ -170,7 +175,7 @@ const AddBook: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Tên sách</FormLabel>

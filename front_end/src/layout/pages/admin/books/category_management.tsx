@@ -8,36 +8,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import LoadingSpinner  from '@/components/LoadingSpinner/LoadingSpinner';
-import { 
-  CategoryData, 
-  fetchMainCategories, 
-  fetchSubCategories 
-} from '@/api/api';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import { CategoryData, fetchMainCategories, fetchSubCategories } from '@/api/api';
 
 const CategoryManagement: React.FC = () => {
   const [categories, setCategories] = React.useState<CategoryData[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
+  // Cache subcategories to avoid repeated API calls
+  const subCategoriesCache = React.useRef<Record<string, string[]>>({});
+
   const fetchCategories = async () => {
     try {
       setIsLoading(true);
-      // Fetch main categories
+      
+      // First fetch main categories
       const mainCategories = await fetchMainCategories();
 
-      // Fetch subcategories for each main category
-      const categoriesWithSubs = await Promise.all(
-        mainCategories.map(async (category) => {
-          const subcategories = await fetchSubCategories(category);
-          return {
-            name: category,
-            subcategories: subcategories
-          };
-        })
-      );
+      // Use Promise.all to fetch all subcategories in parallel
+      const categoriesPromises = mainCategories.map(async (category) => {
+        // Check cache first
+        if (!subCategoriesCache.current[category]) {
+          subCategoriesCache.current[category] = await fetchSubCategories(category);
+        }
+        return {
+          name: category,
+          subcategories: subCategoriesCache.current[category]
+        };
+      });
 
+      // Wait for all promises to resolve together
+      const categoriesWithSubs = await Promise.all(categoriesPromises);
       setCategories(categoriesWithSubs);
+
     } catch (error) {
       console.error('Error fetching categories:', error);
       setError('Có lỗi xảy ra khi tải danh mục');
@@ -46,10 +50,7 @@ const CategoryManagement: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
-    fetchCategories();
-  }, []);
-
+  // Memoize flattenedCategories to prevent unnecessary recalculations
   const flattenedCategories = React.useMemo(() => {
     const flattened: CategoryData[] = [];
     categories.forEach(category => {
@@ -59,7 +60,7 @@ const CategoryManagement: React.FC = () => {
         subcategories: [],
       });
       // Add subcategories with proper indentation
-      if (category.subcategories.length > 0) {
+      if (category.subcategories?.length > 0) {
         category.subcategories.forEach(sub => {
           flattened.push({
             name: sub,
@@ -71,6 +72,11 @@ const CategoryManagement: React.FC = () => {
     });
     return flattened;
   }, [categories]);
+
+  // Fetch categories only once on component mount
+  React.useEffect(() => {
+    fetchCategories();
+  }, []);
 
   if (isLoading) {
     return (
