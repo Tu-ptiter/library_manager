@@ -18,10 +18,19 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const memberSchema = z.object({
-  name: z.string().min(1, "Tên không được để trống"),
-  email: z.string().email("Email không hợp lệ"),
-  phoneNumber: z.string().min(10, "Số điện thoại không hợp lệ"),
-  address: z.string().min(1, "Địa chỉ không được để trống")
+  name: z.string()
+    .min(1, "Tên không được để trống")
+    .regex(/^[a-zA-ZÀ-ỹ\s]+$/, "Tên chỉ được chứa chữ cái và khoảng trắng"),
+  email: z.string()
+    .min(1, "Email không được để trống")
+    .email("Email không hợp lệ"),
+  phoneNumber: z.string()
+    .min(10, "Số điện thoại phải có ít nhất 10 số")
+    .max(11, "Số điện thoại không được quá 11 số")
+    .regex(/^[0-9]+$/, "Số điện thoại chỉ được chứa số"),
+  address: z.string()
+    .min(1, "Địa chỉ không được để trống")
+    .min(5, "Địa chỉ phải có ít nhất 5 ký tự")
 });
 
 type MemberFormValues = z.infer<typeof memberSchema>;
@@ -62,9 +71,9 @@ const AddReader: React.FC = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Họ và tên</FormLabel>
+                      <FormLabel>Họ và tên <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
-                        <Input placeholder="Nhập họ và tên..." {...field} />
+                        <Input required placeholder="Nhập họ và tên..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -73,15 +82,16 @@ const AddReader: React.FC = () => {
 
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="email" 
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Email <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input 
-                          type="email" 
-                          placeholder="Nhập email..." 
-                          {...field} 
+                          required
+                          type="email"
+                          placeholder="Nhập email..."
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -94,11 +104,13 @@ const AddReader: React.FC = () => {
                   name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Số điện thoại</FormLabel>
+                      <FormLabel>Số điện thoại <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Nhập số điện thoại..." 
-                          {...field} 
+                          required
+                          placeholder="Nhập số điện thoại..."
+                          maxLength={11}
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -111,11 +123,12 @@ const AddReader: React.FC = () => {
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Địa chỉ</FormLabel>
+                      <FormLabel>Địa chỉ <span className="text-red-500">*</span></FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="Nhập địa chỉ..." 
-                          {...field} 
+                          required
+                          placeholder="Nhập địa chỉ..."
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />

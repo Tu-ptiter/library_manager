@@ -3,6 +3,7 @@ import React from 'react';
 import { Card } from "@/components/ui/card";
 import { BookStats, UserStats, BorrowStats, CategoryDistribution } from './charts';
 import { Book, Target, Users, BookOpen } from 'lucide-react';
+import { fetchTotalBooks } from '@/api/api';
 
 const StatsCard = ({ title, value, icon, trend }: { 
   title: string;
@@ -32,6 +33,21 @@ const StatsCard = ({ title, value, icon, trend }: {
 );
 
 const Overview: React.FC = () => {
+  const [totalBooks, setTotalBooks] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const total = await fetchTotalBooks();
+        setTotalBooks(total);
+      } catch (error) {
+        console.error('Error fetching total books:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="space-y-6 p-6">
       <h1 className="text-3xl font-bold">Tổng quan</h1>
@@ -40,7 +56,7 @@ const Overview: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Tổng số sách"
-          value="1,234"
+          value={totalBooks.toLocaleString()}
           icon={<Book className="h-6 w-6 text-primary" />}
           trend={{ value: 12, isPositive: true }}
         />

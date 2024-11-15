@@ -1,7 +1,15 @@
 // reader_table.tsx
-import React from 'react';
-import { Search } from "lucide-react";
+import React, { useState, useMemo } from 'react';
+import { Search, Plus } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -18,25 +26,25 @@ import { Member, updateMember, deleteMember } from '@/api/api';
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
 
+type SortOption = 'name-asc' | 'name-desc';
+
 interface ReaderTableProps {
   currentItems: Member[];
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
   searchTerm: string;
   setSearchTerm: (value: string) => void;
 }
 
 const ReaderTable: React.FC<ReaderTableProps> = ({
-  currentItems,
-  currentPage,
-  totalPages,
-  onPageChange,
-  searchTerm,
+  currentItems = [], // Add default empty array
+  searchTerm = '', // Add default empty string
   setSearchTerm
 }) => {
-  const [editingMember, setEditingMember] = React.useState<Member | null>(null);
-  const [deletingMember, setDeletingMember] = React.useState<Member | null>(null);
+  const navigate = useNavigate();
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
+  const [deletingMember, setDeletingMember] = useState<Member | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption>('name-asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const handleEdit = (member: Member) => {
     setEditingMember(member);
@@ -53,7 +61,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
         return;
       }
    
-      
       await updateMember(editingMember.memberId, memberData);
       setEditingMember(null);
       window.location.reload();
@@ -69,15 +76,51 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
         return;
       }
       
-      try {
-        await deleteMember(deletingMember.memberId);
-        setDeletingMember(null);
-        window.location.reload();
-      } catch (error) {
-        console.error('Error deleting member:', error);
-      }
+      await deleteMember(deletingMember.memberId);
+      setDeletingMember(null);
+      window.location.reload();
     } catch (error) {
-      console.error('Error in delete handler:', error);
+      console.error('Error deleting member:', error);
+    }
+  };
+
+  // Filter items based on search term
+  const filteredItems = useMemo(() => {
+    return currentItems.filter(member => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        (member.name?.toLowerCase() || '').includes(searchLower) ||
+        (member.email?.toLowerCase() || '').includes(searchLower) ||
+        (member.phoneNumber || '').includes(searchTerm)
+      );
+    });
+  }, [currentItems, searchTerm]);
+
+  // Sort filtered items
+  const sortedItems = useMemo(() => {
+    return [...filteredItems].sort((a, b) => {
+      if (!a.name || !b.name) return 0;
+      switch (sortOption) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
+    });
+  }, [filteredItems, sortOption]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
+  const paginatedItems = sortedItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
@@ -85,7 +128,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả người đọc</h2>
       <div className="mb-6 flex gap-4 items-center">
-        <div className="relative flex-1">
+        <div className="relative w-[400px]">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
@@ -98,7 +141,26 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             )}
           />
         </div>
+        <div className="w-[200px]">
+          <Select value={sortOption} onValueChange={(value: SortOption) => setSortOption(value)}>
+            <SelectTrigger className="focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Sắp xếp" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name-asc">Tên A-Z</SelectItem>
+              <SelectItem value="name-desc">Tên Z-A</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Button 
+          onClick={() => navigate('/admin/readers/add')}
+          className="bg-green-500 hover:bg-blue-600 text-white"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Thêm người đọc mới
+        </Button>
       </div>
+
       <div className="rounded-md border border-gray-200">
         <Table>
           <TableHeader>
@@ -113,7 +175,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems.map((member) => (
+            {paginatedItems.map((member) => (
               <TableRow 
                 key={member.memberId} 
                 className={cn("bg-gray-50/50 hover:bg-gray-100/80 border-gray-200")}
@@ -147,19 +209,22 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           </TableBody>
         </Table>
       </div>
+
       <div className="mt-4">
         <CustomPagination 
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={onPageChange}
+          onPageChange={handlePageChange}
         />
       </div>
+
       <EditMemberModal
         member={editingMember}
         isOpen={!!editingMember}
         onClose={() => setEditingMember(null)}
         onSave={handleSaveEdit}
       />
+      
       <DeleteConfirmDialog
         isOpen={!!deletingMember}
         onClose={() => setDeletingMember(null)}

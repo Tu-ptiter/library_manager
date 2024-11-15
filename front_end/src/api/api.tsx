@@ -226,37 +226,18 @@ export const login = async (username: string, password: string) => {
   }
 };
 
-export const getCategoryDistribution = async () => {
+export const changePassword = async (username: string, oldPassword: string, newPassword: string) => {
   try {
-    const response = await axios.get(`${BASE_URL}/books/category-distribution`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching category distribution:', error);
-    throw error;
-  }
-};
-
-
-export const loginAdmin = async (username: string, password: string) => {
-  try {
-    const response = await axios.post(
-      `${BASE_URL}/librarians/login`,
-      {
-        username,
-        password,
-      },
-      
-    );
-
+    const response = await axios.post(`${BASE_URL}/librarians/change`, {
+      username,
+      oldPassword,
+      newPassword
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      if (error.response?.status === 404) {
-        throw new Error('Tài khoản hoặc mật khẩu không đúng');
-      }
-      throw new Error(error.response?.data?.message || 'Lỗi đăng nhập');
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi đổi mật khẩu');
     }
-    throw new Error('Đã xảy ra lỗi trong quá trình đăng nhập');
+    throw error;
   }
 };
-

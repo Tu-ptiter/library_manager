@@ -1,6 +1,7 @@
 // components/sidebar/sidebar.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { FaBook, FaUser, FaHome, FaExchangeAlt } from 'react-icons/fa';
+import { Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Accordion,
@@ -8,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
 
 interface MenuItem {
   title: string;
@@ -23,6 +25,7 @@ interface SubMenuItem {
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const menus: MenuItem[] = [
     {
@@ -63,6 +66,7 @@ const Sidebar: React.FC = () => {
       to={menu.path!}
       className={`flex items-center gap-3 px-4 py-3 hover:bg-gray-700 transition-colors
         ${location.pathname === menu.path ? 'bg-gray-700' : ''}`}
+      onClick={() => setIsOpen(false)}
     >
       {menu.icon}
       <span>{menu.title}</span>
@@ -102,6 +106,7 @@ const Sidebar: React.FC = () => {
                     ${location.pathname === subItem.path 
                       ? 'bg-gray-700 text-white' 
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                  onClick={() => setIsOpen(false)}
                 >
                   {subItem.title}
                 </Link>
@@ -116,18 +121,45 @@ const Sidebar: React.FC = () => {
   const directMenus = menus.filter(menu => menu.path);
   const dropdownMenus = menus.filter(menu => menu.subItems);
 
+  // Add backdrop for mobile
+  const Backdrop = () => (
+    <div 
+      className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
+        ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      onClick={() => setIsOpen(false)}
+    />
+  );
+
   return (
-    <div className="fixed left-0 top-0 w-64 h-screen bg-gray-800 text-white overflow-hidden">
-      <div className="flex flex-col h-full">
-        <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
-        <div className="mt-6">
-          {directMenus.map(renderDirectLink)}
-          <Accordion type="single" collapsible className="mt-2">
-            {renderAccordionItems(dropdownMenus)}
-          </Accordion>
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed top-4 left-4 z-50 lg:hidden"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+
+      <Backdrop />
+      
+      <div 
+        className={`fixed left-0 top-0 w-64 h-screen bg-gray-800 text-white overflow-hidden
+          transition-transform duration-300 ease-in-out lg:translate-x-0
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:block`}
+      >
+        <div className="flex flex-col h-full">
+          <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
+          <div className="mt-6">
+            {directMenus.map(renderDirectLink)}
+            <Accordion type="single" collapsible className="mt-2">
+              {renderAccordionItems(dropdownMenus)}
+            </Accordion>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

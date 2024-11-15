@@ -33,10 +33,9 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
 
   React.useEffect(() => {
     if (member) {
-      // Keep all original data including memberId
       setFormData({
         ...member,
-        id: member.id,           // Keep json-server id
+        id: member.id,
         memberId: member.memberId,
         transactions: member.transactions,
         booksBorrowed: member.booksBorrowed
@@ -68,6 +67,10 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
       newErrors.address = 'Địa chỉ không được để trống';
     }
 
+    if (formData.booksBorrowed !== undefined && formData.booksBorrowed < 0) {
+      newErrors.booksBorrowed = 'Số sách mượn không được âm';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -80,13 +83,12 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
     }
 
     try {
-      // Keep original member data that shouldn't be modified
       const updatedData = {
         ...formData,
-        id: member?.id,           // Include json-server id
+        id: member?.id,
         memberId: member?.memberId,
         transactions: member?.transactions || [],
-        booksBorrowed: member?.booksBorrowed || 0
+        booksBorrowed: formData.booksBorrowed || 0
       };
       
       await onSave(updatedData);
@@ -94,6 +96,14 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
     } catch (error) {
       console.error('Error saving member:', error);
     }
+  };
+
+  const handleBorrowedBooksChange = (value: string) => {
+    const number = parseInt(value);
+    setFormData({
+      ...formData,
+      booksBorrowed: isNaN(number) ? 0 : number
+    });
   };
 
   return (
@@ -151,6 +161,20 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
               />
               {errors.address && (
                 <span className="text-sm text-red-500">{errors.address}</span>
+              )}
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="booksBorrowed">Số sách mượn</Label>
+              <Input
+                id="booksBorrowed"
+                type="number"
+                min="0"
+                value={formData.booksBorrowed || 0}
+                onChange={(e) => handleBorrowedBooksChange(e.target.value)}
+                className={errors.booksBorrowed ? 'border-red-500' : ''}
+              />
+              {errors.booksBorrowed && (
+                <span className="text-sm text-red-500">{errors.booksBorrowed}</span>
               )}
             </div>
           </div>
