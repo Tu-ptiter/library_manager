@@ -1,18 +1,46 @@
 // layout/pages/admin/overview/charts/CategoryDistribution.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { getCategoryDistribution } from '@/api/api';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
-const data = [
-  { name: 'Văn học', value: 400 },
-  { name: 'Kinh tế', value: 300 },
-  { name: 'Khoa học', value: 300 },
-  { name: 'Tiểu thuyết', value: 200 },
-  { name: 'Thiếu nhi', value: 150 },
+const COLORS = [
+  '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', 
+  '#8dd1e1', '#a4de6c', '#d0ed57', '#a28fd0', '#ff7f50', '#87cefa', '#da70d6', 
+  '#32cd32', '#6495ed', '#ff69b4', '#ba55d3', '#cd5c5c', '#ffa07a'
 ];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
-
 const CategoryDistribution: React.FC = () => {
+  const [data, setData] = useState<{ name: string; value: number }[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const distribution = await getCategoryDistribution();
+        // Transform object into array format expected by recharts
+        const transformedData = Object.entries(distribution).map(([name, value]) => ({
+          name,
+          value: Number(value)
+        }));
+        setData(transformedData);
+      } catch (error) {
+        console.error('Error fetching category distribution:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>

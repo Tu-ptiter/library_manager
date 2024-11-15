@@ -8,8 +8,8 @@ interface Category {
 }
 
 export interface Book {
-  idBook: string;
-  name: string;
+  bookId: string;
+  title: string;
   description: string;
   author: string[];
   publicationYear: number;
@@ -20,9 +20,19 @@ export interface Book {
   nxb: string;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  currentPage: number;
+  totalItems: number;
+  totalPages: number;
+  size: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
 export interface Member {
-  id?: string;        // Optional for real backend
-  memberId: string;  // For business logic
+  id?: string;        
+  memberId: string;  
   name: string;
   email: string;
   phoneNumber: string;
@@ -31,13 +41,28 @@ export interface Member {
   booksBorrowed: number;
 }
 
-const BASE_URL = 'http://10.147.19.246:8080';
+export interface CategoryData {
+  name: string;
+  subcategories: string[];
+  isSubcategory?: boolean;
+}
+
+const BASE_URL = 'http://localhost:8080';
 
 // Books API
-export const fetchBooks = async (): Promise<Book[]> => {
+export const fetchBooks = async (page: number = 1, size: number = 10): Promise<PaginatedResponse<Book>> => {
   try {
-    const response = await axios.get<Book[]>(`${BASE_URL}/books`);
-    return response.data;
+    const response = await axios.get<PaginatedResponse<Book>>(`${BASE_URL}/books`, {
+      params: {
+        page: Math.min(page - 1, 199), // Convert to 0-based index with max limit
+        size: size
+      }
+    });
+    return {
+      ...response.data,
+      currentPage: response.data.currentPage + 1, // Convert back to 1-based index
+      totalPages: Math.min(response.data.totalPages, 200) // Limit max pages
+    };
   } catch (error) {
     console.error('Error fetching books:', error);
     throw error;
@@ -46,7 +71,6 @@ export const fetchBooks = async (): Promise<Book[]> => {
 
 export const updateBook = async (idBook: string, bookData: Partial<Book>): Promise<Book> => {
   try {
-    // Use idBook instead of id
     const response = await axios.put<Book>(`${BASE_URL}/books/update/${idBook}`, bookData);
     return response.data;
   } catch (error) {
@@ -55,10 +79,8 @@ export const updateBook = async (idBook: string, bookData: Partial<Book>): Promi
   }
 };
 
-
 export const deleteBook = async (idBook: string): Promise<void> => {
   try {
-    // Use idBook instead of id
     await axios.delete(`${BASE_URL}/books/delete/${idBook}`);
   } catch (error) {
     console.error('Error deleting book:', error);
@@ -75,7 +97,19 @@ export const createBook = async (bookData: Omit<Book, 'id'>): Promise<Book> => {
     throw error;
   }
 };
-
+export const searchBooks = async (query: string, searchType: 'title' | 'author'): Promise<Book[]> => {
+  try {
+    const response = await axios.get<Book[]>(`${BASE_URL}/books/search`, {
+      params: {
+        [searchType]: query // Only pass the selected search type parameter
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error searching books:', error);
+    throw error;
+  }
+};
 // Members API
 export const fetchMembers = async (): Promise<Member[]> => {
   try {
@@ -89,7 +123,6 @@ export const fetchMembers = async (): Promise<Member[]> => {
 
 export const createMember = async (memberData: Omit<Member, 'memberId'>): Promise<Member> => {
   try {
-    // Generate new memberId
     const memberId = `672a281174f873211914d${Math.random().toString(36).substr(2, 3)}`;
     const newMember = {
       ...memberData,
@@ -107,25 +140,9 @@ export const createMember = async (memberData: Omit<Member, 'memberId'>): Promis
 
 export const updateMember = async (memberId: string, memberData: Partial<Member>): Promise<Member> => {
   try {
-    // First get the member to get their id
-    const members = await fetchMembers();
-    const member = members.find(m => m.memberId === memberId);
-    
-    if (!member) {
-      throw new Error('Member not found');
-    }
-
-    // Use the member's id from json-server for the PUT request
-    const updatedMember = {
-      ...member,        // Keep existing data
-      ...memberData,    // Update with new data
-      id: member.id,    // Preserve json-server id
-      memberId         // Keep original memberId
-    };
-
     const response = await axios.put<Member>(
-      `${BASE_URL}/members/${member.id}`, // Use id in URL
-      updatedMember
+      `${BASE_URL}/members/update/${memberId}`,
+      memberData
     );
     return response.data;
   } catch (error) {
@@ -136,18 +153,81 @@ export const updateMember = async (memberId: string, memberData: Partial<Member>
 
 export const deleteMember = async (memberId: string): Promise<void> => {
   try {
-    // First get the member to get their id
-    const members = await fetchMembers();
-    const member = members.find(m => m.memberId === memberId);
-    
-    if (!member?.id) {
-      throw new Error('Member not found');
-    }
-
-    // Use the member's json-server id for the DELETE request
-    await axios.delete(`${BASE_URL}/members/${member.id}`);
+    await axios.delete(`${BASE_URL}/members/delete/${memberId}`);
   } catch (error) {
     console.error('Error deleting member:', error);
     throw error;
   }
 };
+
+export const fetchMainCategories = async (): Promise<string[]> => {
+  try {
+    const response = await axios.get<string[]>(`${BASE_URL}/books/categories`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching main categories:', error);
+    throw error;
+  }
+};
+
+export const fetchSubCategories = async (categoryName: string): Promise<string[]> => {
+  try {
+    const slug = categoryName.toLowerCase()
+      .replace(/\s+/g, '-')           
+      .replace(/\//g, '-')            
+      .normalize("NFD")               
+      .replace(/[\u0300-\u036f]/g, "") 
+      .replace(/đ/g, 'd');           
+    
+    const response = await axios.get<string[]>(`${BASE_URL}/books/categories/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching subcategories for ${categoryName}:`, error);
+    return [];
+  }
+};
+
+export const fetchTotalBooks = async (): Promise<number> => {
+  try {
+    const response = await axios.get<number>(`${BASE_URL}/books/total`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching total books:', error);
+    throw error;
+  }
+};
+
+export const getCategoryDistribution = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/books/category-distribution`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching category distribution:', error);
+    throw error;
+  }
+};
+
+
+export const loginAdmin = async (username: string, password: string) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/librarians/login`,
+      {
+        username,
+        password,
+      },
+      
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        throw new Error('Tài khoản hoặc mật khẩu không đúng');
+      }
+      throw new Error(error.response?.data?.message || 'Lỗi đăng nhập');
+    }
+    throw new Error('Đã xảy ra lỗi trong quá trình đăng nhập');
+  }
+};
+
