@@ -197,6 +197,35 @@ export const fetchTotalBooks = async (): Promise<number> => {
   }
 };
 
+interface CategoryDistribution {
+  [category: string]: number;
+}
+
+// Add new API function
+export const fetchCategoryDistribution = async (): Promise<CategoryDistribution> => {
+  try {
+    const response = await axios.get<CategoryDistribution>(`${BASE_URL}/books/category-distribution`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching category distribution:', error);
+    throw error;
+  }
+};
+
+
+export const login = async (username: string, password: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/librarians/login`, { username, password });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      throw new Error('Invalid username or password');
+    }
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
+
 export const getCategoryDistribution = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/books/category-distribution`);

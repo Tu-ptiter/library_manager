@@ -6,7 +6,6 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('isAdmin');
     navigate('/admin/login');
   };
