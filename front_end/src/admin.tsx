@@ -9,12 +9,14 @@ import BorrowManagement from './layout/pages/admin/borrows/borrow_management';
 import CategoryManagement from './layout/pages/admin/books/category_management';
 import Login from './layout/pages/admin/login/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import ForgotPassword from './layout/pages/admin/login/ForgotPassword';
 
 const AdminApp: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin/login/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin" element={<ProtectedRoute><AdminDashboardLayout /></ProtectedRoute>}>
         <Route index element={<Navigate to="/admin/overview" replace />} />
           <Route path="overview" element={<Overview />} />

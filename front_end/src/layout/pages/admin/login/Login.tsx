@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { login } from '@/api/api';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -25,6 +26,10 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleForgotPassword = () => {
+    navigate('/admin/login/forgot-password');
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -44,7 +49,7 @@ const Login: React.FC = () => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <Input
               id="password"
-              type="password"
+              type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -52,9 +57,15 @@ const Login: React.FC = () => {
             />
           </div>
           {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">Login</Button>
-          <div className="text-center mt-4">
-            <a href="#" className="text-blue-600 hover:underline">Forgot Password?</a>
+          <div className="flex justify-between items-center">
+            <Button type="submit">Login</Button>
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={handleForgotPassword}
+            >
+              Forgot Password
+            </Button>
           </div>
         </form>
       </div>

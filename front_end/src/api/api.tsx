@@ -47,7 +47,7 @@ export interface CategoryData {
   isSubcategory?: boolean;
 }
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'https://ffff-ajd8exg7evhnend0.canadacentral-01.azurewebsites.net/';
 
 // Books API
 export const fetchBooks = async (page: number = 1, size: number = 10): Promise<PaginatedResponse<Book>> => {
@@ -237,6 +237,28 @@ export const changePassword = async (username: string, oldPassword: string, newP
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data || 'Có lỗi xảy ra khi đổi mật khẩu');
+    }
+    throw error;
+  }
+};
+
+export const getOtp = async (username: string): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/librarians/send-otp`, { username });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Không thể gửi mã OTP');
+    }
+    throw error;
+  }
+};
+
+export const resetPassword = async (username: string, otp: string, newPassword: string): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/librarians/reset`, { username, otp, newPassword });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Không thể đổi mật khẩu');
     }
     throw error;
   }
