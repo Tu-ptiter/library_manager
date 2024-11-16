@@ -1,71 +1,80 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { login } from '@/api/api';
+import toast, { Toaster } from 'react-hot-toast';
+
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  useEffect(() => {
-    // Kiểm tra trạng thái xác thực khi component được render
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated === 'true') {
-      navigate('/admin/overview');
-    }
-  }, [navigate]);
-  const handleLogin = (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Thay thế bằng logic xác thực thực tế
-    if (email === 'admin@gmail.com' && password === '1') {
-      // Lưu trạng thái đăng nhập và chuyển hướng đến trang quản trị
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('isAdmin', 'true');
-      navigate('/admin/overview');
-    } else {
-      setError('Tài khoản hoặc mật khẩu không đúng');
+    try {
+      const data = await login(username, password);
+      if (data.librarianId) {
+        localStorage.setItem('adminData', JSON.stringify(data));
+        navigate('/admin/overview');
+      } else {
+        setErrorMessage('Invalid credentials');
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
+
+  const handleForgotPassword = () => {
+    navigate('/admin/login/forgot-password');
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <nav className="bg-gray-800 p-4">
-        <div className="container mx-auto">
-          <h1 className="text-white text-2xl">Admin Login</h1>
-        </div>
-      </nav>
-      <div className="flex flex-1 items-center justify-center">
-        <div className="w-full max-w-md bg-white p-8 rounded shadow">
-          <h2 className="text-2xl font-bold mb-6 text-center">Đăng nhập</h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label className="block text-gray-700">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border rounded"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Mật khẩu</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded"
-                required
-              />
-            </div>
-            <div className="mb-4 flex justify-between items-center">
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                Đăng nhập
-              </button>
-              <a href="/forgot-password" className="text-blue-500">Quên mật khẩu?</a>
-            </div>
-          </form>
-        </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">Admin Login</h1>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <Input
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="mt-1 block w-full"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <Input
+              id="password"
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-1 block w-full"
+            />
+          </div>
+          {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+          <div className="flex justify-between items-center">
+            <Button type="submit">Login</Button>
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={handleForgotPassword}
+            >
+              Forgot Password
+            </Button>
+          </div>
+        </form>
+
       </div>
     </div>
   );
 };
+
+
+
 export default Login;

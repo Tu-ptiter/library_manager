@@ -1,18 +1,47 @@
-// layout/pages/admin/overview/charts/CategoryDistribution.tsx
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { fetchCategoryDistribution } from '@/api/api';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
-const data = [
-  { name: 'Văn học', value: 400 },
-  { name: 'Kinh tế', value: 300 },
-  { name: 'Khoa học', value: 300 },
-  { name: 'Tiểu thuyết', value: 200 },
-  { name: 'Thiếu nhi', value: 150 },
+
+const COLORS = [
+  '#0088FE',  // Blue
+  '#00C49F',  // Green
+  '#FFBB28',  // Yellow
+  '#FF8042',  // Orange
+  '#8884d8',  // Purple
+  '#82ca9d',  // Light green
+  '#ff7c43',  // Coral
+  '#a05195',  // Magenta
+  '#665191',  // Deep purple
 ];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+const CategoryDistribution = () => {
+  const [data, setData] = useState<{ name: string; value: number; }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-const CategoryDistribution: React.FC = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const distribution = await fetchCategoryDistribution();
+        const formattedData = Object.entries(distribution).map(([name, value]) => ({
+          name,
+          value
+        }));
+        setData(formattedData);
+      } catch (err) {
+        setError('Failed to load category distribution');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   return (
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>

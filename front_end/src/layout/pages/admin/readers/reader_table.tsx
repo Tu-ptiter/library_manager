@@ -30,20 +30,17 @@ type SortOption = 'name-asc' | 'name-desc';
 
 interface ReaderTableProps {
   currentItems: Member[];
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
 }
 
 const ReaderTable: React.FC<ReaderTableProps> = ({
   currentItems = [], // Add default empty array
-  searchTerm = '', // Add default empty string
-  setSearchTerm
 }) => {
   const navigate = useNavigate();
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [deletingMember, setDeletingMember] = useState<Member | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 10;
 
   const handleEdit = (member: Member) => {
@@ -134,7 +131,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Tìm kiếm người đọc..."
+            placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
             className={cn(
               "pl-8",
               "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -163,6 +160,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
 
       <div className="rounded-md border border-gray-200">
         <Table>
+          {/* Rest of the table code remains the same */}
           <TableHeader>
             <TableRow className={cn("bg-slate-50 hover:bg-slate-50")}>
               <TableHead className="font-medium text-gray-700">ID</TableHead>
@@ -176,6 +174,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           </TableHeader>
           <TableBody>
             {paginatedItems.map((member) => (
+              // Table row content remains the same
               <TableRow 
                 key={member.memberId} 
                 className={cn("bg-gray-50/50 hover:bg-gray-100/80 border-gray-200")}

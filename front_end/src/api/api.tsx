@@ -47,7 +47,9 @@ export interface CategoryData {
   isSubcategory?: boolean;
 }
 
-const BASE_URL = 'http://10.147.19.246:8080';
+
+const BASE_URL = 'https://ffff-ajd8exg7evhnend0.canadacentral-01.azurewebsites.net/';
+
 
 // Books API
 export const fetchBooks = async (page: number = 1, size: number = 10): Promise<PaginatedResponse<Book>> => {
@@ -195,4 +197,73 @@ export const fetchTotalBooks = async (): Promise<number> => {
     console.error('Error fetching total books:', error);
     throw error;
   }
+
+};
+
+interface CategoryDistribution {
+  [category: string]: number;
+}
+
+// Add new API function
+export const fetchCategoryDistribution = async (): Promise<CategoryDistribution> => {
+  try {
+    const response = await axios.get<CategoryDistribution>(`${BASE_URL}/books/category-distribution`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching category distribution:', error);
+    throw error;
+  }
+};
+
+
+export const login = async (username: string, password: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/librarians/login`, { username, password });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      throw new Error('Invalid username or password');
+    }
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
+
+export const changePassword = async (username: string, oldPassword: string, newPassword: string) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/librarians/change`, {
+      username,
+      oldPassword,
+      newPassword
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi đổi mật khẩu');
+    }
+    throw error;
+  }
+};
+
+export const getOtp = async (username: string): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/librarians/send-otp`, { username });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Không thể gửi mã OTP');
+    }
+    throw error;
+  }
+};
+
+export const resetPassword = async (username: string, otp: string, newPassword: string): Promise<void> => {
+  try {
+    await axios.post(`${BASE_URL}/librarians/reset`, { username, otp, newPassword });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Không thể đổi mật khẩu');
+    }
+    throw error;
+  }
+
 };
