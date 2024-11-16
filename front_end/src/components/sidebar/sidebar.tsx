@@ -1,7 +1,6 @@
-// components/sidebar/sidebar.tsx
-import React, { useState } from 'react';
+// components/sidebar/Sidebar.tsx
+import React from 'react';
 import { FaBook, FaUser, FaHome, FaExchangeAlt } from 'react-icons/fa';
-import { Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Accordion,
@@ -9,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
 
 interface MenuItem {
   title: string;
@@ -23,9 +21,13 @@ interface SubMenuItem {
   path: string;
 }
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
 
   const menus: MenuItem[] = [
     {
@@ -125,40 +127,33 @@ const Sidebar: React.FC = () => {
   const Backdrop = () => (
     <div 
       className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
-        ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        ${isOpen ? 'opacity-100 z-40' : 'opacity-0 pointer-events-none -z-10'}`}
       onClick={() => setIsOpen(false)}
     />
   );
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-4 left-4 z-50 lg:hidden"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <Menu className="h-6 w-6" />
-      </Button>
-
-      <Backdrop />
-      
       <div 
-        className={`fixed left-0 top-0 w-64 h-screen bg-gray-800 text-white overflow-hidden
-          transition-transform duration-300 ease-in-out lg:translate-x-0
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:block`}
+        className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
+          ${isOpen ? 'opacity-100 z-30' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsOpen(false)}
+      />
+      
+      <aside 
+        className={`w-64 bg-gray-800 text-white overflow-y-auto transition-all duration-300 ease-in-out
+          fixed lg:sticky top-0 h-screen
+          ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="flex flex-col h-full">
-          <div className="p-4 text-2xl font-bold">Admin Dashboard</div>
-          <div className="mt-6">
+          <div className="p-4 overflow-y-auto">
             {directMenus.map(renderDirectLink)}
             <Accordion type="single" collapsible className="mt-2">
               {renderAccordionItems(dropdownMenus)}
             </Accordion>
           </div>
         </div>
-      </div>
+      </aside>
     </>
   );
 };

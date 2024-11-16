@@ -142,16 +142,17 @@ const CrudLayout: React.FC = () => {
 };
 
 const AdminDashboardLayout: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="pb-6">
-        <Navbar />
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-1">
-        <Sidebar />
-        <div className="flex-1 ml-64 p-4 lg:ml-64 md:ml-0 sm:ml-0 w-full">
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <main className={`flex-1 p-6 transition-all duration-300 ease-in-out
+          ${isOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
           <Outlet />
-        </div>
+        </main>
       </div>
     </div>
   );
