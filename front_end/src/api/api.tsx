@@ -48,7 +48,7 @@ export interface CategoryData {
 }
 
 
-const BASE_URL = 'https://ffff-ajd8exg7evhnend0.canadacentral-01.azurewebsites.net/';
+const BASE_URL = 'https://library-mana.azurewebsites.net';
 
 
 // Books API
