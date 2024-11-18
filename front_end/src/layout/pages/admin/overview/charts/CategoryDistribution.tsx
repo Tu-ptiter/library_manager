@@ -4,15 +4,15 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 
 
 const COLORS = [
-  '#0088FE',  // Blue
-  '#00C49F',  // Green
-  '#FFBB28',  // Yellow
-  '#FF8042',  // Orange
-  '#8884d8',  // Purple
-  '#82ca9d',  // Light green
-  '#ff7c43',  // Coral
-  '#a05195',  // Magenta
-  '#665191',  // Deep purple
+  '#FF5733',  // Red
+  '#33FF57',  // Green
+  '#3357FF',  // Blue
+  '#FF33A1',  // Pink
+  '#33FFF5',  // Cyan
+  '#FF8C33',  // Orange
+  '#8C33FF',  // Purple
+  '#33FF8C',  // Light green
+  '#FF3333',  // Bright red
 ];
 
 const CategoryDistribution = () => {

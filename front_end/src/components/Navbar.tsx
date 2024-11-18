@@ -1,5 +1,5 @@
 // components/Navbar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,17 +11,40 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
-  const [userName, setUserName] = React.useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const adminData = localStorage.getItem('adminData');
     if (adminData) {
       const parsedData = JSON.parse(adminData);
       setUserName(parsedData.name);
     }
   }, []);
+
+  // Update date time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDateTime = (date: Date) => {
+    const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const day = days[date.getDay()];
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const sec = String(date.getSeconds()).padStart(2, '0');
+
+    return `${day}, ${dd}/${mm}/${yyyy} ${hh}:${min}:${sec}`;
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('adminData');
@@ -43,6 +66,11 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
           Admin Dashboard
         </span>
       </div>
+
+      <div className="hidden md:block text-white text-sm font-medium">
+        {formatDateTime(currentDateTime)}
+      </div>
+      
       <div className="relative group flex items-center">
         {userName && (
           <span className="text-gray-200 mr-4 text-lg font-medium tracking-wide hover:text-blue-400 transition-colors duration-200 cursor-pointer">
