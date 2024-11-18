@@ -145,11 +145,11 @@ const AdminDashboardLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col ">
       <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="flex flex-1">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-        <main className={`flex-1 p-6 transition-all duration-300 ease-in-out
+        <main className={`flex-1 p-6 -mt-8 transition-all duration-300 ease-in-out
           ${isOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
           <Outlet />
         </main>
