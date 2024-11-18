@@ -19,8 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { fetchMainCategories, fetchSubCategories } from '@/api/api';
 
+// Keep existing interfaces
 export interface Book {
     idBook: string;
     title: string;
@@ -33,7 +35,7 @@ export interface Book {
     }>;
     quantity: number;
     availability: boolean;
-    img: string;
+    img: string;  
     nxb: string;
     id: string;
 }
@@ -51,6 +53,7 @@ interface EditBookModalProps {
 }
 
 const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, onSave }) => {
+  // Keep all existing state declarations and handlers the same
   const [formData, setFormData] = React.useState<Partial<Book>>({});
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -58,7 +61,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
   const [selectedSubCategory, setSelectedSubCategory] = React.useState<string>('');
   const [isLoadingCategories, setIsLoadingCategories] = React.useState(false);
 
-  // Fetch categories on mount and set initial selections
+  // Keep all useEffects and handlers the same
   React.useEffect(() => {
     const fetchCategories = async () => {
       setIsLoadingCategories(true);
@@ -75,7 +78,6 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
         );
         setCategories(categoriesWithSubs.filter(cat => cat.mainCategory && cat.subCategories.length > 0));
         
-        // Set initial selections if book exists
         if (book?.bigCategory?.[0]) {
           const mainCat = book.bigCategory[0].name;
           const subCat = book.bigCategory[0].smallCategory?.[0];
@@ -94,7 +96,6 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
     }
   }, [isOpen, book]);
 
-  // Set initial form data when book changes
   React.useEffect(() => {
     if (book) {
       setFormData({
@@ -106,6 +107,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
     }
   }, [book]);
 
+  // Keep all handlers
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -164,9 +166,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     if (!validateForm()) {
       return;
     }
@@ -185,156 +185,172 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[625px]">
-        <DialogHeader>
+      <DialogContent className="max-w-[625px] h-[85vh] p-0 flex flex-col">
+        <DialogHeader className="px-6 py-4 border-b flex-shrink-0">
           <DialogTitle>Chỉnh sửa sách</DialogTitle>
           <DialogDescription>
             Chỉnh sửa thông tin sách. Nhấn lưu để cập nhật thay đổi.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Tên sách</Label>
-              <Input
-                id="name"
-                value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              />
+
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full w-full">
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* All form fields go here - keeping the same structure */}
+                <div className="space-y-2">
+                  <Label htmlFor="name">Tên sách</Label>
+                  <Input
+                    id="name"
+                    value={formData.title || ''}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="idBook">Mã sách</Label>
+                  <Input
+                    id="idBook"
+                    value={formData.idBook || ''}
+                    onChange={(e) => setFormData({ ...formData, idBook: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="author">Tác giả</Label>
+                  <Input
+                    id="author"
+                    value={formData.author?.join(', ') || ''}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      author: e.target.value.split(',').map(a => a.trim()).filter(Boolean)
+                    })}
+                    placeholder="Ngăn cách bởi dấu phẩy"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="publicationYear">Năm xuất bản</Label>
+                  <Input
+                    id="publicationYear"
+                    type="number"
+                    min="0"
+                    value={formData.publicationYear || ''}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      publicationYear: parseInt(e.target.value) || 0
+                    })}
+                    className={errors.publicationYear ? 'border-red-500' : ''}
+                  />
+                  {errors.publicationYear && (
+                    <span className="text-sm text-red-500">{errors.publicationYear}</span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bigCategory">Danh mục lớn</Label>
+                  <Select 
+                    value={selectedMainCategory}
+                    onValueChange={handleMainCategoryChange}
+                  >
+                    <SelectTrigger id="bigCategory">
+                      <SelectValue placeholder="Chọn danh mục lớn" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem 
+                          key={category.mainCategory} 
+                          value={category.mainCategory}
+                        >
+                          {category.mainCategory}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.bigCategory && (
+                    <span className="text-sm text-red-500">{errors.bigCategory}</span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="smallCategory">Danh mục nhỏ</Label>
+                  <Select 
+                    value={selectedSubCategory}
+                    onValueChange={handleSubCategoryChange}
+                    disabled={!selectedMainCategory}
+                  >
+                    <SelectTrigger id="smallCategory">
+                      <SelectValue placeholder="Chọn danh mục nhỏ" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories
+                        .find(c => c.mainCategory === selectedMainCategory)
+                        ?.subCategories
+                        .map(sub => (
+                          <SelectItem key={sub} value={sub}>
+                            {sub}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.smallCategory && (
+                    <span className="text-sm text-red-500">{errors.smallCategory}</span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="quantity">Số lượng</Label>
+                  <Input
+                    id="quantity"
+                    type="number"
+                    min="0"
+                    value={formData.quantity !== undefined ? formData.quantity : ''}
+                    onChange={(e) => handleQuantityChange(e.target.value)}
+                    className={errors.quantity ? 'border-red-500' : ''}
+                  />
+                  {errors.quantity && (
+                    <span className="text-sm text-red-500">{errors.quantity}</span>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="nxb">Nhà xuất bản</Label>
+                  <Input
+                    id="nxb"
+                    value={formData.nxb || ''}
+                    onChange={(e) => setFormData({ ...formData, nxb: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="description">Mô tả</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description || ''}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2 col-span-2">
+                  <Label htmlFor="img">Link hình ảnh</Label>
+                  <Input
+                    id="img"
+                    value={formData.img || ''}
+                    onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="idBook">Mã sách</Label>
-              <Input
-                id="idBook"
-                value={formData.idBook || ''}
-                onChange={(e) => setFormData({ ...formData, idBook: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="author">Tác giả</Label>
-              <Input
-                id="author"
-                value={formData.author?.join(', ') || ''}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  author: e.target.value.split(',').map(a => a.trim()).filter(Boolean)
-                })}
-                placeholder="Ngăn cách bởi dấu phẩy"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="publicationYear">Năm xuất bản</Label>
-              <Input
-                id="publicationYear"
-                type="number"
-                min="0"
-                value={formData.publicationYear || ''}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  publicationYear: parseInt(e.target.value) || 0
-                })}
-                className={errors.publicationYear ? 'border-red-500' : ''}
-              />
-              {errors.publicationYear && (
-                <span className="text-sm text-red-500">{errors.publicationYear}</span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bigCategory">Danh mục lớn</Label>
-              <Select 
-                value={selectedMainCategory}
-                onValueChange={handleMainCategoryChange}
-              >
-                <SelectTrigger id="bigCategory">
-                  <SelectValue placeholder="Chọn danh mục lớn" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem 
-                      key={category.mainCategory} 
-                      value={category.mainCategory}
-                    >
-                      {category.mainCategory}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.bigCategory && (
-                <span className="text-sm text-red-500">{errors.bigCategory}</span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="smallCategory">Danh mục nhỏ</Label>
-              <Select 
-                value={selectedSubCategory}
-                onValueChange={handleSubCategoryChange}
-                disabled={!selectedMainCategory}
-              >
-                <SelectTrigger id="smallCategory">
-                  <SelectValue placeholder="Chọn danh mục nhỏ" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories
-                    .find(c => c.mainCategory === selectedMainCategory)
-                    ?.subCategories
-                    .map(sub => (
-                      <SelectItem key={sub} value={sub}>
-                        {sub}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              {errors.smallCategory && (
-                <span className="text-sm text-red-500">{errors.smallCategory}</span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="quantity">Số lượng</Label>
-              <Input
-                id="quantity"
-                type="number"
-                min="0"
-                value={formData.quantity !== undefined ? formData.quantity : ''}
-                onChange={(e) => handleQuantityChange(e.target.value)}
-                className={errors.quantity ? 'border-red-500' : ''}
-              />
-              {errors.quantity && (
-                <span className="text-sm text-red-500">{errors.quantity}</span>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nxb">Nhà xuất bản</Label>
-              <Input
-                id="nxb"
-                value={formData.nxb || ''}
-                onChange={(e) => setFormData({ ...formData, nxb: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2 col-span-2">
-              <Label htmlFor="description">Mô tả</Label>
-              <Textarea
-                id="description"
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2 col-span-2">
-              <Label htmlFor="img">Link hình ảnh</Label>
-              <Input
-                id="img"
-                value={formData.img || ''}
-                onChange={(e) => setFormData({ ...formData, img: e.target.value })}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Hủy
-            </Button>
-            <Button type="submit">Lưu thay đổi</Button>
-          </DialogFooter>
-        </form>
+          </ScrollArea>
+        </div>
+
+        <DialogFooter className="px-6 py-4 border-t flex-shrink-0">
+          <Button type="button" variant="outline" onClick={onClose}>
+            Hủy
+          </Button>
+          <Button onClick={handleSubmit}>Lưu thay đổi</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

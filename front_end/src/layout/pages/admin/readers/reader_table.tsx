@@ -163,7 +163,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           {/* Rest of the table code remains the same */}
           <TableHeader>
             <TableRow className={cn("bg-slate-50 hover:bg-slate-50")}>
-              <TableHead className="font-medium text-gray-700">ID</TableHead>
+              {/* <TableHead className="font-medium text-gray-700">ID</TableHead> */}
               <TableHead className="font-medium text-gray-700">Họ và tên</TableHead>
               <TableHead className="font-medium text-gray-700">Email</TableHead>
               <TableHead className="font-medium text-gray-700">Số điện thoại</TableHead>
@@ -179,7 +179,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
                 key={member.memberId} 
                 className={cn("bg-gray-50/50 hover:bg-gray-100/80 border-gray-200")}
               >
-                <TableCell className="font-medium">{member.memberId}</TableCell>
+                {/* <TableCell className="font-medium">{member.memberId}</TableCell> */}
                 <TableCell>{member.name}</TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>{member.phoneNumber}</TableCell>

@@ -196,7 +196,7 @@ const BookTable: React.FC<BookTableProps> = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableHead className="font-medium text-gray-700">ID</TableHead>
+              {/* <TableHead className="font-medium text-gray-700">ID</TableHead> */}
               <TableHead className="font-medium text-gray-700">Hình ảnh</TableHead>
               <TableHead className="font-medium text-gray-700">Tên</TableHead>
               <TableHead className="font-medium text-gray-700">Danh mục nhỏ</TableHead>
@@ -210,7 +210,7 @@ const BookTable: React.FC<BookTableProps> = ({
           <TableBody>
             {currentItems?.map((book) => (
               <TableRow key={`book-${book.bookId}`} className="bg-gray-50/50 hover:bg-gray-100/80 border-gray-200">
-                <TableCell className="font-medium">{book.bookId}</TableCell>
+                {/* <TableCell className="font-medium">{book.bookId}</TableCell> */}
                 <TableCell>
                   <img 
                     src={book.img} 
