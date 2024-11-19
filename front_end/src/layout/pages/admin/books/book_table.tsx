@@ -181,7 +181,7 @@ const BookTable: React.FC<BookTableProps> = ({
         </div>
         <Button 
           onClick={() => navigate('/admin/books/add')}
-          className="bg-green-500 hover:bg-blue-600 text-white"
+          className="bg-green-500 hover:bg-green-600 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
           Thêm sách mới
