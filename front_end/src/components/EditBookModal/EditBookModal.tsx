@@ -211,8 +211,9 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                   <Label htmlFor="idBook">Mã sách</Label>
                   <Input
                     id="idBook"
-                    value={formData.idBook || ''}
-                    onChange={(e) => setFormData({ ...formData, idBook: e.target.value })}
+                    value={formData.bookId || ''}
+                    readOnly
+                    className="bg-gray-100 cursor-not-allowed"
                   />
                 </div>
 

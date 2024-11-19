@@ -1,6 +1,6 @@
 // EditMembersModal.tsx
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,9 +111,21 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Chỉnh sửa thông tin người đọc</DialogTitle>
+          <DialogDescription>
+          Chỉnh sửa thông tin người đọc. Nhấn lưu để cập nhật thay đổi.
+        </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="memberId">Mã người đọc</Label>
+            <Input
+              id="memberId"
+              value={formData.memberId || ''}
+              readOnly
+              className="bg-gray-100 cursor-not-allowed"
+            />
+          </div>
             <div className="grid gap-2">
               <Label htmlFor="name">Họ và tên</Label>
               <Input
