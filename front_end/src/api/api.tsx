@@ -48,7 +48,7 @@ export interface CategoryData {
 }
 
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
+const BASE_URL = 'http://localhost:8080';
 
 
 // Books API
