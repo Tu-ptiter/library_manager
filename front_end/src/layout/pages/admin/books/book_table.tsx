@@ -187,7 +187,7 @@ const BookTable: React.FC<BookTableProps> = ({
           Thêm sách mới
         </Button>
       </div>
-      <div className="overflow-x-auto rounded-md border border-gray-200 relative">
+      <div className="overflow-x-auto border border-gray-200 relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
             <LoadingSpinner />
@@ -234,7 +234,7 @@ const BookTable: React.FC<BookTableProps> = ({
                 <TableCell>{book.quantity}</TableCell>
                 <TableCell>
                   <span className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                    "inline-flex items-center rounded-none px-2.5 py-0.5 text-xs font-medium",
                     book.availability ? 
                       "bg-green-100 text-green-800" : 
                       "bg-red-100 text-red-800"

@@ -19,7 +19,7 @@ interface StatsCardProps {
 }
 
 const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon, trend, iconColor }) => (
-  <Card className="p-6">
+  <Card className="p-6 rounded-none">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm font-medium text-gray-600">{title}</p>
@@ -111,19 +111,19 @@ const Overview: React.FC = () => {
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-6">
+        <Card className="p-6 rounded-none">
           <h3 className="text-lg font-semibold mb-4">Thống kê mượn sách</h3>
           <BorrowStats />
         </Card>
-        <Card className="p-6">
+        <Card className="p-6 rounded-none">
           <h3 className="text-lg font-semibold mb-4">Thống kê mượn sách</h3>
           <BookStats />
         </Card>
-        <Card className="p-6">
+        <Card className="p-6 rounded-none">
           <h3 className="text-lg font-semibold mb-4">Thống kê người dùng</h3>
           <UserStats />
         </Card>
-        <Card className="p-6">
+        <Card className="p-6 rounded-none">
           <h3 className="text-lg font-semibold mb-4">Phân bố danh mục</h3>
           <CategoryDistribution />
         </Card>

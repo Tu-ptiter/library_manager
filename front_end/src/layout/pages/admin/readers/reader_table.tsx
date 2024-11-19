@@ -155,7 +155,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
         </Button>
       </div>
 
-      <div className="rounded-md border border-gray-200">
+      <div className="border border-gray-200">
         <Table>
           <TableHeader>
             <TableRow className={cn("bg-slate-50 hover:bg-slate-50")}>

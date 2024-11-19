@@ -32,7 +32,7 @@ interface Category {
 }
 
 const bookSchema = z.object({
-  idBook: z.string().min(1, "Mã sách không được để trống"),
+/*   idBook: z.string().min(1, "Mã sách không được để trống"), */
   title: z.string().min(1, "Tên sách không được để trống"),
   description: z.string(),
   author: z.string().transform(str => str.split(',').map(s => s.trim())),
@@ -151,15 +151,15 @@ const AddBook: React.FC = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <Card>
+      <Card className="rounded-none">
         <CardHeader>
           <CardTitle>Thêm sách mới</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
               <div className="grid grid-cols-2 gap-6">
-                <FormField
+{/*                 <FormField
                   control={form.control}
                   name="idBook"
                   render={({ field }) => (
@@ -171,7 +171,7 @@ const AddBook: React.FC = () => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}

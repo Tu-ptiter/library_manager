@@ -58,7 +58,7 @@ const AddReader: React.FC = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <Card>
+      <Card className="rounded-none">
         <CardHeader>
           <CardTitle>Thêm người đọc mới</CardTitle>
         </CardHeader>
