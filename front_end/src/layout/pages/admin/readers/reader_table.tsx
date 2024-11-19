@@ -142,7 +142,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
-              className="pl-8 focus:ring-0 focus:ring-offset-0"
+              className="pl-8 focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
         </div>
