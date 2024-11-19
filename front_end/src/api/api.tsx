@@ -215,6 +215,25 @@ export const fetchCategoryDistribution = async (): Promise<CategoryDistribution>
   }
 };
 
+export const fetchBooksByCategory = async (mainCategory: string, subCategory: string): Promise<Book[]> => {
+  try {
+    const slug = (str: string) => str.toLowerCase()
+      .replace(/\s+/g, '-')           
+      .replace(/\//g, '-')            
+      .normalize("NFD")               
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, 'd');
+    
+    const response = await axios.get<Book[]>(
+      `${BASE_URL}/books/categories/${slug(mainCategory)}/${slug(subCategory)}/books`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching books by category:', error);
+    throw error;
+  }
+};
+
 
 export const login = async (username: string, password: string) => {
   try {
