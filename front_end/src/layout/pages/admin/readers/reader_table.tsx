@@ -33,7 +33,7 @@ interface ReaderTableProps {
 }
 
 const ReaderTable: React.FC<ReaderTableProps> = ({
-  currentItems = [], // Add default empty array
+  currentItems = [],
 }) => {
   const navigate = useNavigate();
   const [editingMember, setEditingMember] = useState<Member | null>(null);
@@ -42,6 +42,8 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const itemsPerPage = 10;
+
+  // Keep existing handlers...
 
   const handleEdit = (member: Member) => {
     setEditingMember(member);
@@ -81,7 +83,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     }
   };
 
-  // Filter items based on search term
+  // Keep existing filtering and sorting logic...
   const filteredItems = useMemo(() => {
     return currentItems.filter(member => {
       const searchLower = searchTerm.toLowerCase();
@@ -93,7 +95,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     });
   }, [currentItems, searchTerm]);
 
-  // Sort filtered items
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {
       if (!a.name || !b.name) return 0;
@@ -108,7 +109,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     });
   }, [filteredItems, sortOption]);
 
-  // Calculate pagination
   const totalPages = Math.ceil(sortedItems.length / itemsPerPage);
   const paginatedItems = sortedItems.slice(
     (currentPage - 1) * itemsPerPage,
@@ -124,46 +124,41 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả người đọc</h2>
-      <div className="mb-6 flex gap-4 items-center">
-        <div className="relative w-[400px]">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
-            className={cn(
-              "pl-8",
-              "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-            )}
-          />
-        </div>
-        <div className="w-[200px]">
+      <div className="mb-6 flex justify-between items-center">
+        <div className="relative flex gap-2 items-center w-[600px]">
           <Select value={sortOption} onValueChange={(value: SortOption) => setSortOption(value)}>
-            <SelectTrigger className="focus:ring-0 focus:ring-offset-0">
-              <SelectValue placeholder="Sắp xếp" />
+            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Sắp xếp theo" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="name-asc">Tên A-Z</SelectItem>
               <SelectItem value="name-desc">Tên Z-A</SelectItem>
             </SelectContent>
           </Select>
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Tìm kiếm theo tên, email hoặc số điện thoại..."
+              className="pl-8 focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            />
+          </div>
         </div>
         <Button 
           onClick={() => navigate('/admin/readers/add')}
-          className="bg-green-500 hover:bg-blue-600 text-white"
+          className="bg-green-500 hover:bg-green-600 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
           Thêm người đọc mới
         </Button>
       </div>
 
-      <div className="rounded-md border border-gray-200">
+      <div className="border border-gray-200">
         <Table>
-          {/* Rest of the table code remains the same */}
           <TableHeader>
             <TableRow className={cn("bg-slate-50 hover:bg-slate-50")}>
-              <TableHead className="font-medium text-gray-700">ID</TableHead>
               <TableHead className="font-medium text-gray-700">Họ và tên</TableHead>
               <TableHead className="font-medium text-gray-700">Email</TableHead>
               <TableHead className="font-medium text-gray-700">Số điện thoại</TableHead>
@@ -174,12 +169,10 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           </TableHeader>
           <TableBody>
             {paginatedItems.map((member) => (
-              // Table row content remains the same
               <TableRow 
                 key={member.memberId} 
                 className={cn("bg-gray-50/50 hover:bg-gray-100/80 border-gray-200")}
               >
-                <TableCell className="font-medium">{member.memberId}</TableCell>
                 <TableCell>{member.name}</TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>{member.phoneNumber}</TableCell>

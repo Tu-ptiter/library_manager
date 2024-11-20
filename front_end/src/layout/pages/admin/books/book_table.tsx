@@ -1,6 +1,6 @@
 // book_table.tsx
 import React from 'react';
-import { Plus, Search, Edit, Trash2, RotateCcw } from "lucide-react";
+import { Plus, Search, Edit, Trash2, RotateCcw, Filter } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import {
   Table,
@@ -21,7 +21,15 @@ import {
 } from "@/components/ui/select";
 import EditBookModal from '../../../../components/EditBookModal/EditBookModal';
 import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
-import { Book, updateBook, deleteBook, searchBooks } from '@/api/api';
+import { 
+  Book, 
+  updateBook, 
+  deleteBook, 
+  searchBooks, 
+  fetchMainCategories, 
+  fetchSubCategories,
+  fetchBooksByCategory 
+} from '@/api/api';
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
 import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
@@ -49,28 +57,81 @@ const BookTable: React.FC<BookTableProps> = ({
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [searchType, setSearchType] = React.useState<SearchType>('title');
+  const [categories, setCategories] = React.useState<{mainCategory: string, subCategories: string[]}[]>([]);
+  const [selectedMainCategory, setSelectedMainCategory] = React.useState<string>('');
+  const [selectedSubCategory, setSelectedSubCategory] = React.useState<string>('');
+  const [filteredBooks, setFilteredBooks] = React.useState<Book[] | null>(null);
+  const [filterCurrentPage, setFilterCurrentPage] = React.useState(1);
+  const itemsPerPage = 10;
+
+  const paginatedFilteredBooks = React.useMemo(() => {
+    if (!filteredBooks) return null;
+    const start = (filterCurrentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return filteredBooks.slice(start, end);
+  }, [filteredBooks, filterCurrentPage]);
+
+  const filteredTotalPages = React.useMemo(() => {
+    if (!filteredBooks) return 0;
+    return Math.ceil(filteredBooks.length / itemsPerPage);
+  }, [filteredBooks]);
 
   const handleResetSearch = () => {
     setSearchTerm('');
+    setFilteredBooks(null);
+    setFilterCurrentPage(1);
+    setSelectedMainCategory('');
+    setSelectedSubCategory('');
     onSearch(null);
   };
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
-      onSearch(null);
+      handleResetSearch();
       return;
     }
     setIsLoading(true);
     try {
-      const results = await searchBooks(searchTerm, searchType); // Pass both searchTerm and searchType
+      const results = await searchBooks(searchTerm, searchType);
+      setFilteredBooks(results);
+      setFilterCurrentPage(1);
       onSearch(results);
     } catch (error) {
       console.error('Error searching books:', error);
-      onSearch(null);
+      handleResetSearch();
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleFilter = async () => {
+    if (!selectedMainCategory || !selectedSubCategory) return;
+    
+    setIsLoading(true);
+    try {
+      const results = await fetchBooksByCategory(selectedMainCategory, selectedSubCategory);
+      setFilteredBooks(results);
+      setFilterCurrentPage(1);
+      onSearch(results);
+    } catch (error) {
+      console.error('Error filtering books:', error);
+      handleResetSearch();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePageChange = (page: number) => {
+    if (filteredBooks) {
+      setFilterCurrentPage(page);
+    } else {
+      onPageChange(page);
+    }
+  };
+
+  const displayItems = filteredBooks ? paginatedFilteredBooks : currentItems;
+  const displayCurrentPage = filteredBooks ? filterCurrentPage : currentPage;
+  const displayTotalPages = filteredBooks ? filteredTotalPages : totalPages;
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -85,6 +146,41 @@ const BookTable: React.FC<BookTableProps> = ({
   const handleSearchTypeChange = (value: SearchType) => {
     setSearchType(value);
   };
+
+  const handleMainCategoryChange = (value: string) => {
+    setSelectedMainCategory(value);
+    setSelectedSubCategory('');
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSelectedSubCategory(value);
+    
+    if (!selectedMainCategory) {
+      const category = categories.find(c => 
+        c.subCategories.includes(value)
+      );
+      if (category) {
+        setSelectedMainCategory(category.mainCategory);
+      }
+    }
+  };
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const mainCategories = await fetchMainCategories();
+        const categoriesWithSubs = await Promise.all(
+          mainCategories.map(async (category) => ({
+            mainCategory: category,
+            subCategories: await fetchSubCategories(category)
+          }))
+        );
+        setCategories(categoriesWithSubs);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleEdit = (book: Book) => {
     setEditingBook(book);
@@ -128,7 +224,7 @@ const BookTable: React.FC<BookTableProps> = ({
     }
   };
 
-  if (!currentItems?.length && !isLoading) {
+  if (!displayItems?.length && !isLoading) {
     return (
       <div>
         <h2 className="text-2xl font-bold mb-4">Tất cả sách</h2>
@@ -151,9 +247,9 @@ const BookTable: React.FC<BookTableProps> = ({
     <div>
       <h2 className="text-2xl font-bold mb-4">Tất cả sách</h2>
       <div className="mb-6 flex justify-between items-center">
-        <div className="relative flex gap-2 items-center w-[600px]">
+        <div className="relative flex gap-2 items-center w-[900px]">
           <Select value={searchType} onValueChange={handleSearchTypeChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Tìm kiếm theo" />
             </SelectTrigger>
             <SelectContent>
@@ -169,25 +265,79 @@ const BookTable: React.FC<BookTableProps> = ({
               onChange={handleSearchChange}
               onKeyPress={handleKeyPress}
               placeholder={searchType === 'title' ? "Tìm kiếm theo tên sách..." : "Tìm kiếm theo tác giả..."}
-              className="pl-8 focus:ring-0 focus:ring-offset-0"
+              className="pl-8 focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
           <Button 
             onClick={handleSearch}
             variant="outline"
+            className="font-normal border-blue-400 text-blue-400 hover:bg-blue-50 border"
           >
             Tìm kiếm
           </Button>
+  
+          <Select value={selectedMainCategory} onValueChange={handleMainCategoryChange}>
+            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Danh mục lớn" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.mainCategory} value={category.mainCategory}>
+                  {category.mainCategory}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+  
+          <Select 
+            value={selectedSubCategory} 
+            onValueChange={handleSubCategoryChange}
+            /* disabled={!selectedMainCategory} */
+          >
+            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
+              <SelectValue placeholder="Danh mục nhỏ" />
+            </SelectTrigger>
+            <SelectContent>
+            {selectedMainCategory
+              ? categories
+                .find(c => c.mainCategory === selectedMainCategory)
+                ?.subCategories.map(sub => (
+                  <SelectItem key={sub} value={sub}>
+                    {sub}
+              </SelectItem>
+            ))
+            : categories.flatMap(category =>
+              category.subCategories.map(sub => (
+          <SelectItem key={sub} value={sub}>
+            {sub}
+          </SelectItem>
+        ))
+      )}
+            </SelectContent>
+          </Select>
+          
+          <Button
+            onClick={handleFilter}
+            variant="outline"
+            className="font-normal border-blue-400 text-blue-400 hover:bg-blue-50 border"
+            disabled={!selectedSubCategory}
+          >
+            <Filter className="h-4 w-4 mr-2" />
+            Lọc
+          </Button>
         </div>
+  
+  
         <Button 
           onClick={() => navigate('/admin/books/add')}
-          className="bg-green-500 hover:bg-blue-600 text-white"
+          className="bg-green-500 hover:bg-green-600 text-white"
         >
           <Plus className="h-4 w-4 mr-2" />
           Thêm sách mới
         </Button>
       </div>
-      <div className="overflow-x-auto rounded-md border border-gray-200 relative">
+  
+      <div className="overflow-x-auto border border-gray-200 relative">
         {isLoading && (
           <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
             <LoadingSpinner />
@@ -196,7 +346,6 @@ const BookTable: React.FC<BookTableProps> = ({
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableHead className="font-medium text-gray-700">ID</TableHead>
               <TableHead className="font-medium text-gray-700">Hình ảnh</TableHead>
               <TableHead className="font-medium text-gray-700">Tên</TableHead>
               <TableHead className="font-medium text-gray-700">Danh mục nhỏ</TableHead>
@@ -208,9 +357,8 @@ const BookTable: React.FC<BookTableProps> = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems?.map((book) => (
+            {displayItems?.map((book) => (
               <TableRow key={`book-${book.bookId}`} className="bg-gray-50/50 hover:bg-gray-100/80 border-gray-200">
-                <TableCell className="font-medium">{book.bookId}</TableCell>
                 <TableCell>
                   <img 
                     src={book.img} 
@@ -234,7 +382,7 @@ const BookTable: React.FC<BookTableProps> = ({
                 <TableCell>{book.quantity}</TableCell>
                 <TableCell>
                   <span className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                    "inline-flex items-center rounded-none px-2.5 py-0.5 text-xs font-medium",
                     book.availability ? 
                       "bg-green-100 text-green-800" : 
                       "bg-red-100 text-red-800"
@@ -265,13 +413,15 @@ const BookTable: React.FC<BookTableProps> = ({
           </TableBody>
         </Table>
       </div>
+  
       <div className="mt-4">
         <CustomPagination 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={onPageChange}
+          currentPage={displayCurrentPage}
+          totalPages={displayTotalPages}
+          onPageChange={handlePageChange}
         />
       </div>
+  
       <EditBookModal
         book={editingBook}
         isOpen={!!editingBook}

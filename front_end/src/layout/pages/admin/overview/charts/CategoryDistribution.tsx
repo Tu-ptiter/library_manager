@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react';
 import { fetchCategoryDistribution } from '@/api/api';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
-
 const COLORS = [
-  '#0088FE',  // Blue
-  '#00C49F',  // Green
-  '#FFBB28',  // Yellow
-  '#FF8042',  // Orange
-  '#8884d8',  // Purple
-  '#82ca9d',  // Light green
-  '#ff7c43',  // Coral
-  '#a05195',  // Magenta
-  '#665191',  // Deep purple
+  '#FF5733',  // Red
+  '#33FF57',  // Lime Green
+  '#3357FF',  // Blue
+  '#FFD700',  // Gold
+  '#800080',  // Purple
+  '#FF69B4',  // Hot Pink
+  '#008000',  // Green
+  '#FFA500',  // Orange
+  '#000000',  // Black
+  '#00FFFF',  // Cyan
+  '#FF00FF',  // Magenta
 ];
 
 const CategoryDistribution = () => {
@@ -28,6 +29,7 @@ const CategoryDistribution = () => {
           name,
           value
         }));
+        console.log('Formatted Data:', formattedData); // Log dữ liệu để kiểm tra
         setData(formattedData);
       } catch (err) {
         setError('Failed to load category distribution');
