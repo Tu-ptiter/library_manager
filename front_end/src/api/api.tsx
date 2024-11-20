@@ -48,7 +48,7 @@ export interface CategoryData {
 }
 
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
+const BASE_URL = 'http://10.147.19.246:8080';
 
 
 // Books API
@@ -286,3 +286,5 @@ export const resetPassword = async (username: string, otp: string, newPassword: 
   }
 
 };
+
+
