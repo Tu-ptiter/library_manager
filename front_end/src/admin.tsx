@@ -6,6 +6,7 @@ import Overview from './layout/pages/admin/overview/overview';
 import AddBook from './layout/pages/admin/books/add_book';
 import AddReader from './layout/pages/admin/readers/add_reader';
 import BorrowManagement from './layout/pages/admin/borrows/borrow_management';
+import BorrowHistory from './layout/pages/admin/borrows/borrow_history';
 import CategoryManagement from './layout/pages/admin/books/category_management';
 
 import Login from './layout/pages/admin/login/Login';
@@ -29,7 +30,7 @@ const AdminApp: React.FC = () => {
           <Route path="books/add" element={<AddBook />} />
           <Route path="books/categories" element={<CategoryManagement />} />
           <Route path="readers/add" element={<AddReader />} />
-          <Route path="borrows/manage" element={<BorrowManagement />} />
+          <Route path="borrows/history" element={<BorrowHistory />} />
         </Route>
       </Routes>
     </Router>

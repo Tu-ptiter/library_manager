@@ -32,7 +32,6 @@ interface Category {
 }
 
 const bookSchema = z.object({
-/*   idBook: z.string().min(1, "Mã sách không được để trống"), */
   title: z.string().min(1, "Tên sách không được để trống"),
   description: z.string(),
   author: z.string().transform(str => str.split(',').map(s => s.trim())),
@@ -63,11 +62,14 @@ const AddBook: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedMainCategory, setSelectedMainCategory] = React.useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = React.useState<string>('');
+  const [isCustomMainCategory, setIsCustomMainCategory] = React.useState(false);
+  const [isCustomSubCategory, setIsCustomSubCategory] = React.useState(false);
+  const [customMainCategory, setCustomMainCategory] = React.useState('');
+  const [customSubCategory, setCustomSubCategory] = React.useState('');
 
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
-      idBook: '',
       title: '',
       description: '',
       author: '',
@@ -109,32 +111,56 @@ const AddBook: React.FC = () => {
   }, []);
 
   const handleMainCategoryChange = (value: string) => {
-    setSelectedMainCategory(value);
-    form.setValue('bigCategory', value);
-    
-    const category = categories.find(c => c.mainCategory === value);
-    if (category && !category.subCategories.includes(selectedSubCategory)) {
+    if (value === 'custom') {
+      setIsCustomMainCategory(true);
+      setIsCustomSubCategory(true);
+      setSelectedMainCategory('');
       setSelectedSubCategory('');
-      form.setValue('smallCategory', '');
+    } else {
+      setIsCustomMainCategory(false);
+      setIsCustomSubCategory(false);
+      setSelectedMainCategory(value);
+      form.setValue('bigCategory', value);
+      
+      const category = categories.find(c => c.mainCategory === value);
+      if (category && !category.subCategories.includes(selectedSubCategory)) {
+        setSelectedSubCategory('');
+        form.setValue('smallCategory', '');
+      }
     }
   };
 
   const handleSubCategoryChange = (value: string) => {
-    setSelectedSubCategory(value);
-    form.setValue('smallCategory', value);
-    
-    if (!selectedMainCategory) {
-      const category = categories.find(c => c.subCategories.includes(value));
-      if (category) {
-        setSelectedMainCategory(category.mainCategory);
-        form.setValue('bigCategory', category.mainCategory);
+    if (value === 'custom') {
+      setIsCustomSubCategory(true);
+      setSelectedSubCategory('');
+    } else {
+      setIsCustomSubCategory(false);
+      setSelectedSubCategory(value);
+      form.setValue('smallCategory', value);
+      
+      if (!selectedMainCategory) {
+        const category = categories.find(c => c.subCategories.includes(value));
+        if (category) {
+          setSelectedMainCategory(category.mainCategory);
+          form.setValue('bigCategory', category.mainCategory);
+        }
       }
     }
   };
 
   const onSubmit = async (data: BookFormValues) => {
+    // Create the correct data structure for bigCategory
+    const finalData = {
+      ...data,
+      bigCategory: [{
+        name: isCustomMainCategory ? customMainCategory : data.bigCategory,
+        smallCategory: [isCustomSubCategory ? customSubCategory : data.smallCategory]
+      }]
+    };
+  
     try {
-      await createBook(data);
+      await createBook(finalData);
       navigate('/admin/books/list');
     } catch (error) {
       console.error('Error creating book:', error);
@@ -159,19 +185,6 @@ const AddBook: React.FC = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
               <div className="grid grid-cols-2 gap-6">
-{/*                 <FormField
-                  control={form.control}
-                  name="idBook"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Mã sách</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập mã sách..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
 
                 <FormField
                   control={form.control}
@@ -221,20 +234,32 @@ const AddBook: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Danh mục lớn</FormLabel>
-                      <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Chọn danh mục lớn" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category.mainCategory} value={category.mainCategory}>
-                              {category.mainCategory}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        {isCustomMainCategory ? (
+                          <Input
+                            placeholder="Nhập tên danh mục lớn..."
+                            value={customMainCategory}
+                            onChange={(e) => {
+                              setCustomMainCategory(e.target.value);
+                              form.setValue('bigCategory', e.target.value);
+                            }}
+                          />
+                        ) : (
+                          <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Chọn danh mục lớn" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {categories.map((category) => (
+                                <SelectItem key={category.mainCategory} value={category.mainCategory}>
+                                  {category.mainCategory}
+                                </SelectItem>
+                              ))}
+                              <SelectItem value="custom">+ Tùy chọn</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -246,30 +271,42 @@ const AddBook: React.FC = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Danh mục nhỏ</FormLabel>
-                      <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Chọn danh mục nhỏ" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {selectedMainCategory
-                            ? categories
-                                .find(c => c.mainCategory === selectedMainCategory)
-                                ?.subCategories.map(sub => (
-                                  <SelectItem key={sub} value={sub}>
-                                    {sub}
-                                  </SelectItem>
-                                ))
-                            : categories.flatMap(category =>
-                                category.subCategories.map(sub => (
-                                  <SelectItem key={sub} value={sub}>
-                                    {sub}
-                                  </SelectItem>
-                                ))
-                              )}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        {isCustomSubCategory ? (
+                          <Input
+                            placeholder="Nhập tên danh mục nhỏ..."
+                            value={customSubCategory}
+                            onChange={(e) => {
+                              setCustomSubCategory(e.target.value);
+                              form.setValue('smallCategory', e.target.value);
+                            }}
+                          />
+                        ) : (
+                          <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Chọn danh mục nhỏ" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {selectedMainCategory
+                                ? categories
+                                    .find(c => c.mainCategory === selectedMainCategory)
+                                    ?.subCategories.map(sub => (
+                                      <SelectItem key={sub} value={sub}>
+                                        {sub}
+                                      </SelectItem>
+                                    ))
+                                : categories.flatMap(category =>
+                                    category.subCategories.map(sub => (
+                                      <SelectItem key={sub} value={sub}>
+                                        {sub}
+                                      </SelectItem>
+                                    ))
+                                  )}
+                              <SelectItem value="custom">+ Tùy chọn</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
