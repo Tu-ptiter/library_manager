@@ -47,9 +47,22 @@ export interface CategoryData {
   isSubcategory?: boolean;
 }
 
+export interface Transaction {
+  memberName: string;
+  description: string;
+  transactionDate: string;
+  memberId: string;
+  bookId: string;
+  bookTitle: string;
+  status: "Đã trả" | "Đang mượn"; 
+}
 
+interface TransactionRequest {
+  name: string;
+  title: string;
+}
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
+const BASE_URL = 'http://10.147.19.246:8080';
 
 
 
@@ -114,6 +127,86 @@ export const searchBooks = async (query: string, searchType: 'title' | 'author')
     throw error;
   }
 };
+
+export const fetchBorrowedTransactions = async (): Promise<Transaction[]> => {
+  try {
+    const response = await axios.get<Transaction[]>(`${BASE_URL}/transactions/borrowed`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching borrowed transactions:', error);
+    throw error;
+  }
+};
+
+// Fetch returned transactions 
+export const fetchReturnedTransactions = async (): Promise<Transaction[]> => {
+  try {
+    const response = await axios.get<Transaction[]>(`${BASE_URL}/transactions/returned`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching returned transactions:', error);
+    throw error;
+  }
+};
+
+// Fetch renewed transactions
+export const fetchRenewedTransactions = async (): Promise<Transaction[]> => {
+  try {
+    const response = await axios.get<Transaction[]>(`${BASE_URL}/transactions/renewed`); 
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching renewed transactions:', error);
+    throw error;
+  }
+};
+
+// Add new API functions
+export const borrowBook = async (data: TransactionRequest): Promise<Transaction> => {
+  try {
+    const response = await axios.post<Transaction>(
+      `${BASE_URL}/transactions/borrow`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi mượn sách');
+    }
+    throw error;
+  }
+};
+
+//post
+export const returnBook = async (data: TransactionRequest): Promise<Transaction> => {
+  try {
+    const response = await axios.post<Transaction>(
+      `${BASE_URL}/transactions/return`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi trả sách');
+    }
+    throw error;
+  }
+};
+
+export const renewBook = async (data: TransactionRequest): Promise<Transaction> => {
+  try {
+    const response = await axios.post<Transaction>(
+      `${BASE_URL}/transactions/renew`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi gia hạn sách');
+    }
+    throw error;
+  }
+};
+
 // Members API
 export const fetchMembers = async (): Promise<Member[]> => {
   try {
@@ -163,7 +256,17 @@ export const deleteMember = async (memberId: string): Promise<void> => {
     throw error;
   }
 };
-
+export const searchMembers = async (name: string): Promise<Member[]> => {
+  try {
+    const response = await axios.get<Member[]>(`${BASE_URL}/members/search`, {
+      params: { name: encodeURIComponent(name) }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error searching members:', error);
+    throw error;
+  }
+};
 export const fetchMainCategories = async (): Promise<string[]> => {
   try {
     const response = await axios.get<string[]>(`${BASE_URL}/books/categories`);
