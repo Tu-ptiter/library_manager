@@ -132,9 +132,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       />
       
       <aside 
-        className={`w-64 bg-gray-800 text-white overflow-y-auto transition-all duration-300 ease-in-out
-          fixed lg:sticky top-0 h-screen
-          ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
+        className={`w-64 bg-gray-800 text-white transition-all duration-300 ease-in-out h-full
+    ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="flex flex-col h-full">
           <div className="p-4 flex-1 overflow-y-auto">

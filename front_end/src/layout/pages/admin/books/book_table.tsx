@@ -56,7 +56,6 @@ const BookTable: React.FC<BookTableProps> = ({
   const [deletingBook, setDeletingBook] = React.useState<Book | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [searchType, setSearchType] = React.useState<SearchType>('title');
   const [categories, setCategories] = React.useState<{mainCategory: string, subCategories: string[]}[]>([]);
   const [selectedMainCategory, setSelectedMainCategory] = React.useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = React.useState<string>('');
@@ -92,10 +91,19 @@ const BookTable: React.FC<BookTableProps> = ({
     }
     setIsLoading(true);
     try {
-      const results = await searchBooks(searchTerm, searchType);
-      setFilteredBooks(results);
+      // Search both title and author simultaneously
+      const titleResults = await searchBooks(searchTerm, 'title');
+      const authorResults = await searchBooks(searchTerm, 'author');
+      
+      // Combine and deduplicate results based on bookId
+      const combined = [...titleResults, ...authorResults];
+      const uniqueResults = Array.from(
+        new Map(combined.map(book => [book.bookId, book])).values()
+      );
+      
+      setFilteredBooks(uniqueResults);
       setFilterCurrentPage(1);
-      onSearch(results);
+      onSearch(uniqueResults);
     } catch (error) {
       console.error('Error searching books:', error);
       handleResetSearch();
@@ -103,7 +111,6 @@ const BookTable: React.FC<BookTableProps> = ({
       setIsLoading(false);
     }
   };
-
   const handleFilter = async () => {
     if (!selectedMainCategory || !selectedSubCategory) return;
     
@@ -243,131 +250,163 @@ const BookTable: React.FC<BookTableProps> = ({
     );
   }
 
-  return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Tất cả sách</h2>
-      <div className="mb-6 flex justify-between items-center">
-        <div className="relative flex gap-2 items-center w-[900px]">
-          <Select value={searchType} onValueChange={handleSearchTypeChange}>
-            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-              <SelectValue placeholder="Tìm kiếm theo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="title">Tên sách</SelectItem>
-              <SelectItem value="author">Tác giả</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="relative flex-1">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearchChange}
-              onKeyPress={handleKeyPress}
-              placeholder={searchType === 'title' ? "Tìm kiếm theo tên sách..." : "Tìm kiếm theo tác giả..."}
-              className="pl-8 focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            />
-          </div>
+return (
+  <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-white rounded-lg shadow-sm border border-gray-100">
+    {/* Header Section - Same as before */}
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Tất cả sách</h2>
+      <Button 
+        onClick={() => navigate('/admin/books/add')}
+        className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white transition-all duration-200 shadow-sm hover:shadow-md"
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        Thêm sách mới
+      </Button>
+    </div>
+
+    {/* Search and Filter Section - Enhanced responsiveness */}
+    <div className="space-y-4">
+      <div className="flex flex-col gap-3">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            placeholder="Tìm kiếm theo tên sách hoặc tác giả..."
+            className="pl-10 h-11 text-base border-gray-200 hover:border-gray-300 focus:border-blue-500 transition-colors w-full"
+          />
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button 
             onClick={handleSearch}
             variant="outline"
-            className="font-normal border-blue-400 text-blue-400 hover:bg-blue-50 border"
+            className="w-full sm:w-auto h-11 px-6 font-medium border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
           >
             Tìm kiếm
           </Button>
-  
-          <Select value={selectedMainCategory} onValueChange={handleMainCategoryChange}>
-            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-              <SelectValue placeholder="Danh mục lớn" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.mainCategory} value={category.mainCategory}>
-                  {category.mainCategory}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-  
-          <Select 
-            value={selectedSubCategory} 
-            onValueChange={handleSubCategoryChange}
-            /* disabled={!selectedMainCategory} */
-          >
-            <SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-              <SelectValue placeholder="Danh mục nhỏ" />
-            </SelectTrigger>
-            <SelectContent>
-            {selectedMainCategory
-              ? categories
-                .find(c => c.mainCategory === selectedMainCategory)
-                ?.subCategories.map(sub => (
-                  <SelectItem key={sub} value={sub}>
-                    {sub}
-              </SelectItem>
-            ))
-            : categories.flatMap(category =>
-              category.subCategories.map(sub => (
-          <SelectItem key={sub} value={sub}>
-            {sub}
-          </SelectItem>
-        ))
-      )}
-            </SelectContent>
-          </Select>
-          
           <Button
-            onClick={handleFilter}
+            onClick={handleResetSearch}
             variant="outline"
-            className="font-normal border-blue-400 text-blue-400 hover:bg-blue-50 border"
-            disabled={!selectedSubCategory}
+            className="w-full sm:w-auto h-11 px-6 font-medium border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
           >
-            <Filter className="h-4 w-4 mr-2" />
-            Lọc
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Đặt lại
           </Button>
         </div>
-  
-  
-        <Button 
-          onClick={() => navigate('/admin/books/add')}
-          className="bg-green-500 hover:bg-green-600 text-white"
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <Select value={selectedMainCategory} onValueChange={handleMainCategoryChange}>
+          <SelectTrigger className="h-11 w-full border-gray-200 hover:border-gray-300">
+            <SelectValue placeholder="Danh mục lớn" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category.mainCategory} value={category.mainCategory}>
+                {category.mainCategory}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedSubCategory} onValueChange={handleSubCategoryChange}>
+          <SelectTrigger className="h-11 w-full border-gray-200 hover:border-gray-300">
+            <SelectValue placeholder="Danh mục nhỏ" />
+          </SelectTrigger>
+          <SelectContent>
+            {selectedMainCategory
+              ? categories
+                  .find(c => c.mainCategory === selectedMainCategory)
+                  ?.subCategories.map(sub => (
+                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                  ))
+              : categories.flatMap(category =>
+                  category.subCategories.map(sub => (
+                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                  ))
+                )}
+          </SelectContent>
+        </Select>
+
+        <Button
+          onClick={handleFilter}
+          variant="outline"
+          className="w-full sm:w-auto h-11 px-6 font-medium border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          disabled={!selectedSubCategory}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Thêm sách mới
+          <Filter className="h-4 w-4 mr-2" />
+          Lọc
         </Button>
       </div>
-  
-      <div className="overflow-x-auto border border-gray-200 relative">
+    </div>
+
+    {/* Enhanced Table Section */}
+    <div className="-mx-4 sm:mx-0 rounded-none sm:rounded-lg border border-gray-200 overflow-hidden">
+      <div className="relative overflow-x-auto min-h-[400px]">
         {isLoading && (
-          <div className="absolute inset-0 bg-white/50 z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center">
             <LoadingSpinner />
           </div>
         )}
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50 hover:bg-slate-50">
-              <TableHead className="font-medium text-gray-700">Hình ảnh</TableHead>
-              <TableHead className="font-medium text-gray-700">Tên</TableHead>
-              <TableHead className="font-medium text-gray-700">Danh mục nhỏ</TableHead>
-              <TableHead className="font-medium text-gray-700">Tác giả</TableHead>
-              <TableHead className="font-medium text-gray-700">Năm xuất bản</TableHead>
-              <TableHead className="font-medium text-gray-700">Số lượng</TableHead>
-              <TableHead className="font-medium text-gray-700">Trạng thái</TableHead>
-              <TableHead className="font-medium text-right text-gray-700">Hành động</TableHead>
+            <TableRow className="bg-gray-50/80">
+              <TableHead className="font-semibold text-gray-600 w-20 lg:w-28">Hình ảnh</TableHead>
+              <TableHead className="font-semibold text-gray-600">Tên sách</TableHead>
+              <TableHead className="font-semibold text-gray-600 hidden md:table-cell">Tác giả</TableHead>
+              <TableHead className="font-semibold text-gray-600 hidden lg:table-cell">Danh mục</TableHead>
+              <TableHead className="font-semibold text-gray-600 hidden xl:table-cell">Năm XB</TableHead>
+              <TableHead className="font-semibold text-gray-600 text-center hidden sm:table-cell">SL</TableHead>
+              <TableHead className="font-semibold text-gray-600 hidden sm:table-cell">Trạng thái</TableHead>
+              <TableHead className="font-semibold text-gray-600 text-right pr-4">Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {displayItems?.map((book) => (
-              <TableRow key={`book-${book.bookId}`} className="bg-gray-50/50 hover:bg-gray-100/80 border-gray-200">
-                <TableCell>
+              <TableRow 
+                key={`book-${book.bookId}`} 
+                className="transition-colors hover:bg-gray-50/80"
+              >
+                <TableCell className="w-20 lg:w-28">
                   <img 
                     src={book.img} 
                     alt={book.title} 
-                    className="w-16 h-16 object-cover rounded-sm"
+                    className="w-16 h-20 object-cover rounded-sm shadow-sm hover:shadow-md transition-shadow"
                   />
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate">{book.title}</TableCell>
-                <TableCell className="max-w-[200px] truncate">
+                <TableCell>
+                  <div className="space-y-1">
+                    <h3 className="font-medium text-gray-900">{book.title}</h3>
+                    {/* Show author on small screens */}
+                    <p className="text-sm text-gray-500 md:hidden">
+                      {book.author?.join(', ') || 'N/A'}
+                    </p>
+                    {/* Show category on small screens */}
+                    <p className="text-sm text-gray-500 lg:hidden">
+                      {book.bigCategory?.[0]?.smallCategory?.join(', ')}
+                    </p>
+                    {/* Show quantity and status on mobile */}
+                    <div className="flex flex-col sm:hidden space-y-1 mt-2">
+                      <div className="text-sm text-gray-500">
+                        SL: {book.quantity} | {book.publicationYear}
+                      </div>
+                      <span className={cn(
+                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium w-fit",
+                        book.availability ? 
+                          "bg-green-50 text-green-700 ring-1 ring-green-600/20" : 
+                          "bg-red-50 text-red-700 ring-1 ring-red-600/20"
+                      )}>
+                        {book.availability ? 'Còn sách' : 'Hết sách'}
+                      </span>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {book.author?.join(', ') || 'N/A'}
+                </TableCell>
+                <TableCell className="hidden lg:table-cell">
                   {book.bigCategory?.map((cat, index) => (
                     <span key={`${book.bookId}-${cat.name}-${index}`}>
                       {cat.smallCategory?.join(', ')}
@@ -375,37 +414,38 @@ const BookTable: React.FC<BookTableProps> = ({
                     </span>
                   ))}
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate">
-                  {book.author?.join(', ') || 'N/A'}
+                <TableCell className="hidden xl:table-cell">
+                  {book.publicationYear}
                 </TableCell>
-                <TableCell>{book.publicationYear}</TableCell>
-                <TableCell>{book.quantity}</TableCell>
-                <TableCell>
+                <TableCell className="text-center hidden sm:table-cell">
+                  {book.quantity}
+                </TableCell>
+                <TableCell className="hidden sm:table-cell">
                   <span className={cn(
-                    "inline-flex items-center rounded-none px-2.5 py-0.5 text-xs font-medium",
+                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
                     book.availability ? 
-                      "bg-green-100 text-green-800" : 
-                      "bg-red-100 text-red-800"
+                      "bg-green-50 text-green-700 ring-1 ring-green-600/20" : 
+                      "bg-red-50 text-red-700 ring-1 ring-red-600/20"
                   )}>
                     {book.availability ? 'Còn sách' : 'Hết sách'}
                   </span>
                 </TableCell>
-                <TableCell className="text-right space-x-2">
+                <TableCell className="text-right space-x-1 pr-4">
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="hover:bg-blue-50 hover:text-blue-600"
+                    className="border-gray-200 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     onClick={() => handleEdit(book)}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-3.5 w-3.5" />
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="hover:bg-red-50 hover:text-red-600"
+                    className="border-gray-200 hover:border-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                     onClick={() => handleDelete(book)}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -413,29 +453,32 @@ const BookTable: React.FC<BookTableProps> = ({
           </TableBody>
         </Table>
       </div>
-  
-      <div className="mt-4">
-        <CustomPagination 
-          currentPage={displayCurrentPage}
-          totalPages={displayTotalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
-  
-      <EditBookModal
-        book={editingBook}
-        isOpen={!!editingBook}
-        onClose={() => setEditingBook(null)}
-        onSave={handleSaveEdit}
-      />
-      <DeleteConfirmDialog
-        isOpen={!!deletingBook}
-        onClose={() => setDeletingBook(null)}
-        onConfirm={handleConfirmDelete}
-        bookName={deletingBook?.title || ''}
+    </div>
+
+    {/* Pagination */}
+    <div className="mt-4 sm:mt-6 flex justify-center">
+      <CustomPagination 
+        currentPage={displayCurrentPage}
+        totalPages={displayTotalPages}
+        onPageChange={handlePageChange}
       />
     </div>
-  );
+
+    {/* Modals - Same as before */}
+    <EditBookModal
+      book={editingBook}
+      isOpen={!!editingBook}
+      onClose={() => setEditingBook(null)}
+      onSave={handleSaveEdit}
+    />
+    <DeleteConfirmDialog
+      isOpen={!!deletingBook}
+      onClose={() => setDeletingBook(null)}
+      onConfirm={handleConfirmDelete}
+      bookName={deletingBook?.title || ''}
+    />
+  </div>
+);
 };
 
 export default BookTable;

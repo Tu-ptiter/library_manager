@@ -145,14 +145,25 @@ const AdminDashboardLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   
   return (
-    <div className="min-h-screen flex flex-col ">
-      <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
-      <div className="flex flex-1">
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-        <main className={`flex-1 p-6 -mt-8 transition-all duration-300 ease-in-out
-          ${isOpen ? 'lg:ml-64' : 'lg:ml-0'}`}>
-          <Outlet />
-        </main>
+    <div className="min-h-screen bg-gray-100">
+      {/* Fixed Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
+      </div>
+
+      <div className="flex pt-16"> {/* Add pt-16 to account for navbar height */}
+        {/* Sidebar */}
+        <div className="fixed left-0 bottom-0 top-16 w-64 z-40"> {/* Add explicit width */}
+          <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        </div>
+
+        {/* Main Content */}
+        <div className={`flex-1 pl-0 lg:pl-64 transition-all duration-300 ease-in-out -mt-[20px]`}>
+          {/* Container for the actual content */}
+          <div className="p-6 lg:p-8">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

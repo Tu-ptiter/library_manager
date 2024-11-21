@@ -6,6 +6,7 @@ import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -16,19 +17,16 @@ import {
 } from "@/components/ui/form";
 import { borrowBook, returnBook, renewBook } from '@/api/api';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-
-// Update TransactionRequest interface in api.tsx
-interface TransactionRequest {
-  name: string;
-  title: string;
-  memberId?: string;
-}
+import { Book, ArrowLeftRight, RefreshCw, UserCheck } from 'lucide-react';
 
 type TabType = 'borrow' | 'return' | 'renew';
 
 const transactionSchema = z.object({
   name: z.string().min(1, "Tên người dùng không được để trống"),
-  memberId: z.string().optional(),
+  phoneNumber: z.string()
+    .min(10, "Số điện thoại phải có ít nhất 10 số")
+    .max(11, "Số điện thoại không được quá 11 số")
+    .regex(/^[0-9]+$/, "Số điện thoại chỉ được chứa số"),
   title: z.string().min(1, "Tên sách không được để trống"),
 });
 
@@ -38,8 +36,6 @@ const TransactionForm: React.FC<{
   type: TabType;
   onSubmit: (data: TransactionFormValues) => Promise<void>;
 }> = ({ type, onSubmit }) => {
-  const [showIdField, setShowIdField] = React.useState(false);
-  const [duplicateMessage, setDuplicateMessage] = React.useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [message, setMessage] = React.useState<{text: string; type: 'success' | 'error'} | null>(null);
 
@@ -47,7 +43,7 @@ const TransactionForm: React.FC<{
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       name: '',
-      memberId: '',
+      phoneNumber: '',
       title: ''
     }
   });
@@ -59,25 +55,14 @@ const TransactionForm: React.FC<{
     try {
       await onSubmit(data);
       form.reset();
-      setShowIdField(false);
-      setDuplicateMessage(null);
       setMessage({
         text: `Thao tác ${type === 'borrow' ? 'mượn' : type === 'return' ? 'trả' : 'gia hạn'} sách thành công`,
         type: 'success'
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
-      
-      // Add detailed error checking for duplicate names
-      if (errorMessage.includes('Có nhiều thành viên trùng tên')) {
-        setDuplicateMessage(errorMessage);
-        setShowIdField(true);
-      } 
-      
       setMessage({
-        text: errorMessage.includes('Có nhiều thành viên trùng tên') 
-          ? "Vui lòng chọn ID người dùng từ danh sách trên"
-          : errorMessage,
+        text: errorMessage,
         type: 'error'
       });
     } finally {
@@ -85,68 +70,59 @@ const TransactionForm: React.FC<{
     }
   };
 
-  // Reset states when form is cleared
-  React.useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === 'name' && !value.name) {
-        setShowIdField(false);
-        setDuplicateMessage(null);
-        setMessage(null);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên người dùng</FormLabel>
-              <FormControl>
-                <Input placeholder="Nhập tên người dùng..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {duplicateMessage && (
-          <div className="text-sm space-y-2 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-            <p className="whitespace-pre-line text-yellow-700">{duplicateMessage}</p>
-          </div>
-        )}
-
-        {showIdField && (
+        <div className="grid gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
-            name="memberId"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>ID Người dùng</FormLabel>
+                <FormLabel className="text-gray-700">Tên người dùng</FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder="Nhập ID người dùng từ danh sách trên..." 
+                    placeholder="Nhập tên người dùng..." 
                     {...field}
+                    className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500" 
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
+
+          <FormField
+            control={form.control}
+            name="phoneNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-gray-700">Số điện thoại</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Nhập số điện thoại..." 
+                    {...field}
+                    className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tên sách</FormLabel>
+              <FormLabel className="text-gray-700">Tên sách</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập tên sách..." {...field} />
+                <Input 
+                  placeholder="Nhập tên sách..." 
+                  {...field}
+                  className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,15 +130,36 @@ const TransactionForm: React.FC<{
         />
 
         {message && (
-          <p className={`text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+          <div className={`p-4 rounded-lg ${
+            message.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+          } transition-all duration-300 animate-fade-in`}>
             {message.text}
-          </p>
+          </div>
         )}
 
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmitting}>
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="transition-all duration-200 hover:shadow-lg"
+          >
             {isSubmitting && <LoadingSpinner className="mr-2 h-4 w-4" />}
-            {type === 'borrow' ? 'Mượn sách' : type === 'return' ? 'Trả sách' : 'Gia hạn'}
+            {type === 'borrow' ? (
+              <>
+                <Book className="w-4 h-4 mr-2" />
+                Mượn sách
+              </>
+            ) : type === 'return' ? (
+              <>
+                <ArrowLeftRight className="w-4 h-4 mr-2" />
+                Trả sách
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Gia hạn
+              </>
+            )}
           </Button>
         </div>
       </form>
@@ -177,7 +174,7 @@ const BorrowManagement: React.FC = () => {
     await borrowBook({
       name: data.name,
       title: data.title,
-      ...(data.memberId && { memberId: data.memberId })
+      phoneNumber: data.phoneNumber
     });
   };
 
@@ -185,7 +182,7 @@ const BorrowManagement: React.FC = () => {
     await returnBook({
       name: data.name,
       title: data.title,
-      ...(data.memberId && { memberId: data.memberId })
+      phoneNumber: data.phoneNumber
     });
   };
 
@@ -193,34 +190,66 @@ const BorrowManagement: React.FC = () => {
     await renewBook({
       name: data.name,
       title: data.title,
-      ...(data.memberId && { memberId: data.memberId })
+      phoneNumber: data.phoneNumber
     });
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">Quản lý mượn trả</h1>
-      
-      <div className="max-w-xl mx-auto">
-        <Tabs defaultValue="borrow" className="w-full" onValueChange={(value) => setActiveTab(value as TabType)}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="borrow">Mượn sách</TabsTrigger>
-            <TabsTrigger value="return">Trả sách</TabsTrigger>
-            <TabsTrigger value="renew">Gia hạn</TabsTrigger>
-          </TabsList>
+    <div className="container mx-auto py-6 px-4">
+      <div className="max-w-4xl mx-auto">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="space-y-1 pb-8">
+            <CardTitle className="text-2xl font-bold text-center">
+              <UserCheck className="w-6 h-6 inline-block mr-2 mb-1" />
+              Quản lý mượn trả sách
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs 
+              defaultValue="borrow" 
+              className="w-full"
+              onValueChange={(value) => setActiveTab(value as TabType)}
+            >
+              <TabsList className="mb-8 grid grid-cols-3 gap-4 bg-muted/50 p-1">
+                <TabsTrigger 
+                  value="borrow"
+                  className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200"
+                >
+                  <Book className="w-4 h-4 mr-2" />
+                  Mượn sách
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="return"
+                  className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200"
+                >
+                  <ArrowLeftRight className="w-4 h-4 mr-2" />
+                  Trả sách
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="renew"
+                  className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Gia hạn
+                </TabsTrigger>
+              </TabsList>
 
-          <TabsContent value="borrow">
-            <TransactionForm type="borrow" onSubmit={handleBorrow} />
-          </TabsContent>
+              <div className="mt-4">
+                <TabsContent value="borrow">
+                  <TransactionForm type="borrow" onSubmit={handleBorrow} />
+                </TabsContent>
 
-          <TabsContent value="return">
-            <TransactionForm type="return" onSubmit={handleReturn} />
-          </TabsContent>
+                <TabsContent value="return">
+                  <TransactionForm type="return" onSubmit={handleReturn} />
+                </TabsContent>
 
-          <TabsContent value="renew">
-            <TransactionForm type="renew" onSubmit={handleRenew} />
-          </TabsContent>
-        </Tabs>
+                <TabsContent value="renew">
+                  <TransactionForm type="renew" onSubmit={handleRenew} />
+                </TabsContent>
+              </div>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

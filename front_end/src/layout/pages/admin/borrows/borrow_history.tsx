@@ -120,57 +120,120 @@ const BorrowHistory: React.FC = () => {
   }, [activeTab, fetchTransactions]);
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">Lịch sử mượn trả</h1>
-      
+    <div className="p-4 mt-6 sm:p-6 space-y-4 sm:space-y-6 bg-white rounded-lg shadow-sm border border-gray-100">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Lịch sử mượn trả</h2>
+      </div>
+  
+      {/* Tab Navigation */}
       <Tabs defaultValue="borrowed" className="w-full" onValueChange={(value) => setActiveTab(value as TabType)}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="borrowed">Đã mượn</TabsTrigger>
-          <TabsTrigger value="returned">Đã trả</TabsTrigger>
-          <TabsTrigger value="renewed">Đã gia hạn</TabsTrigger>
+        <TabsList className="mb-4 flex space-x-2 bg-transparent">
+          <TabsTrigger 
+            value="borrowed" 
+            className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200"
+          >
+            Đã mượn
+          </TabsTrigger>
+          <TabsTrigger 
+            value="returned"
+            className="data-[state=active]:bg-green-50 data-[state=active]:text-green-600 data-[state=active]:border-green-200"
+          >
+            Đã trả
+          </TabsTrigger>
+          <TabsTrigger 
+            value="renewed"
+            className="data-[state=active]:bg-purple-50 data-[state=active]:text-purple-600 data-[state=active]:border-purple-200"
+          >
+            Đã gia hạn
+          </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="borrowed">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-32">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            <TransactionTable 
-              transactions={transactions} 
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </TabsContent>
-
-        <TabsContent value="returned">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-32">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            <TransactionTable 
-              transactions={transactions}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </TabsContent>
-
-        <TabsContent value="renewed">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-32">
-              <LoadingSpinner />
-            </div>
-          ) : (
-            <TransactionTable 
-              transactions={transactions}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          )}
-        </TabsContent>
+  
+        {/* Table Content for Each Tab */}
+        {['borrowed', 'returned', 'renewed'].map((tab) => (
+          <TabsContent value={tab} key={tab}>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-32">
+                <LoadingSpinner />
+              </div>
+            ) : (
+              <div className="-mx-4 sm:mx-0 rounded-none sm:rounded-lg border border-gray-200 overflow-hidden">
+                <div className="relative overflow-x-auto min-h-[400px]">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50/80">
+                        <TableHead className="font-semibold text-gray-600">Người mượn</TableHead>
+                        <TableHead className="font-semibold text-gray-600 hidden sm:table-cell">Tên sách</TableHead>
+                        <TableHead className="font-semibold text-gray-600 hidden lg:table-cell">Mô tả</TableHead>
+                        <TableHead className="font-semibold text-gray-600 hidden md:table-cell">Ngày giao dịch</TableHead>
+                        <TableHead className="font-semibold text-gray-600">Trạng thái</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {transactions.map((transaction, index) => (
+                        <TableRow 
+                          key={`${transaction.memberId}-${index}`} 
+                          className="transition-colors hover:bg-gray-50/80"
+                        >
+                          <TableCell>
+                            <div className="space-y-1">
+                              <p className="font-medium text-gray-900">
+                                {transaction.memberName}
+                              </p>
+                              {/* Show book title on mobile */}
+                              <p className="text-sm text-gray-500 sm:hidden">
+                                {transaction.bookTitle}
+                              </p>
+                              {/* Show date on mobile */}
+                              <p className="text-sm text-gray-500 md:hidden">
+                                {format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            {transaction.bookTitle}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell max-w-[300px] truncate">
+                            {transaction.description}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell whitespace-nowrap">
+                            {format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}
+                          </TableCell>
+                          <TableCell>
+                            <span className={cn(
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
+                              {
+                                "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20": 
+                                  transaction.status === 'Đang mượn',
+                                "bg-green-50 text-green-700 ring-1 ring-green-600/20": 
+                                  transaction.status === 'Đã trả',
+                                "bg-purple-50 text-purple-700 ring-1 ring-purple-600/20": 
+                                  transaction.status === 'Đã gia hạn',
+                              }
+                            )}>
+                              {transaction.status}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
+            )}
+  
+            {/* Pagination */}
+            {transactions.length > ITEMS_PER_PAGE && (
+              <div className="mt-4 sm:mt-6 flex justify-center">
+                <CustomPagination 
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(transactions.length / ITEMS_PER_PAGE)}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

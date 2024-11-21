@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-
+import { Plus, BookOpen } from 'lucide-react'; 
 interface Category {
   mainCategory: string;
   subCategories: string[];
@@ -176,213 +176,256 @@ const AddBook: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <Card className="rounded-none">
-        <CardHeader>
-          <CardTitle>Thêm sách mới</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
-              <div className="grid grid-cols-2 gap-6">
-
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tên sách</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập tên sách..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="author"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tác giả (ngăn cách bởi dấu phẩy)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập tên tác giả..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="publicationYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Năm xuất bản</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="bigCategory"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Danh mục lớn</FormLabel>
-                      <FormControl>
-                        {isCustomMainCategory ? (
-                          <Input
-                            placeholder="Nhập tên danh mục lớn..."
-                            value={customMainCategory}
-                            onChange={(e) => {
-                              setCustomMainCategory(e.target.value);
-                              form.setValue('bigCategory', e.target.value);
-                            }}
+    <div className="container mx-auto py-6 px-4">
+      <div className="max-w-4xl mx-auto">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="space-y-1 pb-8">
+            <CardTitle className="text-2xl font-bold text-center">
+              <BookOpen className="w-6 h-6 inline-block mr-2 mb-1" />
+              Thêm sách mới
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <div className="grid grid-cols-2 gap-6">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Tên sách</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Nhập tên sách..." 
+                            {...field}
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500" 
                           />
-                        ) : (
-                          <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Chọn danh mục lớn" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {categories.map((category) => (
-                                <SelectItem key={category.mainCategory} value={category.mainCategory}>
-                                  {category.mainCategory}
-                                </SelectItem>
-                              ))}
-                              <SelectItem value="custom">+ Tùy chọn</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="smallCategory"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Danh mục nhỏ</FormLabel>
-                      <FormControl>
-                        {isCustomSubCategory ? (
-                          <Input
-                            placeholder="Nhập tên danh mục nhỏ..."
-                            value={customSubCategory}
-                            onChange={(e) => {
-                              setCustomSubCategory(e.target.value);
-                              form.setValue('smallCategory', e.target.value);
-                            }}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="author"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Tác giả (ngăn cách bởi dấu phẩy)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Nhập tên tác giả..." 
+                            {...field} 
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
                           />
-                        ) : (
-                          <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Chọn danh mục nhỏ" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {selectedMainCategory
-                                ? categories
-                                    .find(c => c.mainCategory === selectedMainCategory)
-                                    ?.subCategories.map(sub => (
-                                      <SelectItem key={sub} value={sub}>
-                                        {sub}
-                                      </SelectItem>
-                                    ))
-                                : categories.flatMap(category =>
-                                    category.subCategories.map(sub => (
-                                      <SelectItem key={sub} value={sub}>
-                                        {sub}
-                                      </SelectItem>
-                                    ))
-                                  )}
-                              <SelectItem value="custom">+ Tùy chọn</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="publicationYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Năm xuất bản</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="0" 
+                            {...field} 
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="quantity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Số lượng</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="0" 
+                            {...field}
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="bigCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Danh mục lớn</FormLabel>
+                        <FormControl>
+                          {isCustomMainCategory ? (
+                            <Input
+                              placeholder="Nhập tên danh mục lớn..."
+                              value={customMainCategory}
+                              onChange={(e) => {
+                                setCustomMainCategory(e.target.value);
+                                form.setValue('bigCategory', e.target.value);
+                              }}
+                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            />
+                          ) : (
+                            <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
+                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500">
+                                <SelectValue placeholder="Chọn danh mục lớn" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories.map((category) => (
+                                  <SelectItem key={category.mainCategory} value={category.mainCategory}>
+                                    {category.mainCategory}
+                                  </SelectItem>
+                                ))}
+                                <SelectItem value="custom">+ Tùy chọn</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="smallCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Danh mục nhỏ</FormLabel>
+                        <FormControl>
+                          {isCustomSubCategory ? (
+                            <Input
+                              placeholder="Nhập tên danh mục nhỏ..."
+                              value={customSubCategory}
+                              onChange={(e) => {
+                                setCustomSubCategory(e.target.value);
+                                form.setValue('smallCategory', e.target.value);
+                              }}
+                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            />
+                          ) : (
+                            <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
+                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500">
+                                <SelectValue placeholder="Chọn danh mục nhỏ" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {selectedMainCategory
+                                  ? categories
+                                      .find(c => c.mainCategory === selectedMainCategory)
+                                      ?.subCategories.map(sub => (
+                                        <SelectItem key={sub} value={sub}>
+                                          {sub}
+                                        </SelectItem>
+                                      ))
+                                  : categories.flatMap(category =>
+                                      category.subCategories.map(sub => (
+                                        <SelectItem key={sub} value={sub}>
+                                          {sub}
+                                        </SelectItem>
+                                      ))
+                                    )}
+                                <SelectItem value="custom">+ Tùy chọn</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="nxb"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">Nhà xuất bản</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Nhập tên nhà xuất bản..." 
+                            {...field}
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+  
+                  <FormField
+                    control={form.control}
+                    name="img"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700">URL Hình ảnh</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Nhập URL hình ảnh..." 
+                            {...field}
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+  
                 <FormField
                   control={form.control}
-                  name="quantity"
+                  name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Số lượng</FormLabel>
+                      <FormLabel className="text-gray-700">Mô tả</FormLabel>
                       <FormControl>
-                        <Input type="number" min="0" {...field} />
+                        <Textarea 
+                          placeholder="Nhập mô tả sách..." 
+                          {...field}
+                          className="min-h-[120px] transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="nxb"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nhà xuất bản</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập tên nhà xuất bản..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="img"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL Hình ảnh</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Nhập URL hình ảnh..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mô tả</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Nhập mô tả sách..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex justify-end space-x-4">
-                <Button 
-                  type="button" 
-                  variant="outline"
-                  onClick={() => navigate('/admin/books/list')}
-                >
-                  Hủy
-                </Button>
-                <Button type="submit">Thêm sách</Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+  
+                <div className="flex justify-end space-x-4">
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => navigate('/admin/books/list')}
+                    className="transition-all duration-200 hover:bg-gray-100"
+                  >
+                    Hủy
+                  </Button>
+                  <Button 
+                    type="submit"
+                    className="transition-all duration-200 hover:shadow-lg"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Thêm sách
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

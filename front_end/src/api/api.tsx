@@ -227,7 +227,7 @@ export const createMember = async (memberData: Omit<Member, 'memberId'>): Promis
       transactions: ['BORROW'],
       booksBorrowed: 0
     };
-    const response = await axios.post<Member>(`${BASE_URL}/members`, newMember);
+    const response = await axios.post<Member>(`${BASE_URL}/members/register`, newMember);
     return response.data;
   } catch (error) {
     console.error('Error creating member:', error);
