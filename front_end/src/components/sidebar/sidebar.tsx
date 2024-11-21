@@ -1,13 +1,13 @@
 // components/sidebar/Sidebar.tsx
 import React from 'react';
-import { FaBook, FaUser, FaHome, FaExchangeAlt } from 'react-icons/fa';
+import { FaBook, FaUser, FaHome, FaExchangeAlt, FaPowerOff } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
 
 interface MenuItem {
   title: string;
@@ -33,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     {
       title: 'Tổng quan',
       icon: <FaHome className="h-4 w-4" />,
-      path: '/admin/overview'
+      path: '/admin/overview',
     },
     {
       title: 'Sách',
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         { title: 'Quản lý mượn trả', path: '/admin/borrows/manage' },
         { title: 'Lịch sử mượn trả', path: '/admin/borrows/history' },
       ],
-    }
+    },
   ];
 
   const renderDirectLink = (menu: MenuItem) => (
@@ -123,15 +123,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const directMenus = menus.filter(menu => menu.path);
   const dropdownMenus = menus.filter(menu => menu.subItems);
 
-  // Add backdrop for mobile
-  const Backdrop = () => (
-    <div 
-      className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
-        ${isOpen ? 'opacity-100 z-40' : 'opacity-0 pointer-events-none -z-10'}`}
-      onClick={() => setIsOpen(false)}
-    />
-  );
-
   return (
     <>
       <div 
@@ -146,12 +137,30 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="flex flex-col h-full">
-          <div className="p-4 overflow-y-auto">
+          <div className="p-4 flex-1 overflow-y-auto">
             {directMenus.map(renderDirectLink)}
             <Accordion type="single" collapsible className="mt-2">
               {renderAccordionItems(dropdownMenus)}
             </Accordion>
           </div>
+
+          {/* Gạch ngang giữa phần menu và đăng xuất */}
+          <div className="border-t border-gray-700 my-8 mb-0" />
+
+          {/* Nút đăng xuất dịch lên thêm một chút */}
+          <div className="p-4 mt-2 mb-15"> {/* Dịch lên thêm với margin-top */}
+            <button
+              className="flex items-center gap-3 w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white transition-colors rounded-md"
+              onClick={() => {
+                localStorage.removeItem('adminData');
+                window.location.href = '/admin/login';  // Điều hướng đến trang đăng nhập
+              }}
+            >
+              <FaPowerOff className="h-4 w-4" /> {/* Thay đổi biểu tượng đăng xuất */}
+              <span>Đăng xuất</span>
+            </button>
+          </div>
+
         </div>
       </aside>
     </>
