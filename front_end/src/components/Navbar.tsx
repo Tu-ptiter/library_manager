@@ -7,7 +7,6 @@ import { Menu, Bell } from 'lucide-react';  // Đảm bảo rằng Bell được
 import { Button } from "@/components/ui/button";
 import ChangePassword from '@/components/password/ChangePassword';
 
-
 interface NavbarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
