@@ -67,7 +67,7 @@ interface TransactionRequest {
 }
 
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
+const BASE_URL = 'http://localhost:8080';
 
 
 
