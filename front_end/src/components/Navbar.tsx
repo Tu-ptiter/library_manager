@@ -106,9 +106,12 @@ const Navbar: React.FC<NavbarProps> = ({ isOpen, setIsOpen }) => {
         >
           <Menu className="h-6 w-6" />
         </Button>
-        <span className="text-white text-2xl font-semibold tracking-wide hover:text-blue-400 transition-colors duration-200 font-sans">
-          Admin Dashboard
-        </span>
+        <span 
+  className="text-white text-2xl font-semibold tracking-wide hover:text-blue-400 transition-colors duration-200 font-sans cursor-pointer"
+  onClick={() => navigate('/admin/overview')}
+>
+  Admin Dashboard
+</span>
       </div>
 
       <div className="hidden md:block text-white text-sm font-medium">

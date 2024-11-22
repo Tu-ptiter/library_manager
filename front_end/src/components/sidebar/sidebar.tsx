@@ -1,6 +1,7 @@
 // components/sidebar/Sidebar.tsx
 import React from 'react';
-import { FaBook, FaUser, FaHome, FaExchangeAlt, FaPowerOff } from 'react-icons/fa';
+import { FaBook, FaUser, FaHome, FaExchangeAlt, FaPowerOff} from 'react-icons/fa';
+import { LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Accordion,
@@ -56,8 +57,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       title: 'Mượn trả',
       icon: <FaExchangeAlt className="h-4 w-4" />,
       subItems: [
-        { title: 'Quản lý mượn trả', path: '/admin/borrows/manage' },
-        { title: 'Lịch sử mượn trả', path: '/admin/borrows/history' },
+        { title: 'Thêm phiếu mượn', path: '/admin/borrows/manage' },
+        { title: 'Quản lý mượn trả', path: '/admin/borrows/history' },
       ],
     },
   ];
@@ -125,41 +126,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
+      {/* Overlay */}
       <div 
         className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
           ${isOpen ? 'opacity-100 z-30' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsOpen(false)}
       />
       
+      {/* Sidebar */}
       <aside 
-        className={`w-64 bg-gray-800 text-white transition-all duration-300 ease-in-out h-full
-    ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
+        className={`fixed top-16 bottom-0 left-0 w-64 bg-gray-800 text-white transition-all duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0 z-40' : '-translate-x-full lg:translate-x-0'}`}
       >
         <div className="flex flex-col h-full">
+          {/* Menu Items */}
           <div className="p-4 flex-1 overflow-y-auto">
             {directMenus.map(renderDirectLink)}
             <Accordion type="single" collapsible className="mt-2">
               {renderAccordionItems(dropdownMenus)}
             </Accordion>
           </div>
-
-          {/* Gạch ngang giữa phần menu và đăng xuất */}
-          <div className="border-t border-gray-700 my-8 mb-0" />
-
-          {/* Nút đăng xuất dịch lên thêm một chút */}
-          <div className="p-4 mt-2 mb-15"> {/* Dịch lên thêm với margin-top */}
+  
+          {/* Divider */}
+          <div className="border-t border-gray-700 my-4" />
+  
+          {/* Logout Button */}
+          <div className="p-4">
             <button
               className="flex items-center gap-3 w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white transition-colors rounded-md"
               onClick={() => {
                 localStorage.removeItem('adminData');
-                window.location.href = '/admin/login';  // Điều hướng đến trang đăng nhập
+                window.location.href = '/admin/login';
               }}
             >
-              <FaPowerOff className="h-4 w-4" /> {/* Thay đổi biểu tượng đăng xuất */}
+              <LogOut className="h-4 w-4" />
               <span>Đăng xuất</span>
             </button>
           </div>
-
         </div>
       </aside>
     </>

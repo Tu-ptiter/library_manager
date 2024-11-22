@@ -1,6 +1,5 @@
-// reader_table.tsx
 import React, { useState, useMemo } from 'react';
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Edit, Trash2, Info } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import {
@@ -19,10 +18,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
 import EditMemberModal from '../../../../components/EditMembersModal/EditMembersModal';
 import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/DeleteConfirmDialog';
-import { Member, updateMember, deleteMember } from '@/api/api';
+import { Member, updateMember, deleteMember, fetchBorrowedAndRenewedBooks } from '@/api/api';
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
 
@@ -41,9 +39,10 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   const [sortOption, setSortOption] = useState<SortOption>('name-asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [borrowedBooks, setBorrowedBooks] = useState<any | null>(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const itemsPerPage = 10;
-
-  // Keep existing handlers...
 
   const handleEdit = (member: Member) => {
     setEditingMember(member);
@@ -53,13 +52,23 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     setDeletingMember(member);
   };
 
+  const handleViewInfo = async (member: Member) => {
+    try {
+      const data = await fetchBorrowedAndRenewedBooks(member.memberId);
+      setBorrowedBooks(data.borrowedAndRenewedBooks || []);
+      setSelectedMember(member);
+      setIsInfoModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching member info:', error);
+    }
+  };
+
   const handleSaveEdit = async (memberData: Partial<Member>) => {
     try {
       if (!editingMember?.memberId) {
         console.error('Member ID is missing');
         return;
       }
-   
       await updateMember(editingMember.memberId, memberData);
       setEditingMember(null);
       window.location.reload();
@@ -67,14 +76,13 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
       console.error('Error updating member:', error);
     }
   };
-  
+
   const handleConfirmDelete = async () => {
     try {
       if (!deletingMember?.memberId) {
         console.error('Member ID is missing');
         return;
       }
-      
       await deleteMember(deletingMember.memberId);
       setDeletingMember(null);
       window.location.reload();
@@ -83,7 +91,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     }
   };
 
-  // Keep existing filtering and sorting logic...
   const filteredItems = useMemo(() => {
     return currentItems.filter(member => {
       const searchLower = searchTerm.toLowerCase();
@@ -126,7 +133,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Tất cả người đọc</h2>
-        <Button 
+        <Button
           onClick={() => navigate('/admin/readers/add')}
           className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white transition-all duration-200 shadow-sm hover:shadow-md"
         >
@@ -134,7 +141,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           Thêm người đọc mới
         </Button>
       </div>
-  
+
       {/* Search and Filter Section */}
       <div className="space-y-4">
         <div className="flex flex-col gap-3">
@@ -161,7 +168,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           </div>
         </div>
       </div>
-  
+
       {/* Table Section */}
       <div className="-mx-4 sm:mx-0 rounded-none sm:rounded-lg border border-gray-200 overflow-hidden">
         <div className="relative overflow-x-auto min-h-[400px]">
@@ -178,57 +185,49 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
             </TableHeader>
             <TableBody>
               {paginatedItems.map((member) => (
-                <TableRow 
-                  key={member.memberId} 
+                <TableRow
+                  key={member.memberId}
                   className="transition-colors hover:bg-gray-50/80"
                 >
                   <TableCell>
                     <div className="space-y-1">
                       <p className="font-medium text-gray-900">{member.name}</p>
-                      {/* Show email on mobile */}
-                      <p className="text-sm text-gray-500 md:hidden">
-                        {member.email}
-                      </p>
-                      {/* Show phone on mobile */}
-                      <p className="text-sm text-gray-500 sm:hidden">
-                        {member.phoneNumber}
-                      </p>
-                      {/* Show address on mobile */}
-                      <p className="text-sm text-gray-500 lg:hidden max-w-[200px] truncate">
-                        {member.address}
-                      </p>
-                      {/* Show borrowed books on mobile */}
-                      <div className="flex items-center gap-2 sm:hidden mt-2">
-                        <span className="text-sm text-gray-500">
-                          Sách mượn: {member.booksBorrowed}
-                        </span>
-                      </div>
                     </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{member.email}</TableCell>
                   <TableCell className="hidden sm:table-cell">{member.phoneNumber}</TableCell>
-                  <TableCell className="hidden lg:table-cell max-w-[200px] truncate">
-                    {member.address}
-                  </TableCell>
-                  <TableCell className="hidden sm:table-cell text-center">
-                    {member.booksBorrowed}
-                  </TableCell>
-                  <TableCell className="text-right space-x-1 pr-4">
-                    <Button 
-                      variant="outline" 
+                  <TableCell className="hidden lg:table-cell">{member.address}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-center">{member.booksBorrowed}</TableCell>
+                  <TableCell className="text-right space-x-1 flex justify-end items-center pr-4">
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="border-gray-200 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       onClick={() => handleEdit(member)}
                     >
                       <Edit className="h-3.5 w-3.5" />
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="border-gray-200 hover:border-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                       onClick={() => handleDelete(member)}
                     >
                       <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={cn(
+                        "border-gray-200 rounded-full transition-colors p-2 h-8 w-8 flex items-center justify-center",
+                        member.booksBorrowed > 0
+                          ? "hover:border-yellow-400 hover:bg-yellow-50 hover:text-yellow-600"
+                          : "opacity-50 cursor-not-allowed"
+                      )}
+                      onClick={() => handleViewInfo(member)}
+                      disabled={member.booksBorrowed === 0}
+                    >
+                      <Info className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -237,30 +236,86 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           </Table>
         </div>
       </div>
-  
-      {/* Pagination */}
-      <div className="mt-4 sm:mt-6 flex justify-center">
-        <CustomPagination 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+
+      {/* Pagination Section */}
+      <CustomPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+
+      {/* Edit Member Modal */}
+      {editingMember && (
+        <EditMemberModal
+          member={editingMember}
+          isOpen={!!editingMember}
+          onSave={handleSaveEdit}
+          onClose={() => setEditingMember(null)}
         />
-      </div>
-  
-      {/* Modals */}
-      <EditMemberModal
-        member={editingMember}
-        isOpen={!!editingMember}
-        onClose={() => setEditingMember(null)}
-        onSave={handleSaveEdit}
-      />
+      )}
+
+      {/* Delete Confirm Dialog */}
+      {deletingMember && (
+        <DeleteConfirmDialog
+          isOpen={!!deletingMember}
+          bookName={deletingMember?.name || ''}
+          onConfirm={handleConfirmDelete}
+          onClose={() => setDeletingMember(null)}
+        />
+      )}
+
+      {/* Info Modal for Borrowed Books */}
+{isInfoModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white rounded-lg shadow-md w-full max-w-2xl p-6 relative">
+      {/* Close button */}
+      <button
+        className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+        onClick={() => setIsInfoModalOpen(false)}
+      >
+        <span className="sr-only">Đóng</span>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <h3 className="text-xl font-bold mb-4">Thông tin mượn sách</h3>
       
-      <DeleteConfirmDialog
-        isOpen={!!deletingMember}
-        onClose={() => setDeletingMember(null)}
-        onConfirm={handleConfirmDelete}
-        bookName={deletingMember?.name || ''}
-      />
+      {borrowedBooks ? (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <p><strong>Họ và tên:</strong> {selectedMember?.name}</p>
+            <p><strong>Email:</strong> {selectedMember?.email}</p>
+            <p><strong>Số điện thoại:</strong> {selectedMember?.phoneNumber}</p>
+          </div>
+          
+          <div>
+            <h4 className="font-semibold mb-2">Danh sách sách:</h4>
+            {/* Add custom scrollbar */}
+            <div className="max-h-[400px] overflow-y-auto pr-4 
+              scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100
+              hover:scrollbar-thumb-gray-400 scroll-smooth">
+              <ul className="space-y-4">
+                {borrowedBooks.map((book) => (
+                  <li key={book.bookId} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <p><strong>Tiêu đề:</strong> {book.bookTitle}</p>
+                    <p><strong>Loại giao dịch:</strong> {book.transactionType}</p>
+                    <p><strong>Ngày giao dịch:</strong> {new Date(book.transactionDate).toLocaleString()}</p>
+                    <p><strong>Hạn trả:</strong> {new Date(book.dueDate).toLocaleString()}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p>Đang tải dữ liệu...</p>
+      )}
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

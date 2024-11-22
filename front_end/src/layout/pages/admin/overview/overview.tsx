@@ -1,83 +1,87 @@
 // layout/pages/admin/overview/overview.tsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Book, Users, BookOpen, Target } from 'lucide-react';
 import { Card } from "@/components/ui/card";
-import { fetchTotalBooks } from '@/api/api';
+import { fetchTotalBooks, countMembers, countBorrowedBooks } from '@/api/api';
+import StatsCard from '@/components/ui/starts-card';
 import { BookStats, UserStats, BorrowStats, CategoryDistribution } from './charts';
 
-interface TrendProps {
-  value: number;
-  isPositive: boolean;
-}
+export default function Overview() {
+  // State for real values
+  const [totalBooks, setTotalBooks] = useState(0);
+  const [activeUsers, setActiveUsers] = useState(0);
+  const [borrowedBooks, setBorrowedBooks] = useState(0);
 
-interface StatsCardProps {
-  title: string; 
-  value: string;
-  icon: React.ReactNode;
-  trend?: TrendProps;
-  iconColor: string;
-}
+  // State for animated displays
+  const [displayedTotal, setDisplayedTotal] = useState(0);
+  const [displayedUsers, setDisplayedUsers] = useState(0);
+  const [displayedBorrowed, setDisplayedBorrowed] = useState(0);
 
-const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon, trend, iconColor }) => (
-  <Card className="p-6 bg-white/60 backdrop-blur-sm hover:bg-white/80 
-    transition-all duration-300 border border-gray-200/50 rounded-lg shadow-sm hover:shadow
-    group overflow-hidden">
-    <div className="flex items-center justify-between relative">
-      <div className="space-y-2">
-        <p className="text-sm font-medium text-gray-600 tracking-wide">{title}</p>
-        <h3 className="text-3xl font-bold text-gray-800">{value}</h3>
-        {trend && (
-          <div className={`flex items-center gap-1.5 text-sm
-            ${trend.isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
-            <span className="font-medium">
-              {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
-            </span>
-            <span className="text-gray-500">vs tháng trước</span>
-          </div>
-        )}
-      </div>
-      <div className={`${iconColor} p-4 rounded-xl transition-transform duration-300 
-        group-hover:scale-110 group-hover:rotate-[-3deg]`}>
-        {icon}
-      </div>
-    </div>
-  </Card>
-);
+  // Animation utility function
+  const animateValue = (
+    startValue: number,
+    endValue: number,
+    duration: number,
+    setValue: (value: number) => void
+  ) => {
+    const steps = 30;
+    const increment = endValue / steps;
+    let current = startValue;
 
-const Overview: React.FC = () => {
-  const [totalBooks, setTotalBooks] = useState<number>(0);
-  const [displayedTotal, setDisplayedTotal] = useState<number>(0);
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= endValue) {
+        setValue(endValue);
+        clearInterval(timer);
+      } else {
+        setValue(Math.floor(current));
+      }
+    }, duration / steps);
 
+    return timer;
+  };
+
+  // Fetch all data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const total = await fetchTotalBooks();
-        setTotalBooks(total);
+        const [books, users, borrowed] = await Promise.all([
+          fetchTotalBooks(),
+          countMembers(),
+          countBorrowedBooks()
+        ]);
+        setTotalBooks(books);
+        setActiveUsers(users);
+        setBorrowedBooks(borrowed);
       } catch (error) {
-        console.error('Error fetching total books:', error);
+        console.error('Error fetching stats:', error);
       }
     };
     fetchData();
   }, []);
 
+  // Animation effects
   useEffect(() => {
     if (totalBooks > 0) {
-      const duration = 1500;
-      const steps = 30;
-      const increment = totalBooks / steps;
-      let current = 0;
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= totalBooks) {
-          setDisplayedTotal(totalBooks);
-          clearInterval(timer);
-        } else {
-          setDisplayedTotal(Math.floor(current));
-        }
-      }, duration / steps);
+      const timer = animateValue(0, totalBooks, 1500, setDisplayedTotal);
       return () => clearInterval(timer);
     }
   }, [totalBooks]);
+
+  useEffect(() => {
+    if (activeUsers > 0) {
+      const timer = animateValue(0, activeUsers, 1500, setDisplayedUsers);
+      return () => clearInterval(timer);
+    }
+  }, [activeUsers]);
+
+  useEffect(() => {
+    if (borrowedBooks > 0) {
+      const timer = animateValue(0, borrowedBooks, 1500, setDisplayedBorrowed);
+      return () => clearInterval(timer);
+    }
+  }, [borrowedBooks]);
+
 
   return (
     <div className="bg-white mt-5">
@@ -103,22 +107,27 @@ const Overview: React.FC = () => {
             trend={{ value: 12, isPositive: true }}
           />
           <StatsCard
+<<<<<<< HEAD
             title="Số lượng bạn đọc"
             value="856"
+=======
+            title="Số bạn đọc"
+            value={displayedUsers.toLocaleString()}
+>>>>>>> b572abcc2c8c296c1e0bcf07c3f641a8cb1a58ee
             icon={<Users className="h-7 w-7 text-purple-600" />}
             iconColor="bg-purple-100"
             trend={{ value: 8, isPositive: true }}
           />
           <StatsCard
             title="Sách đang mượn"
-            value="342"
+            value={displayedBorrowed.toLocaleString()}
             icon={<BookOpen className="h-7 w-7 text-orange-600" />}
             iconColor="bg-orange-100"
             trend={{ value: 5, isPositive: false }}
           />
           <StatsCard
-            title="Tỷ lệ hoàn thành"
-            value="92%"
+            title="Số sách đã trả"
+            value="333"
             icon={<Target className="h-7 w-7 text-emerald-600" />}
             iconColor="bg-emerald-100"
             trend={{ value: 2, isPositive: true }}
@@ -158,6 +167,4 @@ const Overview: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default Overview;
+}

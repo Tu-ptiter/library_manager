@@ -47,6 +47,10 @@ export interface CategoryData {
   isSubcategory?: boolean;
 }
 
+interface CategoryDistribution {
+  [category: string]: number;
+}
+
 export interface Transaction {
   memberName: string;
   description: string;
@@ -58,11 +62,12 @@ export interface Transaction {
 }
 
 interface TransactionRequest {
-  name: string;
-  title: string;
+  name: string;   // memberName
+  title: string;  // bookTitle
 }
 
-const BASE_URL = 'http://10.147.19.246:8080';
+
+const BASE_URL = 'https://library-mana.azurewebsites.net';
 
 
 
@@ -305,9 +310,6 @@ export const fetchTotalBooks = async (): Promise<number> => {
 
 };
 
-interface CategoryDistribution {
-  [category: string]: number;
-}
 
 // Add new API function
 export const fetchCategoryDistribution = async (): Promise<CategoryDistribution> => {
@@ -337,6 +339,18 @@ export const fetchBooksByCategory = async (mainCategory: string, subCategory: st
     console.error('Error fetching books by category:', error);
     throw error;
   }
+};
+
+export const updateBigCategory = async (oldName: string, newName: string) => {
+  return await axios.put(`${BASE_URL}/books/update-big-category`, null, {
+    params: { oldName, newName }
+  });
+};
+
+export const updateSmallCategory = async (oldName: string, newName: string) => {
+  return await axios.put(`${BASE_URL}/books/update-small-category`, null, {
+    params: { oldName, newName }
+  });
 };
 
 
@@ -393,3 +407,34 @@ export const resetPassword = async (username: string, otp: string, newPassword: 
 };
 
 
+export const countBorrowedBooks = async (): Promise<number> => {
+  try {
+    const response = await axios.get<number>(`${BASE_URL}/transactions/count`);
+    return response.data;
+  } catch (error) {
+    console.error('Error counting borrowed books:', error);
+    throw error;
+  }
+};
+
+export const countMembers = async (): Promise<number> => {
+  try {
+    const response = await axios.get<number>(`${BASE_URL}/members/count`);
+    return response.data;
+  } catch (error) {
+    console.error('Error counting members:', error);
+    throw error;
+  }
+};
+
+export const fetchBorrowedAndRenewedBooks = async (memberId: string) => {
+  try {
+    const response = await axios.get<{ phoneNumber: string; memberName: string; email: string; borrowedAndRenewedBooks: Array<{ transactionType: string; dueDate: string; transactionDate: string; bookId: string; bookTitle: string }> }>(
+      `${BASE_URL}/members/${memberId}/borrowed-renewed-books`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching borrowed and renewed books:', error);
+    throw error;
+  }
+};
