@@ -133,7 +133,7 @@ const BorrowHistory: React.FC = () => {
             value="borrowed" 
             className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200"
           >
-            Đã mượn
+            Đang mượn
           </TabsTrigger>
           <TabsTrigger 
             value="returned"

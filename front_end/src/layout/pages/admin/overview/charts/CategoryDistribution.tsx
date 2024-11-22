@@ -10,8 +10,8 @@ const COLORS = [
   '#FF8042',  // Orange
   '#8884d8',  // Purple
   '#82ca9d',  // Light green
-  '#ff7c43',  // Coral
-  '#a05195',  // Magenta
+  '#273c75',  // Coral
+  '#ff4757',  // Magenta
   '#665191',  // Deep purple
 
 ];

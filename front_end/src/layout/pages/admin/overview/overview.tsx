@@ -103,7 +103,7 @@ const Overview: React.FC = () => {
             trend={{ value: 12, isPositive: true }}
           />
           <StatsCard
-            title="Người dùng hoạt động"
+            title="Số lượng bạn đọc"
             value="856"
             icon={<Users className="h-7 w-7 text-purple-600" />}
             iconColor="bg-purple-100"
