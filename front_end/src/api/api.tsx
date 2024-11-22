@@ -310,9 +310,8 @@ export const fetchTotalBooks = async (): Promise<number> => {
     return response.data;
   } catch (error) {
     console.error('Error fetching total books:', error);
-    throw error;
+    return 0; // Return default value on error
   }
-
 };
 
 
@@ -414,13 +413,23 @@ export const resetPassword = async (username: string, otp: string, newPassword: 
 
 export const countBorrowedBooks = async (): Promise<number> => {
   try {
-    const response = await axios.get<number>(`${BASE_URL}/transactions/count`);
+    const response = await axios.get<number>(`${BASE_URL}/transactions/count-borrowed`);
     return response.data;
   } catch (error) {
     console.error('Error counting borrowed books:', error);
-    throw error;
+    return 0; // Return default value on error
   }
 };
+
+export const countReturnedBooks = async (): Promise<number> => {
+  try {
+    const response = await axios.get<number>(`${BASE_URL}/transactions/count-returned`);
+    return response.data;
+  } catch (error) {
+    console.error('Error counting returned books:', error);
+    return 0; // Return default value on error
+  }
+}
 
 export const countMembers = async (): Promise<number> => {
   try {
@@ -428,7 +437,7 @@ export const countMembers = async (): Promise<number> => {
     return response.data;
   } catch (error) {
     console.error('Error counting members:', error);
-    throw error;
+    return 0; // Return default value on error
   }
 };
 
