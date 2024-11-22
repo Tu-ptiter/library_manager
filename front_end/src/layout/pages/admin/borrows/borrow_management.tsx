@@ -16,7 +16,16 @@ import {
 } from "@/components/ui/form";
 import { borrowBook } from '@/api/api';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-import { Book, UserCheck } from 'lucide-react';
+import { Book, UserCheck, Search } from 'lucide-react';
+import axios from 'axios';
+import { cn } from "@/lib/utils";
+
+const BASE_URL = 'https://library-mana.azurewebsites.net';
+
+interface BookSuggestion {
+  bookId: string;
+  title: string;
+}
 
 const transactionSchema = z.object({
   name: z.string().min(1, "Tên người dùng không được để trống"),
@@ -32,6 +41,9 @@ type TransactionFormValues = z.infer<typeof transactionSchema>;
 const BorrowManagement: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [message, setMessage] = React.useState<{text: string; type: 'success' | 'error'} | null>(null);
+  const [suggestions, setSuggestions] = React.useState<BookSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = React.useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = React.useState(false);
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
@@ -41,6 +53,38 @@ const BorrowManagement: React.FC = () => {
       title: ''
     }
   });
+
+  const fetchSuggestions = React.useCallback(async (query: string) => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+
+    setIsLoadingSuggestions(true);
+    try {
+      const response = await axios.get<BookSuggestion[]>(`${BASE_URL}/books/suggest`, {
+        params: { query }
+      });
+      setSuggestions(response.data);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  }, []);
+
+  const handleTitleChange = (value: string) => {
+    form.setValue('title', value);
+    setShowSuggestions(true);
+    fetchSuggestions(value);
+  };
+
+  const handleSelectSuggestion = (title: string) => {
+    form.setValue('title', title);
+    setShowSuggestions(false);
+    setSuggestions([]);
+  };
 
   const handleSubmit = async (data: TransactionFormValues) => {
     setIsSubmitting(true);
@@ -123,15 +167,49 @@ const BorrowManagement: React.FC = () => {
                   control={form.control}
                   name="title"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="relative">
                       <FormLabel className="text-gray-700">Tên sách</FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="Nhập tên sách..." 
-                          {...field}
-                          className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
-                        />
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Input 
+                            placeholder="Nhập tên sách..." 
+                            {...field}
+                            onChange={(e) => handleTitleChange(e.target.value)}
+                            onFocus={() => setShowSuggestions(true)}
+                            className="pl-10 transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          />
+                        </div>
                       </FormControl>
+                      {showSuggestions && (field.value || isLoadingSuggestions) && (
+                        <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
+                          {isLoadingSuggestions ? (
+                            <div className="p-4 text-center text-gray-500">
+                              <LoadingSpinner className="w-5 h-5 mx-auto" />
+                              <span className="text-sm">Đang tìm kiếm...</span>
+                            </div>
+                          ) : suggestions.length > 0 ? (
+                            <ul className="max-h-60 overflow-auto py-2">
+                              {suggestions.map((book) => (
+                                <li
+                                  key={book.bookId}
+                                  className={cn(
+                                    "px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm",
+                                    "transition-colors duration-100"
+                                  )}
+                                  onClick={() => handleSelectSuggestion(book.title)}
+                                >
+                                  {book.title}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : field.value ? (
+                            <div className="p-4 text-center text-gray-500 text-sm">
+                              Không tìm thấy sách
+                            </div>
+                          ) : null}
+                        </div>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
