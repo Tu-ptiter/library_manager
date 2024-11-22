@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Transaction, renewBook, fetchMembers } from '@/api/api';
 import { RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface RenewBookModalProps {
   transaction: Transaction;
@@ -26,8 +27,8 @@ const RenewBookModal: React.FC<RenewBookModalProps> = ({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = React.useState<string>('');
+  const [response, setResponse] = React.useState<Transaction | null>(null);
 
-  // Use fetchMembers API
   React.useEffect(() => {
     const fetchMemberPhone = async () => {
       try {
@@ -35,28 +36,53 @@ const RenewBookModal: React.FC<RenewBookModalProps> = ({
         const member = members.find(m => m.name === transaction.memberName);
         if (member) {
           setPhoneNumber(member.phoneNumber);
+        } else {
+          setError('Không tìm thấy thông tin người mượn');
+          toast.error('Không tìm thấy thông tin người mượn');
         }
       } catch (error) {
         console.error('Error fetching member phone:', error);
+        setError('Không thể lấy thông tin người mượn');
+        toast.error('Không thể lấy thông tin người mượn');
       }
     };
     fetchMemberPhone();
   }, [transaction.memberName]);
 
   const handleSubmit = async () => {
+    if (!phoneNumber) {
+      setError('Vui lòng chờ lấy thông tin số điện thoại');
+      return;
+    }
+
     try {
       setError(null);
       setIsSubmitting(true);
-      await renewBook({
+      setResponse(null);
+
+      const result = await renewBook({
         transactionId: transaction.id,
         name: transaction.memberName,
         title: transaction.bookTitle,
         phoneNumber: phoneNumber
       });
-      onSuccess();
-      onClose();
+
+      console.log('Renew response:', result);
+      setResponse(result);
+
+      if (result) {
+        toast.success('Gia hạn sách thành công');
+        setTimeout(() => {
+          onSuccess();
+          onClose();
+        }, 3000); // Extended delay to show response
+      } else {
+        throw new Error('Không nhận được phản hồi từ server');
+      }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Có lỗi xảy ra khi gia hạn sách');
+      const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra khi gia hạn sách';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error('Error renewing book:', error);
     } finally {
       setIsSubmitting(false);
@@ -80,7 +106,7 @@ const RenewBookModal: React.FC<RenewBookModalProps> = ({
           </div>
           <div className="grid gap-2">
             <Label>Số điện thoại</Label>
-            <div className="text-sm">{phoneNumber}</div>
+            <div className="text-sm">{phoneNumber || 'Đang tải...'}</div>
           </div>
           <div className="grid gap-2">
             <Label>Tên sách</Label>
@@ -96,6 +122,16 @@ const RenewBookModal: React.FC<RenewBookModalProps> = ({
           {error && (
             <div className="text-sm text-red-500 bg-red-50 p-3 rounded-md">
               {error}
+            </div>
+          )}
+
+          {/* Raw Response Data Display */}
+          {response && (
+            <div className="text-sm bg-gray-50 p-3 rounded-md space-y-2">
+              <p className="font-medium text-gray-700">Server Response:</p>
+              <pre className="whitespace-pre-wrap text-xs bg-white p-2 rounded border">
+                {JSON.stringify(response, null, 2)}
+              </pre>
             </div>
           )}
         </div>
