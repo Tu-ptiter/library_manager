@@ -66,6 +66,7 @@ interface TransactionRequest {
   title: string;  // bookTitle
 }
 
+
 const BASE_URL = 'https://library-mana.azurewebsites.net';
 
 
@@ -422,6 +423,18 @@ export const countMembers = async (): Promise<number> => {
     return response.data;
   } catch (error) {
     console.error('Error counting members:', error);
+    throw error;
+  }
+};
+
+export const fetchBorrowedAndRenewedBooks = async (memberId: string) => {
+  try {
+    const response = await axios.get<{ phoneNumber: string; memberName: string; email: string; borrowedAndRenewedBooks: Array<{ transactionType: string; dueDate: string; transactionDate: string; bookId: string; bookTitle: string }> }>(
+      `${BASE_URL}/members/${memberId}/borrowed-renewed-books`
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching borrowed and renewed books:', error);
     throw error;
   }
 };
