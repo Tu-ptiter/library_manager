@@ -57,8 +57,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       title: 'Mượn trả',
       icon: <FaExchangeAlt className="h-4 w-4" />,
       subItems: [
-        { title: 'Quản lý mượn trả', path: '/admin/borrows/manage' },
-        { title: 'Lịch sử mượn trả', path: '/admin/borrows/history' },
+        { title: 'Thêm phiếu mượn', path: '/admin/borrows/manage' },
+        { title: 'Quản lý mượn trả', path: '/admin/borrows/history' },
       ],
     },
   ];

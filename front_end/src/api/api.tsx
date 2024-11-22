@@ -58,8 +58,8 @@ export interface Transaction {
 }
 
 interface TransactionRequest {
-  name: string;
-  title: string;
+  name: string;   // memberName
+  title: string;  // bookTitle
 }
 
 const BASE_URL = 'http://10.147.19.246:8080';
