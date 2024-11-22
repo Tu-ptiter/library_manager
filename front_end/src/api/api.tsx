@@ -52,18 +52,21 @@ interface CategoryDistribution {
 }
 
 export interface Transaction {
+  id: string;
   memberName: string;
   description: string;
   transactionDate: string;
   memberId: string;
   bookId: string;
   bookTitle: string;
-  status: "Đã trả" | "Đang mượn"; 
+  status: "Đã trả" | "Đang mượn" | "Đã gia hạn";
 }
 
-interface TransactionRequest {
-  name: string;   // memberName
-  title: string;  // bookTitle
+export interface TransactionRequest {
+  transactionId?: string;
+  name: string;        // memberName
+  title: string;       // bookTitle
+  phoneNumber: string; // Thêm trường này
 }
 
 
