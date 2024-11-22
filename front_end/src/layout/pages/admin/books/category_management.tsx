@@ -11,6 +11,7 @@ import {
 import { Pencil, Check, X } from 'lucide-react'; // Add icons
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { CategoryData, fetchMainCategories, fetchSubCategories, updateBigCategory, updateSmallCategory } from '@/api/api';
+import { Card } from '@/components/ui/card';
 
 const CategoryManagement: React.FC = () => {
   const [categories, setCategories] = React.useState<CategoryData[]>([]);
@@ -98,19 +99,19 @@ const CategoryManagement: React.FC = () => {
           <input
             value={editMainName}
             onChange={(e) => setEditMainName(e.target.value)}
-            className="border p-1 rounded"
+            className="px-3 py-2 rounded-md border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all w-full"
           />
           <button
             onClick={() => handleSaveMain(category.name)}
-            className="p-1 hover:bg-green-100 rounded"
+            className="p-2 hover:bg-green-100 rounded-full transition-colors"
           >
-            <Check size={16} className="text-green-600" />
+            <Check className="h-5 w-5 text-green-600"/>
           </button>
           <button
             onClick={handleCancel}
-            className="p-1 hover:bg-red-100 rounded"
+            className="p-2 hover:bg-red-100 rounded-full transition-colors"
           >
-            <X size={16} className="text-red-600" />
+            <X className="h-5 w-5 text-red-600" />
           </button>
         </div>
       );
@@ -118,12 +119,12 @@ const CategoryManagement: React.FC = () => {
 
     return (
       <div className="flex items-center gap-2 group">
-        <span>{category.name}</span>
+        <span className="font-medium text-gray-700">{category.name}</span>
         <button
           onClick={() => handleEditMain(category)}
-          className="p-1 hover:bg-gray-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+          className="p-2 hover:bg-gray-100 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200"
         >
-          <Pencil size={16} className="text-gray-600" />
+          <Pencil className="h-4 w-4 text-gray-600" />
         </button>
       </div>
     );
@@ -177,28 +178,44 @@ const CategoryManagement: React.FC = () => {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Main Category</TableHead>
-          <TableHead>Subcategories</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {categories.map((category) => (
-          <TableRow key={category.name}>
-            <TableCell>{renderCategoryName(category)}</TableCell>
-            <TableCell>
-              {category.subcategories.map(subCategory => (
-                <div key={subCategory}>
-                  {renderSubCategoryName(category.name, subCategory)}
-                </div>
-              ))}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Card className="p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Quản lý danh mục</h2>
+        <p className="text-gray-500 mt-1">Chỉnh sửa tên các danh mục và danh mục con</p>
+      </div>
+      
+      <div className="rounded-lg border border-gray-200 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-50/80">
+              <TableHead className="w-1/3 font-semibold text-gray-700">Danh mục lớn</TableHead>
+              <TableHead className="font-semibold text-gray-700">Danh mục nhỏ</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {categories.map((category) => (
+              <TableRow 
+                key={category.name}
+                className="hover:bg-gray-50/80 transition-colors"
+              >
+                <TableCell className="align-top border-r border-gray-100">
+                  {renderCategoryName(category)}
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-2">
+                    {category.subcategories.map(subCategory => (
+                      <div key={subCategory} className="pl-2">
+                        {renderSubCategoryName(category.name, subCategory)}
+                      </div>
+                    ))}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </Card>
   );
 };
 
