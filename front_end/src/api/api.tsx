@@ -62,8 +62,8 @@ export interface Transaction {
 }
 
 interface TransactionRequest {
-  name: string;
-  title: string;
+  name: string;   // memberName
+  title: string;  // bookTitle
 }
 
 const BASE_URL = 'https://library-mana.azurewebsites.net';
