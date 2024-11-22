@@ -67,7 +67,11 @@ interface TransactionRequest {
 }
 
 
+<<<<<<< HEAD
 const BASE_URL = 'http://localhost:8080';
+=======
+const BASE_URL = 'http://10.147.19.246:8080';
+>>>>>>> c1233325690f708b75d9d9ac28b4dbb9bdcdde2b
 
 
 
