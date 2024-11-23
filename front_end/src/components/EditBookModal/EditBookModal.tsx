@@ -204,6 +204,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     id="name"
                     value={formData.title || ''}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="bg-slate-100"
                   />
                 </div>
 
@@ -227,6 +228,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                       author: e.target.value.split(',').map(a => a.trim()).filter(Boolean)
                     })}
                     placeholder="Ngăn cách bởi dấu phẩy"
+                    className="bg-slate-100"
                   />
                 </div>
 
@@ -241,7 +243,8 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                       ...formData, 
                       publicationYear: parseInt(e.target.value) || 0
                     })}
-                    className={errors.publicationYear ? 'border-red-500' : ''}
+                    className={errors.publicationYear ? 'border-red-500 bg-slate-100' : 'bg-slate-100'}
+                    
                   />
                   {errors.publicationYear && (
                     <span className="text-sm text-red-500">{errors.publicationYear}</span>
@@ -254,7 +257,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     value={selectedMainCategory}
                     onValueChange={handleMainCategoryChange}
                   >
-                    <SelectTrigger id="bigCategory">
+                    <SelectTrigger id="bigCategory" className="bg-slate-100">
                       <SelectValue placeholder="Chọn danh mục lớn" />
                     </SelectTrigger>
                     <SelectContent>
@@ -280,7 +283,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     onValueChange={handleSubCategoryChange}
                     disabled={!selectedMainCategory}
                   >
-                    <SelectTrigger id="smallCategory">
+                    <SelectTrigger id="smallCategory" className="bg-slate-100">
                       <SelectValue placeholder="Chọn danh mục nhỏ" />
                     </SelectTrigger>
                     <SelectContent>
@@ -307,7 +310,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     min="0"
                     value={formData.quantity !== undefined ? formData.quantity : ''}
                     onChange={(e) => handleQuantityChange(e.target.value)}
-                    className={errors.quantity ? 'border-red-500' : ''}
+                    className={errors.quantity ? 'border-red-500' : 'bg-slate-100'}
                   />
                   {errors.quantity && (
                     <span className="text-sm text-red-500">{errors.quantity}</span>
@@ -320,6 +323,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     id="nxb"
                     value={formData.nxb || ''}
                     onChange={(e) => setFormData({ ...formData, nxb: e.target.value })}
+                    className="bg-slate-100"
                   />
                 </div>
 
@@ -330,6 +334,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     value={formData.description || ''}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={3}
+                    className="bg-slate-100"
                   />
                 </div>
 
@@ -339,6 +344,7 @@ const EditBookModal: React.FC<EditBookModalProps> = ({ book, isOpen, onClose, on
                     id="img"
                     value={formData.img || ''}
                     onChange={(e) => setFormData({ ...formData, img: e.target.value })}
+                    className="bg-slate-100"
                   />
                 </div>
               </div>

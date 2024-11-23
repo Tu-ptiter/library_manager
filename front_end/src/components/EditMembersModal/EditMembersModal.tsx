@@ -135,7 +135,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 id="name"
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={errors.name ? 'border-red-500' : ''}
+                className={errors.name ? 'border-red-500' : 'bg-gray-100'}
               />
               {errors.name && (
                 <span className="text-sm text-red-500">{errors.name}</span>
@@ -148,7 +148,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className={errors.email ? 'border-red-500' : ''}
+                className={errors.email ? 'border-red-500' : 'bg-gray-100'}
               />
               {errors.email && (
                 <span className="text-sm text-red-500">{errors.email}</span>
@@ -160,7 +160,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 id="phoneNumber"
                 value={formData.phoneNumber || ''}
                 onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                className={errors.phoneNumber ? 'border-red-500' : ''}
+                className={errors.phoneNumber ? 'border-red-500' : 'bg-gray-100'}
               />
               {errors.phoneNumber && (
                 <span className="text-sm text-red-500">{errors.phoneNumber}</span>
@@ -172,7 +172,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 id="address"
                 value={formData.address || ''}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className={errors.address ? 'border-red-500' : ''}
+                className={errors.address ? 'border-red-500' : 'bg-gray-100'}
               />
               {errors.address && (
                 <span className="text-sm text-red-500">{errors.address}</span>
@@ -186,7 +186,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 min="0"
                 value={formData.booksBorrowed || 0}
                 onChange={(e) => handleBorrowedBooksChange(e.target.value)}
-                className={errors.booksBorrowed ? 'border-red-500' : ''}
+                className={errors.booksBorrowed ? 'border-red-500' : 'bg-gray-100'}
                 />
                 {errors.booksBorrowed && (
                 <span className="text-sm text-red-500">{errors.booksBorrowed}</span>

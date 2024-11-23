@@ -408,14 +408,14 @@ return (
         <Table>
           <TableHeader>
             <TableRow className="bg-gray-50/80">
-              <TableHead className="font-semibold text-gray-600 w-20 lg:w-28">Hình ảnh</TableHead>
-              <TableHead className="font-semibold text-gray-600">Tên sách</TableHead>
-              <TableHead className="font-semibold text-gray-600 hidden md:table-cell">Tác giả</TableHead>
-              <TableHead className="font-semibold text-gray-600 hidden lg:table-cell">Danh mục</TableHead>
-              <TableHead className="font-semibold text-gray-600 hidden xl:table-cell">Năm XB</TableHead>
-              <TableHead className="font-semibold text-gray-600 text-center hidden sm:table-cell">SL</TableHead>
-              <TableHead className="font-semibold text-gray-600 hidden sm:table-cell">Trạng thái</TableHead>
-              <TableHead className="font-semibold text-gray-600 text-right pr-4">Hành động</TableHead>
+              <TableHead className="font-bold text-gray-600 w-20 lg:w-28">Hình ảnh</TableHead>
+              <TableHead className="font-bold text-gray-600">Tên sách</TableHead>
+              <TableHead className="font-bold text-gray-600 hidden md:table-cell">Tác giả</TableHead>
+              <TableHead className="font-bold text-gray-600 hidden lg:table-cell">Danh mục</TableHead>
+              <TableHead className="font-bold text-gray-600 hidden xl:table-cell">Năm XB</TableHead>
+              <TableHead className="font-bold text-gray-600 text-center hidden sm:table-cell">SL</TableHead>
+              <TableHead className="font-bold text-gray-600 hidden sm:table-cell">Trạng thái</TableHead>
+              <TableHead className="font-bold text-gray-600 text-right pr-4">Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -168,14 +168,14 @@ const BorrowHistory: React.FC = () => {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-gray-50/80">
-                      <TableHead className="font-semibold text-gray-600">Người mượn</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Số điện thoại</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Tên sách</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Tác giả</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Ngày mượn</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Hạn trả</TableHead>
-                      <TableHead className="font-semibold text-gray-600">Trạng thái</TableHead>
-                      <TableHead className="font-semibold text-gray-600 text-right">Hành động</TableHead>
+                      <TableHead className="font-bold text-gray-600">Người mượn</TableHead>
+                      <TableHead className="font-bold text-gray-600">Số điện thoại</TableHead>
+                      <TableHead className="font-bold text-gray-600">Tên sách</TableHead>
+                      <TableHead className="font-bold text-gray-600">Tác giả</TableHead>
+                      <TableHead className="font-bold text-gray-600">Ngày mượn</TableHead>
+                      <TableHead className="font-bold text-gray-600">Hạn trả</TableHead>
+                      <TableHead className="font-bold text-gray-600">Trạng thái</TableHead>
+                      <TableHead className="font-bold text-gray-600 text-right">Hành động</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

@@ -214,12 +214,12 @@ const AddBook: React.FC = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700">Tên sách</FormLabel>
+                        <FormLabel className="text-gray-700 ">Tên sách</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="Nhập tên sách..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500" 
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100" 
                           />
                         </FormControl>
                         <FormMessage />
@@ -237,7 +237,7 @@ const AddBook: React.FC = () => {
                           <Input 
                             placeholder="Nhập tên tác giả..." 
                             {...field} 
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -256,7 +256,7 @@ const AddBook: React.FC = () => {
                             type="number" 
                             min="0" 
                             {...field} 
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -275,7 +275,7 @@ const AddBook: React.FC = () => {
                             type="number" 
                             min="0" 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -298,11 +298,11 @@ const AddBook: React.FC = () => {
                                 setCustomMainCategory(e.target.value);
                                 form.setValue('bigCategory', e.target.value);
                               }}
-                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                             />
                           ) : (
                             <Select onValueChange={handleMainCategoryChange} value={selectedMainCategory}>
-                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500">
+                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100">
                                 <SelectValue placeholder="Chọn danh mục lớn" />
                               </SelectTrigger>
                               <SelectContent>
@@ -336,11 +336,11 @@ const AddBook: React.FC = () => {
                                 setCustomSubCategory(e.target.value);
                                 form.setValue('smallCategory', e.target.value);
                               }}
-                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                              className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 "
                             />
                           ) : (
                             <Select onValueChange={handleSubCategoryChange} value={selectedSubCategory}>
-                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500">
+                              <SelectTrigger className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100">
                                 <SelectValue placeholder="Chọn danh mục nhỏ" />
                               </SelectTrigger>
                               <SelectContent>
@@ -379,7 +379,7 @@ const AddBook: React.FC = () => {
                           <Input 
                             placeholder="Nhập tên nhà xuất bản..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -397,7 +397,7 @@ const AddBook: React.FC = () => {
                           <Input 
                             placeholder="Nhập URL hình ảnh..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -416,7 +416,7 @@ const AddBook: React.FC = () => {
                         <Textarea 
                           placeholder="Nhập mô tả sách..." 
                           {...field}
-                          className="min-h-[120px] transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                          className="min-h-[120px] transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                         />
                       </FormControl>
                       <FormMessage />
@@ -435,7 +435,7 @@ const AddBook: React.FC = () => {
                   </Button>
                   <Button 
                     type="submit"
-                    className="transition-all duration-200 hover:shadow-lg"
+                    className="transition-all duration-200 hover:shadow-lg bg-green-500 hover:bg-green-600"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Thêm sách

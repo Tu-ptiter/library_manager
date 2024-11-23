@@ -44,6 +44,24 @@ const BorrowManagement: React.FC = () => {
   const [suggestions, setSuggestions] = React.useState<BookSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = React.useState(false);
+  const suggestionRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Add click outside handler
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionRef.current && 
+        !suggestionRef.current.contains(event.target as Node) &&
+        !inputRef.current?.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
@@ -82,8 +100,11 @@ const BorrowManagement: React.FC = () => {
 
   const handleSelectSuggestion = (title: string) => {
     form.setValue('title', title);
+    // Đóng dropdown và xóa suggestions
     setShowSuggestions(false);  
     setSuggestions([]);
+    // Blur input để đóng focus
+    (document.activeElement as HTMLElement)?.blur();
   };
 
   const handleSubmit = async (data: TransactionFormValues) => {
@@ -139,7 +160,7 @@ const BorrowManagement: React.FC = () => {
                           <Input 
                             placeholder="Nhập tên người dùng..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500" 
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100" 
                           />
                         </FormControl>
                         <FormMessage />
@@ -157,7 +178,7 @@ const BorrowManagement: React.FC = () => {
                           <Input 
                             placeholder="Nhập số điện thoại..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -180,12 +201,12 @@ const BorrowManagement: React.FC = () => {
                             {...field}
                             onChange={(e) => handleTitleChange(e.target.value)}
                             onFocus={() => setShowSuggestions(true)}
-                            className="pl-10 transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="pl-10 transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </div>
                       </FormControl>
                       {showSuggestions && (field.value || isLoadingSuggestions) && (
-                        <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
+                        <div ref={suggestionRef} className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
                           {isLoadingSuggestions ? (
                             <div className="p-4 text-center text-gray-500">
                               <LoadingSpinner className="w-5 h-5 mx-auto" />
@@ -231,6 +252,7 @@ const BorrowManagement: React.FC = () => {
                       "relative",
                       "transition-all duration-300",
                       "hover:shadow-lg",
+                      "bg-green-500 hover:bg-green-600 text-white",
                       isSubmitting && "animate-pulse"
                     )}
                   >
@@ -256,7 +278,7 @@ const BorrowManagement: React.FC = () => {
                       ) : (
                         <motion.div
                           key="content"
-                          className="flex items-center"
+                          className="flex items-center "
                         >
                           <Book className="w-4 h-4 mr-2" />
                           Mượn sách
