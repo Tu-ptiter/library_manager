@@ -1,17 +1,24 @@
 // layout/pages/admin/overview/charts/UserStats.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: 'T1', new: 40, active: 240 },
-  { name: 'T2', new: 30, active: 210 },
-  { name: 'T3', new: 60, active: 280 },
-  { name: 'T4', new: 80, active: 250 },
-  { name: 'T5', new: 50, active: 290 },
-  { name: 'T6', new: 75, active: 300 },
-];
+import { fetchMemberStatistics, MemberStatistics } from '@/api/api';
 
 const UserStats: React.FC = () => {
+  const [data, setData] = useState<MemberStatistics[]>([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const statistics = await fetchMemberStatistics();
+        setData(statistics);
+      } catch (error) {
+        console.error('Error fetching member statistics:', error);
+      }
+    };
+
+    getData();
+  }, []);
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
