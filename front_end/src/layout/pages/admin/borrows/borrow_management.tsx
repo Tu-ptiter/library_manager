@@ -44,6 +44,24 @@ const BorrowManagement: React.FC = () => {
   const [suggestions, setSuggestions] = React.useState<BookSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = React.useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = React.useState(false);
+  const suggestionRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // Add click outside handler
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionRef.current && 
+        !suggestionRef.current.contains(event.target as Node) &&
+        !inputRef.current?.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(transactionSchema),
@@ -82,8 +100,11 @@ const BorrowManagement: React.FC = () => {
 
   const handleSelectSuggestion = (title: string) => {
     form.setValue('title', title);
+    // Đóng dropdown và xóa suggestions
     setShowSuggestions(false);  
     setSuggestions([]);
+    // Blur input để đóng focus
+    (document.activeElement as HTMLElement)?.blur();
   };
 
   const handleSubmit = async (data: TransactionFormValues) => {
@@ -185,7 +206,7 @@ const BorrowManagement: React.FC = () => {
                         </div>
                       </FormControl>
                       {showSuggestions && (field.value || isLoadingSuggestions) && (
-                        <div className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
+                        <div ref={suggestionRef} className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200">
                           {isLoadingSuggestions ? (
                             <div className="p-4 text-center text-gray-500">
                               <LoadingSpinner className="w-5 h-5 mx-auto" />
