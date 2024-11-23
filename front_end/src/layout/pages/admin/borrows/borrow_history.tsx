@@ -3,12 +3,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -71,7 +66,6 @@ const BorrowHistory: React.FC = () => {
     fetchTransactions(activeTab);
   };
 
-  // Pagination logic
   const totalPages = Math.ceil(transactions.length / ITEMS_PER_PAGE);
   const paginatedTransactions = transactions.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -86,22 +80,13 @@ const BorrowHistory: React.FC = () => {
 
       <Tabs defaultValue="borrowed" className="w-full" onValueChange={(value) => setActiveTab(value as TabType)}>
         <TabsList className="mb-4 flex space-x-2 bg-transparent">
-          <TabsTrigger 
-            value="borrowed" 
-            className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200"
-          >
+          <TabsTrigger value="borrowed" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200">
             Đang mượn
           </TabsTrigger>
-          <TabsTrigger 
-            value="returned"
-            className="data-[state=active]:bg-green-50 data-[state=active]:text-green-600 data-[state=active]:border-green-200"
-          >
+          <TabsTrigger value="returned" className="data-[state=active]:bg-green-50 data-[state=active]:text-green-600 data-[state=active]:border-green-200">
             Đã trả
           </TabsTrigger>
-          <TabsTrigger 
-            value="renewed"
-            className="data-[state=active]:bg-purple-50 data-[state=active]:text-purple-600 data-[state=active]:border-purple-200"
-          >
+          <TabsTrigger value="renewed" className="data-[state=active]:bg-purple-50 data-[state=active]:text-purple-600 data-[state=active]:border-purple-200">
             Đã gia hạn
           </TabsTrigger>
         </TabsList>
@@ -118,51 +103,31 @@ const BorrowHistory: React.FC = () => {
                   <TableHeader>
                     <TableRow className="bg-gray-50/80">
                       <TableHead className="font-semibold text-gray-600">Người mượn</TableHead>
-                      <TableHead className="font-semibold text-gray-600 hidden sm:table-cell">Tên sách</TableHead>
-                      <TableHead className="font-semibold text-gray-600 hidden lg:table-cell">Mô tả</TableHead>
-                      <TableHead className="font-semibold text-gray-600 hidden md:table-cell">Ngày giao dịch</TableHead>
+                      <TableHead className="font-semibold text-gray-600">Số điện thoại</TableHead>
+                      <TableHead className="font-semibold text-gray-600">Tên sách</TableHead>
+                      <TableHead className="font-semibold text-gray-600">Tác giả</TableHead>
+                      <TableHead className="font-semibold text-gray-600">Ngày mượn</TableHead>
+                      <TableHead className="font-semibold text-gray-600">Hạn trả</TableHead>
                       <TableHead className="font-semibold text-gray-600">Trạng thái</TableHead>
                       <TableHead className="font-semibold text-gray-600 text-right">Hành động</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginatedTransactions.map((transaction, index) => (
-                      <TableRow 
-                        key={`${transaction.memberId}-${index}`} 
-                        className="transition-colors hover:bg-gray-50/80"
-                      >
-                        <TableCell>
-                          <div className="space-y-1">
-                            <p className="font-medium text-gray-900">
-                              {transaction.memberName}
-                            </p>
-                            <p className="text-sm text-gray-500 sm:hidden">
-                              {transaction.bookTitle}
-                            </p>
-                            <p className="text-sm text-gray-500 md:hidden">
-                              {format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}
-                            </p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          {transaction.bookTitle}
-                        </TableCell>
-                        <TableCell className="hidden lg:table-cell max-w-[300px] truncate">
-                          {transaction.description}
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell whitespace-nowrap">
-                          {format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}
-                        </TableCell>
+                      <TableRow key={`${transaction.memberId}-${index}`} className="transition-colors hover:bg-gray-50/80">
+                        <TableCell className="font-medium">{transaction.memberName}</TableCell>
+                        <TableCell>{transaction.phoneNumber}</TableCell>
+                        <TableCell>{transaction.bookTitle}</TableCell>
+                        <TableCell>{transaction.author}</TableCell>
+                        <TableCell>{format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
+                        <TableCell>{format(new Date(transaction.dueDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
                         <TableCell>
                           <span className={cn(
                             "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
                             {
-                              "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20": 
-                                transaction.status === 'Đang mượn',
-                              "bg-green-50 text-green-700 ring-1 ring-green-600/20": 
-                                transaction.status === 'Đã trả',
-                              "bg-purple-50 text-purple-700 ring-1 ring-purple-600/20": 
-                                transaction.status === 'Đã gia hạn',
+                              "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20": transaction.status === 'Đang mượn',
+                              "bg-green-50 text-green-700 ring-1 ring-green-600/20": transaction.status === 'Đã trả',
+                              "bg-purple-50 text-purple-700 ring-1 ring-purple-600/20": transaction.status === 'Đã gia hạn',
                             }
                           )}>
                             {transaction.status}
@@ -174,10 +139,7 @@ const BorrowHistory: React.FC = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setActionModal({ 
-                                  type: 'return', 
-                                  transaction 
-                                })}
+                                onClick={() => setActionModal({ type: 'return', transaction })}
                                 className="border-green-200 text-green-700 hover:bg-green-50"
                               >
                                 <ArrowLeftRight className="h-4 w-4 mr-1" />
@@ -186,10 +148,7 @@ const BorrowHistory: React.FC = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => setActionModal({ 
-                                  type: 'renew', 
-                                  transaction 
-                                })}
+                                onClick={() => setActionModal({ type: 'renew', transaction })}
                                 className="border-purple-200 text-purple-700 hover:bg-purple-50"
                               >
                                 <RefreshCw className="h-4 w-4 mr-1" />
@@ -218,7 +177,6 @@ const BorrowHistory: React.FC = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Return Book Modal */}
       {actionModal.type === 'return' && actionModal.transaction && (
         <ReturnBookModal
           transaction={actionModal.transaction}
@@ -227,7 +185,6 @@ const BorrowHistory: React.FC = () => {
         />
       )}
 
-      {/* Renew Book Modal */}
       {actionModal.type === 'renew' && actionModal.transaction && (
         <RenewBookModal
           transaction={actionModal.transaction}

@@ -54,6 +54,9 @@ interface CategoryDistribution {
 export interface Transaction {
   id: string;
   memberName: string;
+  phoneNumber: string;
+  author: string;
+  dueDate: string;
   description: string;
   transactionDate: string;
   memberId: string;
@@ -63,10 +66,12 @@ export interface Transaction {
 }
 
 export interface TransactionRequest {
-  transactionId?: string;
-  name: string;        // memberName
-  title: string;       // bookTitle
-  phoneNumber: string; // Thêm trường này
+  transactionId: string;         // Make required
+  memberId?: string;            // Add this
+  bookId?: string;             // Add this
+  name: string;                
+  title: string;               
+  phoneNumber: string;         
 }
 
 

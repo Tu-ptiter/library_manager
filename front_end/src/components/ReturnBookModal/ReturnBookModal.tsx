@@ -1,3 +1,4 @@
+// src/components/ReturnBookModal/ReturnBookModal.tsx
 import React from 'react';
 import {
   Dialog,
@@ -9,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Transaction, returnBook, fetchMembers } from '@/api/api';
+import { Transaction, returnBook } from '@/api/api';
 import { ArrowLeftRight } from 'lucide-react';
 
 interface ReturnBookModalProps {
@@ -25,33 +26,18 @@ const ReturnBookModal: React.FC<ReturnBookModalProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [phoneNumber, setPhoneNumber] = React.useState<string>('');
-
-  // Use fetchMembers API
-  React.useEffect(() => {
-    const fetchMemberPhone = async () => {
-      try {
-        const members = await fetchMembers();
-        const member = members.find(m => m.name === transaction.memberName);
-        if (member) {
-          setPhoneNumber(member.phoneNumber);
-        }
-      } catch (error) {
-        console.error('Error fetching member phone:', error);
-      }
-    };
-    fetchMemberPhone();
-  }, [transaction.memberName]);
 
   const handleSubmit = async () => {
     try {
       setError(null);
       setIsSubmitting(true);
       await returnBook({
-        transactionId: transaction.id,
+        transactionId: transaction.id,        // Add this
+        memberId: transaction.memberId,       // Add this
+        bookId: transaction.bookId,          // Add this
         name: transaction.memberName,
         title: transaction.bookTitle,
-        phoneNumber: phoneNumber
+        phoneNumber: transaction.phoneNumber
       });
       onSuccess();
       onClose();
@@ -80,7 +66,7 @@ const ReturnBookModal: React.FC<ReturnBookModalProps> = ({
           </div>
           <div className="grid gap-2">
             <Label>Số điện thoại</Label>
-            <div className="text-sm">{phoneNumber}</div>
+            <div className="text-sm">{transaction.phoneNumber}</div>
           </div>
           <div className="grid gap-2">
             <Label>Tên sách</Label>
@@ -111,7 +97,7 @@ const ReturnBookModal: React.FC<ReturnBookModalProps> = ({
           </Button>
           <Button 
             onClick={handleSubmit}
-            disabled={isSubmitting || !phoneNumber}
+            disabled={isSubmitting}
             className="bg-green-600 hover:bg-green-700"
           >
             {isSubmitting ? (
