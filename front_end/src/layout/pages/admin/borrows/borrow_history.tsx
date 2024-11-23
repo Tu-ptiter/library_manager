@@ -1,6 +1,6 @@
 // src/layout/pages/admin/borrows/borrow_history.tsx
 import React from 'react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns'; // Add isValid import
 import { vi } from 'date-fns/locale';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
@@ -32,6 +32,17 @@ const BorrowHistory: React.FC = () => {
     type: null,
     transaction: null
   });
+
+  // Add safe date formatting function
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (!isValid(date)) return 'Invalid date';
+    try {
+      return format(date, 'HH:mm dd/MM/yyyy', { locale: vi });
+    } catch {
+      return 'Invalid date';
+    }
+  };
 
   const fetchTransactions = React.useCallback(async (type: TabType) => {
     setIsLoading(true);
@@ -77,7 +88,7 @@ const BorrowHistory: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Quản lý mượn trả</h2>
       </div>
-
+  
       <Tabs defaultValue="borrowed" className="w-full" onValueChange={(value) => setActiveTab(value as TabType)}>
         <TabsList className="mb-4 flex space-x-2 bg-transparent">
           <TabsTrigger value="borrowed" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200">
@@ -90,11 +101,15 @@ const BorrowHistory: React.FC = () => {
             Đã gia hạn
           </TabsTrigger>
         </TabsList>
-
+  
         <TabsContent value={activeTab}>
           {isLoading ? (
             <div className="flex justify-center items-center h-32">
               <LoadingSpinner />
+            </div>
+          ) : transactions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[400px] text-gray-500">
+              <p className="text-lg">Không có dữ liệu để hiển thị</p>
             </div>
           ) : (
             <div className="-mx-4 sm:mx-0 rounded-none sm:rounded-lg border border-gray-200 overflow-hidden">
@@ -119,8 +134,8 @@ const BorrowHistory: React.FC = () => {
                         <TableCell>{transaction.phoneNumber}</TableCell>
                         <TableCell>{transaction.bookTitle}</TableCell>
                         <TableCell>{transaction.author}</TableCell>
-                        <TableCell>{format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
-                        <TableCell>{format(new Date(transaction.dueDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
+                        <TableCell>{formatDate(transaction.transactionDate)}</TableCell>
+                        <TableCell>{formatDate(transaction.dueDate)}</TableCell>
                         <TableCell>
                           <span className={cn(
                             "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
@@ -164,7 +179,7 @@ const BorrowHistory: React.FC = () => {
               </div>
             </div>
           )}
-
+  
           {transactions.length > ITEMS_PER_PAGE && (
             <div className="mt-4 sm:mt-6 flex justify-center">
               <CustomPagination 
@@ -176,7 +191,7 @@ const BorrowHistory: React.FC = () => {
           )}
         </TabsContent>
       </Tabs>
-
+  
       {actionModal.type === 'return' && actionModal.transaction && (
         <ReturnBookModal
           transaction={actionModal.transaction}
@@ -184,7 +199,7 @@ const BorrowHistory: React.FC = () => {
           onSuccess={handleActionComplete}
         />
       )}
-
+  
       {actionModal.type === 'renew' && actionModal.transaction && (
         <RenewBookModal
           transaction={actionModal.transaction}

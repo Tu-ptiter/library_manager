@@ -82,7 +82,7 @@ export interface TransactionRequest {
 
 
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
+const BASE_URL = 'http://10.147.19.246:8080';
 
 
 
