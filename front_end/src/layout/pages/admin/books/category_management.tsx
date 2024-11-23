@@ -12,6 +12,7 @@ import { Pencil, Check, X } from 'lucide-react'; // Add icons
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { CategoryData, fetchMainCategories, fetchSubCategories, updateBigCategory, updateSmallCategory } from '@/api/api';
 import { Card } from '@/components/ui/card';
+import toast, { Toaster } from 'react-hot-toast';
 
 const CategoryManagement: React.FC = () => {
   const [categories, setCategories] = React.useState<CategoryData[]>([]);
@@ -63,14 +64,15 @@ const CategoryManagement: React.FC = () => {
         cat.name === oldName ? { ...cat, name: editMainName } : cat
       ));
       setEditingMainId(null);
+      toast.success('Cập nhật danh mục lớn thành công', { position: "top-right" });
     } catch (err) {
-      setError('Failed to update main category');
+      toast.error('Cập nhật thất bại', { position: "top-right" });
     }
   };
-
+  
   const handleSaveSub = async (mainCategory: string, oldName: string) => {
     try {
-      await updateSmallCategory(oldName, editSubName);
+      await updateSmallCategory(mainCategory, oldName, editSubName);
       setCategories(categories.map(cat => 
         cat.name === mainCategory ? { 
           ...cat, 
@@ -78,8 +80,9 @@ const CategoryManagement: React.FC = () => {
         } : cat
       ));
       setEditingSubId(null);
+      toast.success('Cập nhật danh mục nhỏ thành công', { position: "top-right" });
     } catch (err) {
-      setError('Failed to update subcategory');
+      toast.error('Cập nhật thất bại', { position: "top-right" });
       console.error(err);
     }
   };
@@ -134,6 +137,7 @@ const CategoryManagement: React.FC = () => {
   const renderSubCategoryName = (mainCategory: string, subCategory: string) => {
     if (editingSubId === subCategory) {
       return (
+        
         <div className="flex items-center gap-2">
           <input
             value={editSubName}
@@ -178,6 +182,7 @@ const CategoryManagement: React.FC = () => {
   }
 
   return (
+    <div>
     <Card className="p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Quản lý danh mục</h2>
@@ -216,7 +221,8 @@ const CategoryManagement: React.FC = () => {
         </Table>
       </div>
     </Card>
+    <Toaster position="top-right" />
+    </div>
   );
 };
-
 export default CategoryManagement;
