@@ -265,9 +265,11 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
       )}
 
       {/* Info Modal for Borrowed Books */}
-{isInfoModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-lg shadow-md w-full max-w-2xl p-6 relative">
+  {isInfoModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 !m-0">
+    {/* Modal container */}
+    <div className="absolute inset-0 bg-black bg-opacity-50 m-0" onClick={() => setIsInfoModalOpen(false)}></div>
+    <div className="relative z-10 bg-white rounded-lg shadow-md w-full max-w-2xl p-6">
       {/* Close button */}
       <button
         className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
@@ -314,8 +316,6 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
     </div>
   </div>
 )}
-
-
     </div>
   );
 };

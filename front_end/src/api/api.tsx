@@ -41,6 +41,12 @@ export interface Member {
   booksBorrowed: number;
 }
 
+export interface MemberStatistics {
+  new: number;
+  name: string;
+  active: number;
+}
+
 export interface CategoryData {
   name: string;
   subcategories: string[];
@@ -54,6 +60,9 @@ interface CategoryDistribution {
 export interface Transaction {
   id: string;
   memberName: string;
+  phoneNumber: string;
+  author: string;
+  dueDate: string;
   description: string;
   transactionDate: string;
   memberId: string;
@@ -63,15 +72,22 @@ export interface Transaction {
 }
 
 export interface TransactionRequest {
-  transactionId?: string;
-  name: string;        // memberName
-  title: string;       // bookTitle
-  phoneNumber: string; // Thêm trường này
+  transactionId: string;         // Make required
+  memberId?: string;            // Add this
+  bookId?: string;             // Add this
+  name: string;                
+  title: string;               
+  phoneNumber: string;         
 }
 
 
-const BASE_URL = 'http://localhost:8080';
+<<<<<<< HEAD
+const BASE_URL = 'http://10.147.19.246:8080';
+=======
 
+const BASE_URL = 'https://library-mana.azurewebsites.net';
+
+>>>>>>> 44d663506d880d19a531fcf6f0b695fcf4fa5180
 
 
 
@@ -165,6 +181,16 @@ export const fetchRenewedTransactions = async (): Promise<Transaction[]> => {
     return response.data;
   } catch (error) {
     console.error('Error fetching renewed transactions:', error);
+    throw error;
+  }
+};
+
+export const fetchMemberStatistics = async (): Promise<MemberStatistics[]> => {
+  try {
+    const response = await axios.get<MemberStatistics[]>(`${BASE_URL}/members/statistics`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching member statistics:', error);
     throw error;
   }
 };
@@ -350,11 +376,20 @@ export const updateBigCategory = async (oldName: string, newName: string) => {
   });
 };
 
-export const updateSmallCategory = async (oldName: string, newName: string) => {
+export const updateSmallCategory = async (
+  bigCategoryName: string,
+  oldSmallCategoryName: string,
+  newSmallCategoryName: string
+) => {
   return await axios.put(`${BASE_URL}/books/update-small-category`, null, {
-    params: { oldName, newName }
+    params: {
+      bigCategoryName,
+      oldSmallCategoryName,
+      newSmallCategoryName
+    }
   });
 };
+
 
 
 export const login = async (username: string, password: string) => {
