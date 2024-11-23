@@ -70,13 +70,8 @@ export interface TransactionRequest {
 }
 
 
-<<<<<<< HEAD
-const BASE_URL = 'http://10.147.19.246:8080';
-=======
+const BASE_URL = 'http://localhost:8080';
 
-const BASE_URL = 'https://library-mana.azurewebsites.net';
-
->>>>>>> 44d663506d880d19a531fcf6f0b695fcf4fa5180
 
 
 
