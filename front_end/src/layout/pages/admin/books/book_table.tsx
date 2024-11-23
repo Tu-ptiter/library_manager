@@ -33,7 +33,7 @@ import {
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
 import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner';
-
+import { debounce } from 'lodash';
 interface BookTableProps {
   currentItems: Book[];
   currentPage: number;
@@ -62,6 +62,11 @@ const BookTable: React.FC<BookTableProps> = ({
   const [filteredBooks, setFilteredBooks] = React.useState<Book[] | null>(null);
   const [filterCurrentPage, setFilterCurrentPage] = React.useState(1);
   const itemsPerPage = 10;
+  const [searchSuggestions, setSuggestions] = React.useState<Book[]>([]);
+  const [showSuggestions, setShowSuggestions] = React.useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = React.useState(false);
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
+
 
   const paginatedFilteredBooks = React.useMemo(() => {
     if (!filteredBooks) return null;
@@ -136,6 +141,36 @@ const BookTable: React.FC<BookTableProps> = ({
     }
   };
 
+
+// Add this function to fetch suggestions
+const fetchSuggestions = React.useCallback(async (query: string) => {
+  if (!query.trim()) {
+    setSuggestions([]);
+    return;
+  }
+
+  setIsLoadingSuggestions(true);
+  try {
+    const response = await axios.get<Book[]>(`${BASE_URL}/books/suggest`, {
+      params: { query }
+    });
+    setSuggestions(response.data);
+  } catch (error) {
+    console.error('Error fetching suggestions:', error);
+    setSuggestions([]);
+  } finally {
+    setIsLoadingSuggestions(false);
+  }
+}, []);
+  
+// Add debounce for search input
+const debouncedFetchSuggestions = React.useCallback(
+  debounce((query: string) => fetchSuggestions(query), 300),
+  [fetchSuggestions]
+);
+
+
+
   const displayItems = filteredBooks ? paginatedFilteredBooks : currentItems;
   const displayCurrentPage = filteredBooks ? filterCurrentPage : currentPage;
   const displayTotalPages = filteredBooks ? filteredTotalPages : totalPages;
@@ -146,9 +181,20 @@ const BookTable: React.FC<BookTableProps> = ({
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
+// Update the search input change handler
+const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  setSearchTerm(value);
+  setShowSuggestions(true);
+  debouncedFetchSuggestions(value);
+};
+// Add handler for selecting a suggestion
+const handleSelectSuggestion = async (book: Book) => {
+  setSearchTerm(book.title);
+  setShowSuggestions(false);
+  setFilteredBooks([book]);
+  onSearch([book]);
+};
 
   const handleSearchTypeChange = (value: SearchType) => {
     setSearchType(value);
@@ -188,7 +234,16 @@ const BookTable: React.FC<BookTableProps> = ({
     };
     fetchCategories();
   }, []);
-
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchInputRef.current && !searchInputRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   const handleEdit = (book: Book) => {
     setEditingBook(book);
   };

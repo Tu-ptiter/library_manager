@@ -46,6 +46,14 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
     }
   }, [member]);
 
+  const handleBorrowedBooksChange = (value: string) => {
+    const number = parseInt(value);
+    setFormData({
+      ...formData,
+      booksBorrowed: isNaN(number) ? 0 : number
+    });
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
@@ -66,11 +74,12 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
     if (!formData.address?.trim()) {
       newErrors.address = 'Địa chỉ không được để trống';
     }
-
+  
+    // Move this check before the return statement
     if (formData.booksBorrowed !== undefined && formData.booksBorrowed < 0) {
       newErrors.booksBorrowed = 'Số sách mượn không được âm';
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -98,13 +107,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
     }
   };
 
-  const handleBorrowedBooksChange = (value: string) => {
-    const number = parseInt(value);
-    setFormData({
-      ...formData,
-      booksBorrowed: isNaN(number) ? 0 : number
-    });
-  };
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -176,7 +179,7 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
               )}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="booksBorrowed">Số sách mượn</Label>
+              <Label htmlFor="booksBorrowed">Số sách đang mượn</Label>
               <Input
                 id="booksBorrowed"
                 type="number"
@@ -184,11 +187,11 @@ const EditMemberModal: React.FC<EditMemberModalProps> = ({
                 value={formData.booksBorrowed || 0}
                 onChange={(e) => handleBorrowedBooksChange(e.target.value)}
                 className={errors.booksBorrowed ? 'border-red-500' : ''}
-              />
-              {errors.booksBorrowed && (
+                />
+                {errors.booksBorrowed && (
                 <span className="text-sm text-red-500">{errors.booksBorrowed}</span>
-              )}
-            </div>
+                )}
+</div>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
