@@ -1,4 +1,3 @@
-// layout/pages/admin/borrows/borrow_management.tsx
 import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +18,7 @@ import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { Book, UserCheck, Search } from 'lucide-react';
 import axios from 'axios';
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const BASE_URL = 'https://library-mana.azurewebsites.net';
 
@@ -82,7 +82,7 @@ const BorrowManagement: React.FC = () => {
 
   const handleSelectSuggestion = (title: string) => {
     form.setValue('title', title);
-    setShowSuggestions(false);
+    setShowSuggestions(false);  
     setSuggestions([]);
   };
 
@@ -193,10 +193,7 @@ const BorrowManagement: React.FC = () => {
                               {suggestions.map((book) => (
                                 <li
                                   key={book.bookId}
-                                  className={cn(
-                                    "px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm",
-                                    "transition-colors duration-100"
-                                  )}
+                                  className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm transition-colors duration-100"
                                   onClick={() => handleSelectSuggestion(book.title)}
                                 >
                                   {book.title}
@@ -218,7 +215,7 @@ const BorrowManagement: React.FC = () => {
                 {message && (
                   <div className={`p-4 rounded-lg ${
                     message.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                  } transition-all duration-300 animate-fade-in`}>
+                  }`}>
                     {message.text}
                   </div>
                 )}
@@ -227,11 +224,42 @@ const BorrowManagement: React.FC = () => {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="transition-all duration-200 hover:shadow-lg"
+                    className={cn(
+                      "relative",
+                      "transition-all duration-300",
+                      "hover:shadow-lg",
+                      isSubmitting && "animate-pulse"
+                    )}
                   >
-                    {isSubmitting && <LoadingSpinner className="mr-2 h-4 w-4" />}
-                    <Book className="w-4 h-4 mr-2" />
-                    Mượn sách
+                    <AnimatePresence mode="wait">
+                      {isSubmitting ? (
+                        <motion.div
+                          key="loading"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="absolute inset-0 flex items-center justify-center"
+                        >
+                          <motion.div 
+                            className="border-2 border-white border-t-transparent h-5 w-5 rounded-full"
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              ease: "linear"
+                            }}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="content"
+                          className="flex items-center"
+                        >
+                          <Book className="w-4 h-4 mr-2" />
+                          Mượn sách
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Button>
                 </div>
               </form>

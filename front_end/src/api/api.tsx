@@ -124,12 +124,27 @@ export const deleteBook = async (idBook: string): Promise<void> => {
   }
 };
 
-export const createBook = async (bookData: Omit<Book, 'id'>): Promise<Book> => {
+export const createBook = async (bookData: Omit<Book, 'bookId'>): Promise<Book> => {
   try {
-    const response = await axios.post<Book>(`${BASE_URL}/books`, bookData);
+    // Generate a random bookId
+    const bookId = `6725f0b0801da71ae9777${Math.random().toString(36).substr(2, 3)}`;
+    const formattedData = {
+      ...bookData,
+      bookId,
+      // Ensure correct data structure
+      author: Array.isArray(bookData.author) ? bookData.author : [bookData.author],
+      bigCategory: Array.isArray(bookData.bigCategory) ? bookData.bigCategory : [{
+        name: bookData.bigCategory,
+        smallCategory: [bookData.smallCategory]
+      }]
+    };
+
+    const response = await axios.post<Book>(`${BASE_URL}/books`, formattedData);
     return response.data;
   } catch (error) {
-    console.error('Error creating book:', error);
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi thêm sách');
+    }
     throw error;
   }
 };

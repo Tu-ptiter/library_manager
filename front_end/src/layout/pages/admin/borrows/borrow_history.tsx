@@ -1,17 +1,18 @@
 // src/layout/pages/admin/borrows/borrow_history.tsx
 import React from 'react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input"; // Add this
 import { Transaction, fetchBorrowedTransactions, fetchReturnedTransactions, fetchRenewedTransactions } from '@/api/api';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { cn } from "@/lib/utils";
 import CustomPagination from '@/components/custom-pagination';
-import { ArrowLeftRight, RefreshCw } from 'lucide-react';
+import { ArrowLeftRight, RefreshCw, Search, RotateCcw } from 'lucide-react'; // Add Search, RotateCcw
 import ReturnBookModal from '@/components/ReturnBookModal/ReturnBookModal';
 import RenewBookModal from '@/components/RenewBookModal/RenewBookModal';
 
@@ -26,12 +27,45 @@ interface ActionModalState {
 const BorrowHistory: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState<TabType>('borrowed');
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = React.useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [searchTerm, setSearchTerm] = React.useState('');
   const [actionModal, setActionModal] = React.useState<ActionModalState>({
     type: null,
     transaction: null
   });
+
+  // Add safe date formatting function
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    if (!isValid(date)) return 'Invalid date';
+    try {
+      return format(date, 'HH:mm dd/MM/yyyy', { locale: vi });
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
+  const handleSearch = React.useCallback((searchValue: string) => {
+    const term = searchValue.toLowerCase().trim();
+    if (!term) {
+      setFilteredTransactions(transactions);
+      return;
+    }
+  
+    const filtered = transactions.filter(transaction => 
+      transaction.memberName.toLowerCase().includes(term) ||
+      transaction.bookTitle.toLowerCase().includes(term) ||
+      transaction.author.toLowerCase().includes(term)
+    );
+    setFilteredTransactions(filtered);
+    setCurrentPage(1);
+  }, [transactions]);
+
+  React.useEffect(() => {
+    handleSearch(searchTerm);
+  }, [searchTerm, handleSearch]);
 
   const fetchTransactions = React.useCallback(async (type: TabType) => {
     setIsLoading(true);
@@ -49,6 +83,7 @@ const BorrowHistory: React.FC = () => {
           break;
       }
       setTransactions(data);
+      setFilteredTransactions(data);
       setCurrentPage(1);
     } catch (error) {
       console.error(`Error fetching ${type} transactions:`, error);
@@ -65,9 +100,14 @@ const BorrowHistory: React.FC = () => {
     setActionModal({ type: null, transaction: null });
     fetchTransactions(activeTab);
   };
+  const handleResetSearch = () => {
+    setSearchTerm('');
+    setFilteredTransactions(transactions);
+    setCurrentPage(1);
+  };
 
-  const totalPages = Math.ceil(transactions.length / ITEMS_PER_PAGE);
-  const paginatedTransactions = transactions.slice(
+  const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+  const paginatedTransactions = filteredTransactions.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -77,7 +117,29 @@ const BorrowHistory: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Quản lý mượn trả</h2>
       </div>
-
+        {/* Add Search Bar */}
+        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Tìm kiếm theo tên người mượn, tên sách hoặc tác giả..."
+            className="pl-10 h-11 text-base border-gray-200 hover:border-gray-300 focus:border-blue-500 transition-colors w-full"
+          />
+        </div>
+        {searchTerm && (
+          <Button
+            onClick={handleResetSearch}
+            variant="outline"
+            className="w-full sm:w-auto h-11 px-6 font-medium border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Đặt lại
+          </Button>
+        )}
+      </div>
       <Tabs defaultValue="borrowed" className="w-full" onValueChange={(value) => setActiveTab(value as TabType)}>
         <TabsList className="mb-4 flex space-x-2 bg-transparent">
           <TabsTrigger value="borrowed" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-600 data-[state=active]:border-blue-200">
@@ -90,11 +152,15 @@ const BorrowHistory: React.FC = () => {
             Đã gia hạn
           </TabsTrigger>
         </TabsList>
-
+  
         <TabsContent value={activeTab}>
           {isLoading ? (
             <div className="flex justify-center items-center h-32">
               <LoadingSpinner />
+            </div>
+          ) : transactions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-[400px] text-gray-500">
+              <p className="text-lg">Không có dữ liệu để hiển thị</p>
             </div>
           ) : (
             <div className="-mx-4 sm:mx-0 rounded-none sm:rounded-lg border border-gray-200 overflow-hidden">
@@ -119,8 +185,8 @@ const BorrowHistory: React.FC = () => {
                         <TableCell>{transaction.phoneNumber}</TableCell>
                         <TableCell>{transaction.bookTitle}</TableCell>
                         <TableCell>{transaction.author}</TableCell>
-                        <TableCell>{format(new Date(transaction.transactionDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
-                        <TableCell>{format(new Date(transaction.dueDate), 'HH:mm dd/MM/yyyy', { locale: vi })}</TableCell>
+                        <TableCell>{formatDate(transaction.transactionDate)}</TableCell>
+                        <TableCell>{formatDate(transaction.dueDate)}</TableCell>
                         <TableCell>
                           <span className={cn(
                             "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap",
@@ -164,7 +230,7 @@ const BorrowHistory: React.FC = () => {
               </div>
             </div>
           )}
-
+  
           {transactions.length > ITEMS_PER_PAGE && (
             <div className="mt-4 sm:mt-6 flex justify-center">
               <CustomPagination 
@@ -176,7 +242,7 @@ const BorrowHistory: React.FC = () => {
           )}
         </TabsContent>
       </Tabs>
-
+  
       {actionModal.type === 'return' && actionModal.transaction && (
         <ReturnBookModal
           transaction={actionModal.transaction}
@@ -184,7 +250,7 @@ const BorrowHistory: React.FC = () => {
           onSuccess={handleActionComplete}
         />
       )}
-
+  
       {actionModal.type === 'renew' && actionModal.transaction && (
         <RenewBookModal
           transaction={actionModal.transaction}
