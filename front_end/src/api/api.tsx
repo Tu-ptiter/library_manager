@@ -41,10 +41,10 @@ export interface Member {
   booksBorrowed: number;
 }
 
-export interface MemberStatistics {
-  new: number;
-  name: string;
-  active: number;
+export interface WeeklyStats {
+  returned: number;
+  day: string;
+  borrowed: number;
 }
 
 export interface CategoryData {
@@ -82,7 +82,7 @@ export interface TransactionRequest {
 
 
 
-const BASE_URL = 'http://10.147.19.246:8080';
+const BASE_URL = 'https://library-mana.azurewebsites.net';
 
 
 
@@ -181,12 +181,12 @@ export const fetchRenewedTransactions = async (): Promise<Transaction[]> => {
   }
 };
 
-export const fetchMemberStatistics = async (): Promise<MemberStatistics[]> => {
+export const fetchWeeklyStats = async (): Promise<WeeklyStats[]> => {
   try {
-    const response = await axios.get<MemberStatistics[]>(`${BASE_URL}/members/statistics`);
+    const response = await axios.get<WeeklyStats[]>(`${BASE_URL}/transactions/weekly-stats`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching member statistics:', error);
+    console.error('Error fetching weekly stats:', error);
     throw error;
   }
 };
