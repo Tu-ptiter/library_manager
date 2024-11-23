@@ -2,20 +2,37 @@
 import { useState, useEffect } from 'react';
 import { Book, Users, BookOpen, Target } from 'lucide-react';
 import { Card } from "@/components/ui/card";
-import { fetchTotalBooks, countMembers, countBorrowedBooks } from '@/api/api';
+import { fetchTotalBooks, countMembers, countBorrowedBooks, countReturnedBooks } from '@/api/api';
 import StatsCard from '@/components/ui/starts-card';
 import { BookStats, UserStats, BorrowStats, CategoryDistribution } from './charts';
 
-export default function Overview() {
-  // State for real values
-  const [totalBooks, setTotalBooks] = useState(0);
-  const [activeUsers, setActiveUsers] = useState(0);
-  const [borrowedBooks, setBorrowedBooks] = useState(0);
+interface Stats {
+  totalBooks: number;
+  activeUsers: number;
+  borrowedBooks: number;
+  returnedBooks: number;
+}
 
-  // State for animated displays
-  const [displayedTotal, setDisplayedTotal] = useState(0);
-  const [displayedUsers, setDisplayedUsers] = useState(0);
-  const [displayedBorrowed, setDisplayedBorrowed] = useState(0);
+export default function Overview() {
+  // Combined stats state
+  const [stats, setStats] = useState<Stats>({
+    totalBooks: 0,
+    activeUsers: 0,
+    borrowedBooks: 0,
+    returnedBooks: 0
+  });
+
+  // UI states
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Animated display states
+  const [displayedStats, setDisplayedStats] = useState<Stats>({
+    totalBooks: 0,
+    activeUsers: 0,
+    borrowedBooks: 0,
+    returnedBooks: 0 
+  });
 
   // Animation utility function
   const animateValue = (
@@ -24,6 +41,11 @@ export default function Overview() {
     duration: number,
     setValue: (value: number) => void
   ) => {
+    if (endValue === 0) {
+      setValue(0);
+      return;
+    }
+
     const steps = 30;
     const increment = endValue / steps;
     let current = startValue;
@@ -45,43 +67,78 @@ export default function Overview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [books, users, borrowed] = await Promise.all([
+        setIsLoading(true);
+        const [books, users, borrowed, returned] = await Promise.allSettled([
           fetchTotalBooks(),
           countMembers(),
-          countBorrowedBooks()
+          countBorrowedBooks(),
+          countReturnedBooks()
         ]);
-        setTotalBooks(books);
-        setActiveUsers(users);
-        setBorrowedBooks(borrowed);
+
+        setStats({
+          totalBooks: books.status === 'fulfilled' ? books.value : 0,
+          activeUsers: users.status === 'fulfilled' ? users.value : 0,
+          borrowedBooks: borrowed.status === 'fulfilled' ? borrowed.value : 0,
+          returnedBooks: returned.status === 'fulfilled' ? returned.value : 0 
+        });
       } catch (error) {
         console.error('Error fetching stats:', error);
+        setError('Không thể tải dữ liệu thống kê');
+      } finally {
+        setIsLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
   // Animation effects
   useEffect(() => {
-    if (totalBooks > 0) {
-      const timer = animateValue(0, totalBooks, 1500, setDisplayedTotal);
-      return () => clearInterval(timer);
-    }
-  }, [totalBooks]);
+    const timers: number[] = [];
 
-  useEffect(() => {
-    if (activeUsers > 0) {
-      const timer = animateValue(0, activeUsers, 1500, setDisplayedUsers);
-      return () => clearInterval(timer);
+    if (stats.totalBooks > 0) {
+      timers.push(animateValue(0, stats.totalBooks, 1500, 
+        (value) => setDisplayedStats(prev => ({ ...prev, totalBooks: value })))!);
     }
-  }, [activeUsers]);
-
-  useEffect(() => {
-    if (borrowedBooks > 0) {
-      const timer = animateValue(0, borrowedBooks, 1500, setDisplayedBorrowed);
-      return () => clearInterval(timer);
+    if (stats.activeUsers > 0) {
+      timers.push(animateValue(0, stats.activeUsers, 1500,
+        (value) => setDisplayedStats(prev => ({ ...prev, activeUsers: value })))!);
     }
-  }, [borrowedBooks]);
+    if (stats.borrowedBooks > 0) {
+      timers.push(animateValue(0, stats.borrowedBooks, 1500,
+        (value) => setDisplayedStats(prev => ({ ...prev, borrowedBooks: value })))!);
+    }
+    if (stats.returnedBooks > 0) {
+      timers.push(animateValue(0, stats.returnedBooks, 1500,
+        (value) => setDisplayedStats(prev => ({ ...prev, returnedBooks: value })))!);
+    }
 
+    return () => timers.forEach(timer => clearInterval(timer));
+  }, [stats]);
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="text-red-600 text-center">
+          <p className="text-xl font-semibold">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200"
+          >
+            Thử lại
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white mt-5">
@@ -101,28 +158,28 @@ export default function Overview() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatsCard
             title="Tổng số sách"
-            value={displayedTotal.toLocaleString()}
+            value={displayedStats.totalBooks.toLocaleString()}
             icon={<Book className="h-7 w-7 text-blue-600" />}
             iconColor="bg-blue-100"
             trend={{ value: 12, isPositive: true }}
           />
           <StatsCard
             title="Số bạn đọc"
-            value={displayedUsers.toLocaleString()}
+            value={displayedStats.activeUsers.toLocaleString()}
             icon={<Users className="h-7 w-7 text-purple-600" />}
             iconColor="bg-purple-100"
             trend={{ value: 8, isPositive: true }}
           />
           <StatsCard
             title="Sách đang mượn"
-            value={displayedBorrowed.toLocaleString()}
+            value={displayedStats.borrowedBooks.toLocaleString()}
             icon={<BookOpen className="h-7 w-7 text-orange-600" />}
             iconColor="bg-orange-100"
             trend={{ value: 5, isPositive: false }}
           />
           <StatsCard
             title="Số sách đã trả"
-            value="333"
+            value={displayedStats.returnedBooks.toLocaleString()}
             icon={<Target className="h-7 w-7 text-emerald-600" />}
             iconColor="bg-emerald-100"
             trend={{ value: 2, isPositive: true }}

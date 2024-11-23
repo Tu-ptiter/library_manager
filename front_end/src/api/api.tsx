@@ -52,22 +52,31 @@ interface CategoryDistribution {
 }
 
 export interface Transaction {
+  id: string;
   memberName: string;
   description: string;
   transactionDate: string;
   memberId: string;
   bookId: string;
   bookTitle: string;
-  status: "Đã trả" | "Đang mượn"; 
+  status: "Đã trả" | "Đang mượn" | "Đã gia hạn";
 }
 
-interface TransactionRequest {
-  name: string;   // memberName
-  title: string;  // bookTitle
+export interface TransactionRequest {
+  transactionId?: string;
+  name: string;        // memberName
+  title: string;       // bookTitle
+  phoneNumber: string; // Thêm trường này
 }
 
 
+<<<<<<< HEAD
 const BASE_URL = 'http://10.147.19.246:8080';
+=======
+
+const BASE_URL = 'https://library-mana.azurewebsites.net';
+
+>>>>>>> 44d663506d880d19a531fcf6f0b695fcf4fa5180
 
 
 
@@ -305,9 +314,8 @@ export const fetchTotalBooks = async (): Promise<number> => {
     return response.data;
   } catch (error) {
     console.error('Error fetching total books:', error);
-    throw error;
+    return 0; // Return default value on error
   }
-
 };
 
 
@@ -409,13 +417,23 @@ export const resetPassword = async (username: string, otp: string, newPassword: 
 
 export const countBorrowedBooks = async (): Promise<number> => {
   try {
-    const response = await axios.get<number>(`${BASE_URL}/transactions/count`);
+    const response = await axios.get<number>(`${BASE_URL}/transactions/count-borrowed`);
     return response.data;
   } catch (error) {
     console.error('Error counting borrowed books:', error);
-    throw error;
+    return 0; // Return default value on error
   }
 };
+
+export const countReturnedBooks = async (): Promise<number> => {
+  try {
+    const response = await axios.get<number>(`${BASE_URL}/transactions/count-returned`);
+    return response.data;
+  } catch (error) {
+    console.error('Error counting returned books:', error);
+    return 0; // Return default value on error
+  }
+}
 
 export const countMembers = async (): Promise<number> => {
   try {
@@ -423,7 +441,7 @@ export const countMembers = async (): Promise<number> => {
     return response.data;
   } catch (error) {
     console.error('Error counting members:', error);
-    throw error;
+    return 0; // Return default value on error
   }
 };
 
