@@ -23,6 +23,8 @@ import DeleteConfirmDialog from '../../../../components/DeleteConfirmDialog/Dele
 import { Member, updateMember, deleteMember, fetchBorrowedAndRenewedBooks } from '@/api/api';
 import { cn } from "@/lib/utils";
 import CustomPagination from '../../../../components/custom-pagination';
+import {toast, Toaster} from 'react-hot-toast';
+import { set } from 'lodash';
 
 type SortOption = 'name-asc' | 'name-desc';
 
@@ -59,35 +61,83 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
       setSelectedMember(member);
       setIsInfoModalOpen(true);
     } catch (error) {
-      console.error('Error fetching member info:', error);
+      toast.error('Đã xảy ra lỗi, vui lòng thử lại sau.', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
 
   const handleSaveEdit = async (memberData: Partial<Member>) => {
     try {
       if (!editingMember?.memberId) {
-        console.error('Member ID is missing');
+        toast.error('ID người đọc không tồn tại', {
+          duration: 3000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+        });
         return;
       }
       await updateMember(editingMember.memberId, memberData);
+      toast.success('Cập nhật người đọc thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
       setEditingMember(null);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
-      console.error('Error updating member:', error);
+      toast.error('Đã xảy ra lỗi, vui lòng thử lại sau.', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
 
   const handleConfirmDelete = async () => {
     try {
       if (!deletingMember?.memberId) {
-        console.error('Member ID is missing');
+        toast.error('ID người đọc không tồn tại', {
+          duration: 3000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+        });
         return;
       }
       await deleteMember(deletingMember.memberId);
+      toast.success('Xóa người đọc thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
       setDeletingMember(null);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
-      console.error('Error deleting member:', error);
+      toast.error('Đã xảy ra lỗi, vui lòng thử lại sau.', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
 
@@ -129,6 +179,7 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   };
 
   return (
+    <>
     <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-white rounded-lg shadow-sm border border-gray-100">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
@@ -317,6 +368,8 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
   </div>
 )}
     </div>
+    <Toaster position="top-right" />
+    </>
   );
 };
 

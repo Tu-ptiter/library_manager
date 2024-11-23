@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, UserPlus } from 'lucide-react';
+import { toast, Toaster } from 'react-hot-toast';
 const memberSchema = z.object({
   name: z.string()
     .min(1, "Tên không được để trống")
@@ -50,13 +51,30 @@ const AddReader: React.FC = () => {
   const onSubmit = async (data: MemberFormValues) => {
     try {
       await createMember(data);
-      navigate('/admin/readers/list');
+      toast.success('Thêm người đọc thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
+      setTimeout(() => {
+        navigate('/admin/readers/list');
+      }, 2000); // 2 seconds delay
     } catch (error) {
-      console.error('Error creating member:', error);
+      toast.error((error as any).message || 'Đã xảy ra lỗi, vui lòng thử lại sau.', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
 
   return (
+    <>
+    <Toaster position='top-right'/>
     <div className="container mx-auto py-6 px-4">
       <div className="max-w-4xl mx-auto">
         <Card className="border-none shadow-lg">
@@ -180,6 +198,7 @@ const AddReader: React.FC = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

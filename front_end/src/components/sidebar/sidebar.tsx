@@ -3,6 +3,7 @@ import React from 'react';
 import { FaBook, FaUser, FaHome, FaExchangeAlt, FaPowerOff} from 'react-icons/fa';
 import { LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { toast, Toaster } from 'react-hot-toast';
 import {
   Accordion,
   AccordionContent,
@@ -127,6 +128,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   return (
     <>
       {/* Overlay */}
+      <Toaster position='top-right'/>
       <div 
         className={`fixed inset-0 bg-black/50 transition-opacity lg:hidden
           ${isOpen ? 'opacity-100 z-30' : 'opacity-0 pointer-events-none'}`}
@@ -156,7 +158,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
               className="flex items-center gap-3 w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white transition-colors rounded-md"
               onClick={() => {
                 localStorage.removeItem('adminData');
-                window.location.href = '/admin/login';
+                toast.success('Đăng xuất thành công', {
+                  duration: 3000,
+                  style: {
+                    background: '#22c55e',
+                    color: '#fff',
+                  },
+                });
+                setTimeout(() => {
+                  window.location.href = '/admin/login';
+                }, 2000);
               }}
             >
               <LogOut className="h-4 w-4" />

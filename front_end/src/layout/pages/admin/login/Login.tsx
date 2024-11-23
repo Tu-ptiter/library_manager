@@ -19,16 +19,34 @@ const Login: React.FC = () => {
       const data = await login(username, password);
       if (data.librarianId) {
         localStorage.setItem('adminData', JSON.stringify(data));
-        toast.success('Đăng nhập thành công, đang chuyển hướng...');
+        toast.success('Đăng nhập thành công, đang chuyển hướng...', {
+          duration: 3000,
+          style: {
+            background: '#22c55e',
+            color: '#fff',
+          },
+        });
         setTimeout(() => {
           navigate('/admin/overview');
         }, 2000); // 1 second delay
       }
     } catch (error) {
       if ((error as any).response?.status === 401) {
-        toast.error('Tên đăng nhập hoặc mật khẩu không đúng.');
+        toast.error('Tên đăng nhập hoặc mật khẩu không đúng.', {
+          duration: 3000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+        });
       } else {
-        toast.error('Đã xảy ra lỗi, vui lòng thử lại sau.');
+        toast.error('Đã xảy ra lỗi, vui lòng thử lại sau.', {
+          duration: 3000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+        });
       }
     }
   };

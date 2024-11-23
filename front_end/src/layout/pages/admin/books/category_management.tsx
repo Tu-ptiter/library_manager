@@ -64,9 +64,21 @@ const CategoryManagement: React.FC = () => {
         cat.name === oldName ? { ...cat, name: editMainName } : cat
       ));
       setEditingMainId(null);
-      toast.success('Cập nhật danh mục lớn thành công', { position: "top-right" });
+      toast.success('Cập nhật danh mục lớn thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
     } catch (err) {
-      toast.error('Cập nhật thất bại', { position: "top-right" });
+      toast.error('Cập nhật thất bại', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
   
@@ -80,9 +92,21 @@ const CategoryManagement: React.FC = () => {
         } : cat
       ));
       setEditingSubId(null);
-      toast.success('Cập nhật danh mục nhỏ thành công', { position: "top-right" });
+      toast.success('Cập nhật danh mục nhỏ thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
     } catch (err) {
-      toast.error('Cập nhật thất bại', { position: "top-right" });
+      toast.error('Cập nhật thất bại', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
       console.error(err);
     }
   };

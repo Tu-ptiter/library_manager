@@ -7,6 +7,7 @@ interface Category {
   smallCategory: string[];
 }
 
+
 export interface Book {
   bookId: string;
   title: string;
@@ -46,6 +47,7 @@ export interface WeeklyStats {
   day: string;
   borrowed: number;
 }
+
 
 export interface CategoryData {
   name: string;
@@ -220,6 +222,7 @@ export const fetchWeeklyStats = async (): Promise<WeeklyStats[]> => {
     throw error;
   }
 };
+
 
 // Add new API functions
 export const borrowBook = async (data: TransactionRequest): Promise<Transaction> => {

@@ -1,7 +1,6 @@
 // pages/admin/books/add_book.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast'; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -27,6 +26,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { Plus, BookOpen } from 'lucide-react'; 
+import { toast, Toaster } from 'react-hot-toast';
 interface Category {
   mainCategory: string;
   subCategories: string[];
@@ -160,14 +160,28 @@ const AddBook: React.FC = () => {
       };
   
       await createBook(finalData);
-      toast.success('Thêm sách thành công');
-      navigate('/admin/books/list');
+      toast.success('Thêm sách thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
+      setTimeout(() => {
+        navigate('/admin/books/list');
+      }, 2000);
     } catch (error) {
       console.error('Error creating book:', error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error('Có lỗi xảy ra khi thêm sách');
+        toast.error('Có lỗi xảy ra khi thêm sách', {
+          duration: 3000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+          },
+        });
       }
     }
   };
@@ -180,6 +194,8 @@ const AddBook: React.FC = () => {
   }
 
   return (
+    <>
+    <Toaster position="top-right" />
     <div className="container mx-auto py-6 px-4">
       <div className="max-w-4xl mx-auto">
         <Card className="border-none shadow-lg">
@@ -431,6 +447,7 @@ const AddBook: React.FC = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

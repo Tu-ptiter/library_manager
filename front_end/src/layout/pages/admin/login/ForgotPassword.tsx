@@ -29,10 +29,22 @@ const ForgotPassword: React.FC = () => {
     try {
       setIsLoading(true);
       await getOtp(username);
-      toast.success('Gửi mã OTP thành công');
+      toast.success('Gửi mã OTP thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
       setCountdown(60); // Start 60s countdown
     } catch (error) {
-      toast.error((error as any).message || 'Không thể gửi mã OTP');
+      toast.error((error as any).message || 'Không thể gửi mã OTP', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -42,12 +54,24 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
     try {
       await resetPassword(username, otp, newPassword);
-      toast.success('Đổi mật khẩu thành công');
+      toast.success('Đổi mật khẩu thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
+      });
       setTimeout(() => {
         navigate('/admin/login');
       }, 2000);
     } catch (error) {
-      toast.error((error as any).message || 'Không thể đổi mật khẩu');
+      toast.error((error as any).message || 'Không thể đổi mật khẩu', {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
+      });
     }
   };
 
