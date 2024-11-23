@@ -72,12 +72,12 @@ export interface Transaction {
 }
 
 export interface TransactionRequest {
-  transactionId: string;         // Make required
-  memberId?: string;            // Add this
-  bookId?: string;             // Add this
-  name: string;                
-  title: string;               
-  phoneNumber: string;         
+  transactionId?: string;  // Make optional for borrow requests
+  memberId?: string;      
+  bookId?: string;       
+  name: string;          
+  title: string;         
+  phoneNumber: string;   
 }
 
 
@@ -126,12 +126,42 @@ export const deleteBook = async (idBook: string): Promise<void> => {
   }
 };
 
-export const createBook = async (bookData: Omit<Book, 'id'>): Promise<Book> => {
+interface CreateBookData {
+  title: string;
+  description: string;
+  author: string | string[];
+  publicationYear: number;
+  bigCategory: string | Category[]; // Allow either string or Category[]
+  smallCategory?: string;
+  quantity: number;
+  availability: boolean;
+  img: string;
+  nxb: string;
+}
+
+export const createBook = async (bookData: CreateBookData): Promise<Book> => {
   try {
-    const response = await axios.post<Book>(`${BASE_URL}/books`, bookData);
+    const bookId = `6725f0b0801da71ae9777${Math.random().toString(36).substr(2, 3)}`;
+    
+    // Transform the data structure
+    const formattedData = {
+      ...bookData,
+      bookId,
+      // Ensure author is always an array
+      author: Array.isArray(bookData.author) ? bookData.author : [bookData.author],
+      // Transform bigCategory to match Book interface
+      bigCategory: Array.isArray(bookData.bigCategory) ? bookData.bigCategory : [{
+        name: bookData.bigCategory as string,
+        smallCategory: bookData.smallCategory ? [bookData.smallCategory] : []
+      }]
+    };
+
+    const response = await axios.post<Book>(`${BASE_URL}/books`, formattedData);
     return response.data;
   } catch (error) {
-    console.error('Error creating book:', error);
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data || 'Có lỗi xảy ra khi thêm sách');
+    }
     throw error;
   }
 };
@@ -201,7 +231,9 @@ export const borrowBook = async (data: TransactionRequest): Promise<Transaction>
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data || 'Có lỗi xảy ra khi mượn sách');
+      // Directly throw the error message from server
+      const errorMessage = error.response?.data || 'Có lỗi xảy ra khi mượn sách';
+      throw new Error(errorMessage);
     }
     throw error;
   }
