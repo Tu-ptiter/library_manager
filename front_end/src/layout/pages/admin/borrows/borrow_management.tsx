@@ -89,18 +89,21 @@ const BorrowManagement: React.FC = () => {
   const handleSubmit = async (data: TransactionFormValues) => {
     setIsSubmitting(true);
     setMessage(null);
-
+  
     try {
+      
       await borrowBook({
         name: data.name,
         title: data.title,
         phoneNumber: data.phoneNumber
       });
+      
       form.reset();
       setMessage({
         text: 'Mượn sách thành công',
         type: 'success'
       });
+  
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
       setMessage({
