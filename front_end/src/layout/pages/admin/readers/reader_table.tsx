@@ -175,12 +175,12 @@ const ReaderTable: React.FC<ReaderTableProps> = ({
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/80">
-                <TableHead className="font-semibold text-gray-600">Họ và tên</TableHead>
-                <TableHead className="font-semibold text-gray-600 hidden md:table-cell">Email</TableHead>
-                <TableHead className="font-semibold text-gray-600 hidden sm:table-cell">Số điện thoại</TableHead>
-                <TableHead className="font-semibold text-gray-600 hidden lg:table-cell">Địa chỉ</TableHead>
-                <TableHead className="font-semibold text-gray-600 hidden sm:table-cell text-center">Số sách mượn</TableHead>
-                <TableHead className="font-semibold text-gray-600 text-right pr-4">Hành động</TableHead>
+                <TableHead className="font-bold text-gray-600">Họ và tên</TableHead>
+                <TableHead className="font-bold text-gray-600 hidden md:table-cell">Email</TableHead>
+                <TableHead className="font-bold text-gray-600 hidden sm:table-cell">Số điện thoại</TableHead>
+                <TableHead className="font-bold text-gray-600 hidden lg:table-cell">Địa chỉ</TableHead>
+                <TableHead className="font-bold text-gray-600 hidden sm:table-cell text-center">Số sách mượn</TableHead>
+                <TableHead className="font-bold text-gray-600 text-right pr-4">Hành động</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

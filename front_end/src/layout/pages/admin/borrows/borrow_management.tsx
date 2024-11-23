@@ -160,7 +160,7 @@ const BorrowManagement: React.FC = () => {
                           <Input 
                             placeholder="Nhập tên người dùng..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500" 
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100" 
                           />
                         </FormControl>
                         <FormMessage />
@@ -178,7 +178,7 @@ const BorrowManagement: React.FC = () => {
                           <Input 
                             placeholder="Nhập số điện thoại..." 
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -201,7 +201,7 @@ const BorrowManagement: React.FC = () => {
                             {...field}
                             onChange={(e) => handleTitleChange(e.target.value)}
                             onFocus={() => setShowSuggestions(true)}
-                            className="pl-10 transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="pl-10 transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </div>
                       </FormControl>
@@ -252,6 +252,7 @@ const BorrowManagement: React.FC = () => {
                       "relative",
                       "transition-all duration-300",
                       "hover:shadow-lg",
+                      "bg-green-500 hover:bg-green-600 text-white",
                       isSubmitting && "animate-pulse"
                     )}
                   >
@@ -277,7 +278,7 @@ const BorrowManagement: React.FC = () => {
                       ) : (
                         <motion.div
                           key="content"
-                          className="flex items-center"
+                          className="flex items-center "
                         >
                           <Book className="w-4 h-4 mr-2" />
                           Mượn sách

@@ -83,7 +83,7 @@ const AddReader: React.FC = () => {
                             required
                             placeholder="Nhập họ và tên..."
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -105,7 +105,7 @@ const AddReader: React.FC = () => {
                             type="email"
                             placeholder="Nhập email..."
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -127,7 +127,7 @@ const AddReader: React.FC = () => {
                             placeholder="Nhập số điện thoại..."
                             maxLength={11}
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -148,7 +148,7 @@ const AddReader: React.FC = () => {
                             required
                             placeholder="Nhập địa chỉ..."
                             {...field}
-                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500"
+                            className="transition-all duration-200 hover:border-blue-400 focus:border-blue-500 bg-slate-100"
                           />
                         </FormControl>
                         <FormMessage />
@@ -168,7 +168,7 @@ const AddReader: React.FC = () => {
                   </Button>
                   <Button 
                     type="submit"
-                    className="transition-all duration-200 hover:shadow-lg"
+                    className="transition-all duration-200 hover:shadow-lg bg-green-500 hover:bg-green-600"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Thêm người đọc

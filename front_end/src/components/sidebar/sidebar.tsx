@@ -91,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           className="border-none"
         >
           <AccordionTrigger 
-            className={`flex items-center px-4 py-3 hover:bg-gray-700 no-underline transition-colors
+            className={`flex items-center px-4 py-3 hover:bg-gray-700 !no-underline transition-colors
               ${isActive ? 'bg-gray-700' : ''}`}
           >
             <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       >
         <div className="flex flex-col h-full">
           {/* Menu Items */}
-          <div className="p-4 flex-1 overflow-y-auto">
+          <div className=" flex-1 overflow-y-auto">
             {directMenus.map(renderDirectLink)}
             <Accordion type="single" collapsible className="mt-2">
               {renderAccordionItems(dropdownMenus)}
@@ -151,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           <div className="border-t border-gray-700 my-4" />
   
           {/* Logout Button */}
-          <div className="p-4">
+          <div className="">
             <button
               className="flex items-center gap-3 w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white transition-colors rounded-md"
               onClick={() => {
