@@ -1,6 +1,7 @@
 // pages/admin/books/add_book.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast'; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -34,7 +35,9 @@ interface Category {
 const bookSchema = z.object({
   title: z.string().min(1, "Tên sách không được để trống"),
   description: z.string(),
-  author: z.string().transform(str => str.split(',').map(s => s.trim())),
+  author: z.string()
+    .min(1, "Tác giả không được để trống")
+    .transform(str => str.split(',').map(s => s.trim()).filter(Boolean)),
   publicationYear: z.string()
     .transform(Number)
     .refine((n) => n >= 0, "Năm xuất bản không được âm"),
@@ -46,13 +49,7 @@ const bookSchema = z.object({
   availability: z.boolean().default(true),
   img: z.string().url("URL hình ảnh không hợp lệ"),
   nxb: z.string().min(1, "Nhà xuất bản không được để trống"),
-}).transform(data => ({
-  ...data,
-  bigCategory: [{
-    name: data.bigCategory,
-    smallCategory: [data.smallCategory]
-  }]
-}));
+});
 
 type BookFormValues = z.infer<typeof bookSchema>;
 
@@ -150,23 +147,30 @@ const AddBook: React.FC = () => {
   };
 
   const onSubmit = async (data: BookFormValues) => {
-    // Create the correct data structure for bigCategory
-    const finalData = {
-      ...data,
-      bigCategory: [{
-        name: isCustomMainCategory ? customMainCategory : data.bigCategory,
-        smallCategory: [isCustomSubCategory ? customSubCategory : data.smallCategory]
-      }]
-    };
-  
     try {
+      const finalData = {
+        ...data,
+        // Remove the split since Zod already handles the transformation
+        author: Array.isArray(data.author) ? data.author : [data.author],
+        bigCategory: [{
+          name: isCustomMainCategory ? customMainCategory : data.bigCategory,
+          smallCategory: [isCustomSubCategory ? customSubCategory : data.smallCategory]
+        }],
+        bookId: undefined
+      };
+  
       await createBook(finalData);
+      toast.success('Thêm sách thành công');
       navigate('/admin/books/list');
     } catch (error) {
       console.error('Error creating book:', error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Có lỗi xảy ra khi thêm sách');
+      }
     }
   };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
