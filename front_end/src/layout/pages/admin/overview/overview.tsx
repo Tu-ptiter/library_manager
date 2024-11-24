@@ -189,7 +189,7 @@ export default function Overview() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 bg-white/60 backdrop-blur-sm hover:bg-white/80 
             transition-all duration-300 rounded-lg shadow-sm hover:shadow">
-            <h3 className="text-lg font-semibold text-gray-800 mb-6">Thống kê mượn sách</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-6">Thống kê mượn sách theo tháng</h3>
             <div className="h-[300px]">
               <BorrowStats />
             </div>
@@ -203,7 +203,7 @@ export default function Overview() {
           </Card>
           <Card className="p-6 bg-white/60 backdrop-blur-sm hover:bg-white/80 
             transition-all duration-300 rounded-lg shadow-sm hover:shadow">
-            <h3 className="text-lg font-semibold text-gray-800 mb-6">Thống kê người dùng</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-6">Mượn/Trả sách trong tuần</h3>
             <div className="h-[300px]">
               <UserStats />
             </div>

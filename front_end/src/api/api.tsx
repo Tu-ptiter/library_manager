@@ -7,6 +7,11 @@ interface Category {
   smallCategory: string[];
 }
 
+interface StatData {
+  month: string;
+  borrow: number;
+  return: number;
+}
 
 export interface Book {
   bookId: string;
@@ -219,6 +224,16 @@ export const fetchWeeklyStats = async (): Promise<WeeklyStats[]> => {
     return response.data;
   } catch (error) {
     console.error('Error fetching weekly stats:', error);
+    throw error;
+  }
+};
+
+export const fetchTransactionStats = async (): Promise<StatData[]> => {
+  try {
+    const response = await axios.get<StatData[]>(`${BASE_URL}/transactions/statistics`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching transaction statistics:', error);
     throw error;
   }
 };
