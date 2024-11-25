@@ -19,6 +19,7 @@ import { Book, UserCheck, Search } from 'lucide-react';
 import axios from 'axios';
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import {toast, Toaster} from 'react-hot-toast';
 
 const BASE_URL = 'https://library-mana.azurewebsites.net';
 
@@ -109,10 +110,8 @@ const BorrowManagement: React.FC = () => {
 
   const handleSubmit = async (data: TransactionFormValues) => {
     setIsSubmitting(true);
-    setMessage(null);
   
     try {
-      
       await borrowBook({
         name: data.name,
         title: data.title,
@@ -120,16 +119,24 @@ const BorrowManagement: React.FC = () => {
       });
       
       form.reset();
-      setMessage({
-        text: 'Mượn sách thành công',
-        type: 'success'
+      // Replace message with toast
+      toast.success('Mượn sách thành công', {
+        duration: 3000,
+        style: {
+          background: '#22c55e',
+          color: '#fff',
+        },
       });
   
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Có lỗi xảy ra';
-      setMessage({
-        text: errorMessage,
-        type: 'error'
+      // Replace error message with toast
+      toast.error(errorMessage, {
+        duration: 3000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+        },
       });
     } finally {
       setIsSubmitting(false);
