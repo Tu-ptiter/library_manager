@@ -299,6 +299,7 @@ const BorrowManagement: React.FC = () => {
           </CardContent>
         </Card>
       </div>
+      <Toaster position='top-right'/>
     </div>
   );
 };

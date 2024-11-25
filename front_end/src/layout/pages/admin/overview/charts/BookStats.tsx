@@ -3,12 +3,18 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { name: 'T1', total: 4000, borrowed: 2400 },
-  { name: 'T2', total: 4200, borrowed: 2600 },
-  { name: 'T3', total: 4500, borrowed: 2800 },
-  { name: 'T4', total: 4780, borrowed: 3000 },
-  { name: 'T5', total: 5000, borrowed: 3200 },
-  { name: 'T6', total: 5200, borrowed: 3500 },
+  { name: 'T1', total: 7720, borrowed: 2400 },
+  { name: 'T2', total: 7750, borrowed: 2600 },
+  { name: 'T3', total: 7770, borrowed: 2800 },
+  { name: 'T4', total: 7780, borrowed: 3000 },
+  { name: 'T5', total: 8000, borrowed: 3200 },
+  { name: 'T6', total: 9353, borrowed: 3500 },
+  { name: 'T7', total: 9443, borrowed: 3800 },
+  { name: 'T8', total: 9543, borrowed: 4000 },
+  { name: 'T9', total: 9553, borrowed: 4200 },
+  { name: 'T10', total: 9600, borrowed: 4400 },
+  { name: 'T11', total: 9653, borrowed: 4600 },
+  
 ];
 
 const BookStats: React.FC = () => {
